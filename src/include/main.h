@@ -16,10 +16,8 @@
 #include "maps.h"
 #include "gameObj.h"
 #include "settings.h"
-#include "client.h"
 #include "menu.h"
-#include "mainMenu.h"
-#include "toast.h"
+#include "tsee.h"
 
 #ifdef _WIN32
 #include <winsock.h>
