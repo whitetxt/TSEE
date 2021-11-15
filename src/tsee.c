@@ -2,6 +2,7 @@
 
 TSEE TSEECreate(int width, int height) {
 	TSEE tsee;
+	tsee.fonts = NULL;
 	tsee.window = malloc(sizeof(*tsee.window));
 	tsee.window->width = width;
 	tsee.window->height = height;

@@ -17,9 +17,22 @@ typedef struct TSEE_Window {
 	char *title;
 } TSEE_Window;
 
+typedef struct TSEE_Font {
+	TTF_Font *font;
+	char *name;
+	int size;
+} TSEE_Font;
+
+// TSEE's home-made array type. Stores the current size & data.
+typedef struct TSEE_Array {
+	void **data;
+	size_t size;
+} TSEE_Array;
+
 // The main TSEE object, create using TSEECreate(width, height).
 typedef struct TSEE {
 	TSEE_Window *window;
+	TSEE_Array *fonts;
 } TSEE;
 
 // TSEE's texture wrapper, keeps track of important information for the texture.
