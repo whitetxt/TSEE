@@ -1,7 +1,10 @@
 // !! tsee.c !!
 
-// Creates a new tsee object.
+// Creates a new TSEE object.
 TSEE TSEECreate(int width, int height);
+
+// Closes a TSEE object, clears all memory out and deletes it.
+bool TSEEClose(TSEE *tsee);
 
 // !! tsee_rendering.c !!
 
@@ -12,6 +15,20 @@ bool TSEEInitRendering(TSEE *tsee);
 void TSEEDestroyWindow(TSEE_Window *window);
 
 // !! tsee_objects.c !!
+
+// !! tsee_array.c !!
+
+// Extends a TSEE_Array by 1.
+int TSEEArrayExtend(TSEE_Array *arr);
+
+// Appends data to the end of a TSEE_Array.
+bool TSEEArrayAppend(TSEE_Array *arr, void *data);
+
+// Insert data into TSEE_Array at the specified index.
+bool TSEEArrayInsert(TSEE_Array *arr, void *toInsert, int index);
+
+// Deletes data from a TSEE_Array at the specified index.
+bool TSEEArrayDelete(TSEE_Array *arr, int index);
 
 // !! tsee_logging.c !!
 // Log something to the console, typically for debugging.
