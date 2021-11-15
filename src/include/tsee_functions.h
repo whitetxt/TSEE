@@ -18,6 +18,9 @@ void TSEEDestroyWindow(TSEE_Window *window);
 
 // !! tsee_array.c !!
 
+// Creates a TSEE_Array with size 0.
+TSEE_Array *TSEEArrayCreate();
+
 // Extends a TSEE_Array by 1.
 int TSEEArrayExtend(TSEE_Array *arr);
 
@@ -25,10 +28,16 @@ int TSEEArrayExtend(TSEE_Array *arr);
 bool TSEEArrayAppend(TSEE_Array *arr, void *data);
 
 // Insert data into TSEE_Array at the specified index.
-bool TSEEArrayInsert(TSEE_Array *arr, void *toInsert, int index);
+bool TSEEArrayInsert(TSEE_Array *arr, void *toInsert, size_t index);
 
 // Deletes data from a TSEE_Array at the specified index.
-bool TSEEArrayDelete(TSEE_Array *arr, int index);
+bool TSEEArrayDelete(TSEE_Array *arr, size_t index);
+
+// Gets the specified index from a TSEE_Array.
+void *TSEEArrayGet(TSEE_Array *arr, size_t index);
+
+// Clears a TSEE_Array, freeing all memory.
+bool TSEEArrayClear(TSEE_Array *arr);
 
 // !! tsee_logging.c !!
 // Log something to the console, typically for debugging.
@@ -42,3 +51,35 @@ void TSEEError(char *message, ...);
 
 // Inform the user of a critical error, should only be used if the program can't continue.
 void TSEECritical(char *message, ...);
+
+// !! tsee_text.c !!
+
+// Initialises the fonts and loads the default font if desired.
+// TSEE_Fonts use names to keep track of them, so if you want to use a font, specify its name.
+bool TSEEInitText(TSEE *tsee, bool loadDefault);
+
+// Loads a font from a specified file, with a specified size and specified name.
+bool TSEELoadFont(TSEE *tsee, char *path, int size, char *name);
+
+// Unloads a loaded font. The font must be loaded first.
+bool TSEEUnloadFont(TSEE *tsee, char *name);
+
+// Unloads all fonts inside a TSEE object.
+bool TSEEUnloadAllFonts(TSEE *tsee);
+
+// Returns the TTF_Font object for the specified font name.
+// Returns NULL if the no font is found.
+TTF_Font *TSEEGetFont(TSEE *tsee, char *name);
+
+// !! tsee_settings.c !!
+
+// Callback for TSEE's settings loading system. Do not use.
+void TSEESettingsLoadCallback(TSEE *tsee, char *section, char *value);
+
+// Loads TSEE's settings from a file.
+// THIS WILL NOT LOAD YOUR OWN SETTINGS!!
+bool TSEELoadSettings(TSEE *tsee);
+
+// Saves TSEE's settings to a file.
+// THIS WILL NOT SAVE YOUR OWN SETTINGS!!
+bool TSEESaveSettings(TSEE *tsee);

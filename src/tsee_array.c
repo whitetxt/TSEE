@@ -1,5 +1,12 @@
 #include "include/tsee.h"
 
+TSEE_Array *TSEEArrayCreate() {
+	TSEE_Array *array = malloc(sizeof(*array));
+	array->data = NULL;
+	array->size = 0;
+	return array;
+} 
+
 int TSEEArrayExtend(TSEE_Array *arr) {
 	arr->data = realloc(arr->data, sizeof(*arr->data) * (++arr->size));
 	return arr->size - 1;
@@ -11,7 +18,7 @@ bool TSEEArrayAppend(TSEE_Array *arr, void *data) {
 	return true;
 }
 
-bool TSEEArrayInsert(TSEE_Array *arr, void *data, int index) {
+bool TSEEArrayInsert(TSEE_Array *arr, void *data, size_t index) {
 	if (index > arr->size) {
 		TSEEWarn("Attempted insert into array (size %d) at index \"%d\"\n", arr->size, index);
 		return false;
@@ -22,7 +29,7 @@ bool TSEEArrayInsert(TSEE_Array *arr, void *data, int index) {
 	return true;
 }
 
-bool TSEEArrayDelete(TSEE_Array *arr, int index) {
+bool TSEEArrayDelete(TSEE_Array *arr, size_t index) {
 	if (index >= arr->size) {
 		TSEEWarn("Attempted delete from array (size %d) at index \"%d\"\n", arr->size, index);
 		return false;
@@ -32,7 +39,7 @@ bool TSEEArrayDelete(TSEE_Array *arr, int index) {
 	return true;
 }
 
-void *TSEEArrayGet(TSEE_Array *arr, int index) {
+void *TSEEArrayGet(TSEE_Array *arr, size_t index) {
 	if (index >= arr->size) {
 		TSEEWarn("Attempted get from array (size %d) at index \"%d\"\n", arr->size, index);
 		return NULL;
@@ -41,6 +48,10 @@ void *TSEEArrayGet(TSEE_Array *arr, int index) {
 }
 
 bool TSEEArrayClear(TSEE_Array *arr) {
+	for (size_t i = 0; i < arr->size; i++) {
+		free(arr->data[i]);
+	}
+	free(arr->data);
 	free(arr);
 	return true;
 }

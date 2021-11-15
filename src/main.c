@@ -14,7 +14,7 @@ int main(int argc, char *argv[]) {
 	if (TSEESetWindowTitle(&tsee, "TSEE - Example Game") != true) {
 		TSEEWarn("Failed to set window title.\n");
 	}
-	if (TSEEInitText(&tsee) != true) {
+	if (TSEEInitText(&tsee, true) != true) {
 		TSEECritical("Failed to initialize TSEE Text Module.\n");
 		TSEEClose(&tsee);
 		return -1;
@@ -30,6 +30,6 @@ int main(int argc, char *argv[]) {
 
 	printf("Closing.\n");
 
-	TSEE_Close(tsee);
+	TSEEClose(&tsee);
 	return 0; 
 }

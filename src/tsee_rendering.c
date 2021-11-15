@@ -9,7 +9,7 @@ bool TSEEInitRendering(TSEE *tsee) {
 	tsee->window->window = SDL_CreateWindow("No window title set: Call TSEESetWindowTitle", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, tsee->window->width, tsee->window->height, SDL_WINDOW_SHOWN);
 	if (tsee->window->window == NULL) {
 		printf("Window could not be created! SDL_Error: %s\n", SDL_GetError());
-		SDL_Exit();
+		SDL_Quit();
 		return false;
 	}
 
@@ -17,17 +17,20 @@ bool TSEEInitRendering(TSEE *tsee) {
 	if (tsee->window->renderer == NULL) {
 		printf("Renderer could not be created! SDL_Error: %s\n", SDL_GetError());
 		SDL_DestroyWindow(tsee->window->window);
-		SDL_Exit();
+		SDL_Quit();
 		return false;
 	}
 
 	return true;
 };
 
+void TSEEWindowUpdateSize(TSEE *tsee) {
+	SDL_SetWindowSize(tsee->window->window, tsee->window->width, tsee->window->height);
+}
+
 void TSEEDestroyWindow(TSEE_Window *window) {
 	SDL_DestroyRenderer(window->renderer);
 	SDL_DestroyWindow(window->window);
-	return true;
 }
 
 bool TSEESetWindowTitle(TSEE *tsee, char *title) {
