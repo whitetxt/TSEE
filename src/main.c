@@ -19,8 +19,8 @@ int main(int argc, char *argv[]) {
 		TSEEClose(&tsee);
 		return -1;
 	}
-	TSEEInitInput(tsee);
-	TSEEInitEvents(tsee);
+	//TSEEInitInput(tsee);
+	//TSEEInitEvents(tsee);
 	//TSEEInitNetworking(tsee); // NOTE: COMING SOON!!
 
 	printf("Saving settings.\n");
