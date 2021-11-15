@@ -1,8 +1,10 @@
 #include "include/tsee.h"
 
-// Inits fonts and loads the default font.
-bool TSEEInitText(TSEE *tsee) {
-	tsee->fonts = malloc(sizeof(*tsee->fonts));
+bool TSEEInitText(TSEE *tsee, bool loadDefault) {
+	tsee->fonts = TSEEArrayCreate();
+	if (loadDefault)
+		TSEELoadFont(tsee, "fonts/personn.ttf", 16, "_default");
+	return true;
 }
 
 bool TSEELoadFont(TSEE *tsee, char *path, int size, char *name) {
@@ -19,13 +21,13 @@ bool TSEELoadFont(TSEE *tsee, char *path, int size, char *name) {
 }
 
 bool TSEEUnloadFont(TSEE *tsee, char *name) {
-	for (int i = 0; i < tsee->fonts->size; i++) {
+	for (size_t i = 0; i < tsee->fonts->size; i++) {
 		TSEE_Font *font = tsee->fonts->data[i];
 		if (strcmp(font->name, name) == 0) {
 			TTF_CloseFont(font->font);
 			free(font->name);
 			free(font);
-			TSEEArrayRemove(tsee->fonts, i);
+			TSEEArrayDelete(tsee->fonts, i);
 			return true;
 		}
 	}
@@ -34,18 +36,17 @@ bool TSEEUnloadFont(TSEE *tsee, char *name) {
 }
 
 bool TSEEUnloadAllFonts(TSEE *tsee) {
-	for (int i = 0; i < tsee->fonts->size; i++) {
+	for (size_t i = 0; i < tsee->fonts->size; i++) {
 		TSEE_Font *font = tsee->fonts->data[i];
 		TTF_CloseFont(font->font);
 		free(font->name);
-		free(font);
 	}
 	TSEEArrayClear(tsee->fonts);
 	return true;
 }
 
 TTF_Font *TSEEGetFont(TSEE *tsee, char *name) {
-	for (int i = 0; i < tsee->fonts->size; i++) {
+	for (size_t i = 0; i < tsee->fonts->size; i++) {
 		TSEE_Font *data = tsee->fonts->data[i];
 		if (strcmp(data->name, name) == 0) {
 			return data->font;
