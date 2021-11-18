@@ -1,9 +1,12 @@
 #include "include/tsee.h"
 
 bool TSEEInitText(TSEE *tsee, bool loadDefault) {
+	if (TTF_Init() == -1) {
+		TSEEError("Failed to init SDL_TTF: %s\n", TTF_GetError());
+	}
 	tsee->fonts = TSEEArrayCreate();
 	if (loadDefault)
-		TSEELoadFont(tsee, "fonts/personn.ttf", 16, "_default");
+		return TSEELoadFont(tsee, "fonts/default.ttf", 16, "_default");
 	return true;
 }
 
@@ -11,7 +14,7 @@ bool TSEELoadFont(TSEE *tsee, char *path, int size, char *name) {
 	TSEE_Font *font = malloc(sizeof(*font));
 	font->font = TTF_OpenFont(path, size);
 	if (font->font == NULL) {
-		TSEEWarn("Failed to load font: %s\n", path);
+		TSEEWarn("Failed to load font: %s. Error: %s\n", path, TTF_GetError());
 		return false;
 	}
 	font->name = strdup(name);
@@ -54,4 +57,32 @@ TTF_Font *TSEEGetFont(TSEE *tsee, char *name) {
 	}
 	TSEEWarn("Failed to find font: %s\n", name);
 	return NULL;
+}
+
+TSEE_Text *TSEECreateText(TSEE *tsee, char *fontName, char *text, SDL_Color color) {
+	TSEE_Text *textObj = malloc(sizeof(*textObj));
+	TTF_Font *font = TSEEGetFont(tsee, fontName);
+	if (!font) {
+		TSEEWarn("Failed to create text \"%s\" with font \"%s\"\n", text, fontName);
+	}
+	textObj->text = strdup(text);
+	textObj->texture = malloc(sizeof(*textObj->texture));
+	SDL_Surface *surf = TTF_RenderText_Blended(font, text, color);
+	if (!surf) {
+		TSEEWarn("Failed to create text \"%s\" with font \"%s\"\n", text, fontName);
+	}
+	textObj->texture->texture = SDL_CreateTextureFromSurface(tsee->window->renderer, surf);
+	return textObj;
+}
+
+bool TSEERenderText(TSEE *tsee, TSEE_Text *text) {
+	if (!text->texture) {
+		TSEEWarn("Failed to render text: %s\n", text->text);
+		return false;
+	}
+	if (SDL_RenderCopy(tsee->window->renderer, text->texture->texture, NULL, &text->texture->rect) == -1) {
+		TSEEError("Failed to render text \"%s\"\nError: %s\n", text->text, SDL_GetError());
+		return false;
+	}
+	return true;
 }
