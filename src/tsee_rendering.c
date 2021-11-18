@@ -2,7 +2,12 @@
 
 bool TSEEInitRendering(TSEE *tsee) {
 	if (SDL_Init(SDL_INIT_EVERYTHING) < 0) {
-		printf("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
+		TSEEError("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
+		return false;
+	}
+
+	if (IMG_Init(IMG_INIT_JPG | IMG_INIT_PNG | IMG_INIT_TIF | IMG_INIT_WEBP) == 0) {
+		TSEEError("SDL_IMG could not initialise! IMG_Error: %s\n", IMG_GetError());
 		return false;
 	}
 
@@ -40,5 +45,23 @@ bool TSEESetWindowTitle(TSEE *tsee, char *title) {
 	}
 
 	SDL_SetWindowTitle(tsee->window->window, title);
+	tsee->window->title = strdup(title);
 	return true;
 };
+
+bool TSEERenderAll(TSEE *tsee) {
+	SDL_RenderClear(tsee->window->renderer);
+	// Render all objects
+	for (size_t i = 0; i < tsee->world->objects->size; i++) {
+		TSEE_Object *obj = TSEEArrayGet(tsee->world->objects, i);
+		TSEERenderObject(tsee, obj);
+	}
+
+	// Render all text
+	for (size_t i = 0; i < tsee->world->text->size; i++) {
+		TSEE_Text *text = TSEEArrayGet(tsee->world->text, i);
+		TSEERenderText(tsee, text);
+	}
+	SDL_RenderPresent(tsee->window->renderer);
+	return true;
+}

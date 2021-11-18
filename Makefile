@@ -21,3 +21,6 @@ new:
 run:
 	${CC} -o ${filename} ${files} ${CFLAGS}
 	cd build && ../${filename}
+
+start:
+	cd build && ../${filename}
