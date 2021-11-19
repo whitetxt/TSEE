@@ -61,19 +61,28 @@ typedef struct TSEE_Physics_Object {
 	double mass;
 } TSEE_Physics_Object;
 
+// Struct to keep track of all the world's objects.
 typedef struct TSEE_World {
 	TSEE_Array *objects;
 	TSEE_Array *physics_objects;
 	TSEE_Array *text;
+	TSEE_Array *parallax;
 	double gravity;
 } TSEE_World;
 
+// Struct to keep track of which way the player is moving
 typedef struct TSEE_Player_Movement {
 	bool up;
 	bool down;
 	bool left;
 	bool right;
 } TSEE_Player_Movement;
+
+// Struct for parallax scrolling backgrounds
+typedef struct TSEE_Parallax {
+	TSEE_Texture *texture;
+	double distance;
+} TSEE_Parallax;
 
 // TSEE's player type, which extends TSEE_Physics_Object.
 typedef struct TSEE_Player {

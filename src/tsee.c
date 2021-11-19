@@ -16,6 +16,7 @@ TSEE TSEECreate(int width, int height) {
 	tsee.world->objects = TSEEArrayCreate();
 	tsee.world->physics_objects = TSEEArrayCreate();
 	tsee.world->text = TSEEArrayCreate();
+	tsee.world->parallax = TSEEArrayCreate();
 
 	// Setup player
 	tsee.player = malloc(sizeof(*tsee.player));
