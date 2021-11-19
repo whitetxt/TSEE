@@ -91,7 +91,8 @@ bool TSEEPerformPhysics(TSEE *tsee) {
 			}
 		}
 		TSEEVec2Multiply(&pobj->acceleration, 0);
-		TSEEVec2Multiply(&pobj->velocity, 0.97);
+		pobj->velocity.x *= 0.9;
+		pobj->velocity.y *= 0.99;
 	}
 	return true;
 }

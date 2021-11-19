@@ -51,6 +51,9 @@ bool TSEESetWindowTitle(TSEE *tsee, char *title) {
 
 bool TSEERenderAll(TSEE *tsee) {
 	SDL_RenderClear(tsee->window->renderer);
+	// Render parallax backgrounds
+	TSEERenderParallax(tsee);
+
 	// Render all objects
 	for (size_t i = 0; i < tsee->world->objects->size; i++) {
 		TSEE_Object *obj = TSEEArrayGet(tsee->world->objects, i);
@@ -62,6 +65,7 @@ bool TSEERenderAll(TSEE *tsee) {
 		TSEE_Text *text = TSEEArrayGet(tsee->world->text, i);
 		TSEERenderText(tsee, text);
 	}
+
 	SDL_RenderPresent(tsee->window->renderer);
 	return true;
 }
