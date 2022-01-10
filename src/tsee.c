@@ -30,11 +30,19 @@ TSEE TSEECreate(int width, int height) {
 	tsee.dt = 0;
 	tsee.last_time = 0;
 	tsee.current_time = SDL_GetPerformanceCounter();
+
+	// Load basic settings
+	TSEELoadSettings(&tsee);
 	return tsee;
 }
 
 bool TSEEClose(TSEE *tsee) {
 	tsee->window->running = false;
+	TSEEArrayFree(tsee->world->objects);
+	TSEEArrayFree(tsee->world->physics_objects);
+	TSEEArrayFree(tsee->world->text);
+	TSEEArrayFree(tsee->world->parallax);
+	TSEEArrayFree(tsee->textures);
 	TSEEDestroyWindow(tsee->window);
 	return true;
 }
