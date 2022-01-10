@@ -87,8 +87,11 @@ bool TSEEArrayDelete(TSEE_Array *arr, size_t index);
 // Gets the specified index from a TSEE_Array.
 void *TSEEArrayGet(TSEE_Array *arr, size_t index);
 
-// Clears a TSEE_Array, freeing all memory.
+// Clears a TSEE_Array, deleting all data and setting size to 0.
 bool TSEEArrayClear(TSEE_Array *arr);
+
+// Frees a TSEE_Array, freeing all memory.
+bool TSEEArrayFree(TSEE_Array *arr);
 
 // !! tsee_logging.c !!
 
@@ -163,3 +166,8 @@ bool TSEEInitInput(TSEE *tsee);
 // Basic key press and release functions.
 void TSEEKeyPress(void *tsee, SDL_Keycode key);
 void TSEEKeyRelease(void *tsee, SDL_Keycode key);
+
+// !! tsee_parallax.c !!
+
+bool TSEECreateParallax(TSEE *tsee, TSEE_Texture *texture, int distanceFromCamera);
+bool TSEERenderParallax(TSEE *tsee);

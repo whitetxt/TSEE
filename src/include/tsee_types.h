@@ -68,6 +68,9 @@ typedef struct TSEE_World {
 	TSEE_Array *text;
 	TSEE_Array *parallax;
 	double gravity;
+	double scroll_x;
+	double scroll_y;
+	double max_scroll_x;
 } TSEE_World;
 
 // Struct to keep track of which way the player is moving
@@ -103,6 +106,7 @@ typedef struct TSEE_Events {
 // The main TSEE object, create using TSEECreate(width, height).
 typedef struct TSEE {
 	TSEE_Window *window;
+	TSEE_Array *textures;
 	TSEE_Array *fonts;
 	TSEE_World *world;
 	TSEE_Events *events;

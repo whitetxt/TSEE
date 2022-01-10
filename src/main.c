@@ -32,7 +32,7 @@ int main(int argc, char *argv[]) {
 	int idx = TSEECreatePhysicsObject(&tsee, TSEECreateTextureFromPath(&tsee, "assets/test_image.png"), 1);
 	TSEECreatePlayer(&tsee, TSEEArrayGet(tsee.world->physics_objects, idx));
 	TSEESetPlayerJumpForce(&tsee, 30);
-	TSEESetPlayerSpeed(&tsee, 10);
+	TSEESetPlayerSpeed(&tsee, 50);
 	TSEESetWorldGravity(&tsee, 15);
 
 	TSEEInitEvents(&tsee);

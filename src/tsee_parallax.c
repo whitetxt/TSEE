@@ -8,6 +8,7 @@ bool TSEECreateParallax(TSEE *tsee, TSEE_Texture *texture, int distanceFromCamer
 	parallax->texture = texture;
 	parallax->distance = distanceFromCamera;
 	TSEEArrayAppend(tsee->world->parallax, parallax);
+	return true;
 }
 
 bool TSEERenderParallax(TSEE *tsee) {
@@ -28,4 +29,5 @@ bool TSEERenderParallax(TSEE *tsee) {
 						NULL,
 						&((TSEE_Parallax *)TSEEArrayGet(renderOrder, i))->texture->rect);
 	}
+	return true;
 }

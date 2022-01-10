@@ -44,7 +44,7 @@ bool TSEEUnloadAllFonts(TSEE *tsee) {
 		TTF_CloseFont(font->font);
 		free(font->name);
 	}
-	TSEEArrayClear(tsee->fonts);
+	TSEEArrayFree(tsee->fonts);
 	return true;
 }
 
