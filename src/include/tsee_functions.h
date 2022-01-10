@@ -72,8 +72,8 @@ bool TSEEVec2Multiply(TSEE_Vec2 *vec, double mult);
 // Creates a TSEE_Array with size 0.
 TSEE_Array *TSEEArrayCreate();
 
-// Extends a TSEE_Array by 1.
-int TSEEArrayExtend(TSEE_Array *arr);
+// Extends a TSEE_Array by the specified size.
+int TSEEArrayExtend(TSEE_Array *arr, int size);
 
 // Appends data to the end of a TSEE_Array.
 bool TSEEArrayAppend(TSEE_Array *arr, void *data);
@@ -82,6 +82,8 @@ bool TSEEArrayAppend(TSEE_Array *arr, void *data);
 bool TSEEArrayInsert(TSEE_Array *arr, void *toInsert, size_t index);
 
 // Deletes data from a TSEE_Array at the specified index.
+// This will move all following data to the left.
+// Update any stored indexes after using this!
 bool TSEEArrayDelete(TSEE_Array *arr, size_t index);
 
 // Gets the specified index from a TSEE_Array.
