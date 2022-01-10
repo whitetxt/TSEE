@@ -7,13 +7,14 @@ TSEE_Array *TSEEArrayCreate() {
 	return array;
 } 
 
-int TSEEArrayExtend(TSEE_Array *arr) {
-	arr->data = realloc(arr->data, sizeof(*arr->data) * (++arr->size));
+int TSEEArrayExtend(TSEE_Array *arr, int size) {
+	arr->data = realloc(arr->data, sizeof(*arr->data) * (arr->size + size));
+	arr->size += size;
 	return arr->size - 1;
 }
 
 bool TSEEArrayAppend(TSEE_Array *arr, void *data) {
-	int idx = TSEEArrayExtend(arr);
+	int idx = TSEEArrayExtend(arr, 1);
 	arr->data[idx] = data;
 	return true;
 }
@@ -23,8 +24,8 @@ bool TSEEArrayInsert(TSEE_Array *arr, void *data, size_t index) {
 		TSEEWarn("Attempted insert into array (size %d) at index \"%d\"\n", arr->size, index);
 		return false;
 	}
-	TSEEArrayExtend(arr);
-	memmove(arr->data[index + 1], arr->data[index + 2], sizeof(*arr->data) * (arr->size - index));
+	TSEEArrayExtend(arr, 1);
+	memmove(arr->data[index + 1], arr->data[index + 2], sizeof(*arr->data) * (arr->size - index - 1));
 	arr->data[index] = data;
 	return true;
 }
