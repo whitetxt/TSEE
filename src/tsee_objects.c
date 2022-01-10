@@ -88,6 +88,9 @@ bool TSEEPerformPhysics(TSEE *tsee) {
 				pobj->object->x = tsee->window->width / 2 - pobj->object->texture->rect.w / 2;
 				tsee->world->scroll_x -= under;
 			}
+			if (pobj->object->x < 0) {
+				pobj->object->x = 0;
+			}
 		}
 		pobj->object->texture->rect.x = pobj->object->x;
 		pobj->object->texture->rect.y = pobj->object->y;
