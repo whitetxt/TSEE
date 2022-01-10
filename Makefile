@@ -24,3 +24,6 @@ run:
 
 start:
 	cd build && ../${filename}
+
+gdb:
+	cd build && gdb ../${filename}

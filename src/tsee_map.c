@@ -59,7 +59,7 @@ bool TSEELoadMap(TSEE *tsee, char *fn) {
 			}
 			// Read the surface and convert to a texture
 			surface = IMG_LoadPNG_RW(stream);
-			SDL_RWClose(stream);
+			SDL_RWclose(stream);
 			texture = SDL_CreateTextureFromSurface(tsee->window->renderer, surface);
 			SDL_FreeSurface(surface);
 			if (!texture) { // If the texture could not be created
@@ -82,7 +82,7 @@ bool TSEELoadMap(TSEE *tsee, char *fn) {
 		parallax->texture = TSEEArrayGet(tsee->textures, textureIdx);
 		fread(&parallax->distance, sizeof(parallax->distance), 1, fp);
 		bool inserted = false;
-		for (int j = 0; j < tsee->world->parallax->size; j++) {
+		for (size_t j = 0; j < tsee->world->parallax->size; j++) {
 			TSEE_Parallax *parallax2 = TSEEArrayGet(tsee->world->parallax, j);
 			if (parallax->distance > parallax2->distance) {
 				TSEEArrayInsert(tsee->world->parallax, parallax, j);
@@ -94,4 +94,5 @@ bool TSEELoadMap(TSEE *tsee, char *fn) {
 			TSEEArrayAppend(tsee->world->parallax, parallax);
 		}
 	}
+	return true;
 }

@@ -34,14 +34,17 @@ int main(int argc, char *argv[]) {
 	TSEESetPlayerJumpForce(&tsee, 30);
 	TSEESetPlayerSpeed(&tsee, 50);
 	TSEESetWorldGravity(&tsee, 15);
+	TSEECreateParallax(&tsee, TSEECreateTextureFromPath(&tsee, "assets/parallax1.png"), 10);
+	TSEECreateParallax(&tsee, TSEECreateTextureFromPath(&tsee, "assets/parallax2.png"), 5);
+	TSEECreateParallax(&tsee, TSEECreateTextureFromPath(&tsee, "assets/parallax3.png"), 2);
 
 	if (!TSEEInitEvents(&tsee)) {
-		TSEE_Critical("Failed to initialize TSEE Events Module.\n");
+		TSEECritical("Failed to initialize TSEE Events Module.\n");
 		TSEEClose(&tsee);
 		return -1;
 	}
 	if (!TSEEInitInput(&tsee)) {
-		TSEE_Critical("Failed to initialize TSEE Input Module.\n");
+		TSEECritical("Failed to initialize TSEE Input Module.\n");
 		TSEEClose(&tsee);
 		return -1;
 	}
@@ -55,7 +58,7 @@ int main(int argc, char *argv[]) {
 	}
 
 	TSEELog("Saving settings.\n");
-	if (TSEESaveSettings(&tsee) != true) {
+	if (!TSEESaveSettings(&tsee)) {
 		TSEEError("Failed to save settings. All changes will be lost.\nSorry.");
 	}
 

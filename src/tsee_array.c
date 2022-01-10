@@ -48,6 +48,9 @@ void *TSEEArrayGet(TSEE_Array *arr, size_t index) {
 }
 
 bool TSEEArrayClear(TSEE_Array *arr) {
+	if (!arr) {
+		return false;
+	}
 	for (size_t i = 0; i < arr->size; i++) {
 		free(arr->data[i]);
 	}
@@ -58,6 +61,9 @@ bool TSEEArrayClear(TSEE_Array *arr) {
 }
 
 bool TSEEArrayFree(TSEE_Array *arr) {
+	if (!arr) {
+		return false;
+	}
 	for (size_t i = 0; i < arr->size; i++) {
 		free(arr->data[i]);
 	}
