@@ -37,6 +37,7 @@ int main(int argc, char *argv[]) {
 	TSEECreateParallax(&tsee, TSEECreateTextureFromPath(&tsee, "assets/parallax1.png"), 6);
 	TSEECreateParallax(&tsee, TSEECreateTextureFromPath(&tsee, "assets/parallax2.png"), 4);
 	TSEECreateParallax(&tsee, TSEECreateTextureFromPath(&tsee, "assets/parallax3.png"), 2);
+	TSEECreateParallax(&tsee, TSEECreateTextureFromPath(&tsee, "assets/parallax4.png"), 1);
 
 	if (!TSEEInitEvents(&tsee)) {
 		TSEECritical("Failed to initialize TSEE Events Module.\n");
