@@ -11,12 +11,15 @@ TSEE TSEECreate(int width, int height) {
 	tsee.window->running = true;
 	tsee.window->fps = 60;
 
-	// Setup world
+	// Setup world + textures
 	tsee.world = malloc(sizeof(*tsee.world));
 	tsee.world->objects = TSEEArrayCreate();
 	tsee.world->physics_objects = TSEEArrayCreate();
 	tsee.world->text = TSEEArrayCreate();
 	tsee.world->parallax = TSEEArrayCreate();
+	tsee.world->scroll_x = 0;
+	tsee.world->scroll_y = 0;
+	tsee.textures = TSEEArrayCreate();
 
 	// Setup player
 	tsee.player = malloc(sizeof(*tsee.player));

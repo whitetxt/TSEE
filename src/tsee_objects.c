@@ -77,6 +77,18 @@ bool TSEEPerformPhysics(TSEE *tsee) {
 		pobj->velocity.y += pobj->acceleration.y * tsee->dt;
 		pobj->object->x += pobj->velocity.x * tsee->dt;
 		pobj->object->y += pobj->velocity.y * tsee->dt;
+		if (tsee->player->physics_object == pobj) {
+			double center = pobj->object->x + pobj->object->texture->rect.w / 2;
+			if (center > tsee->window->width / 2) {
+				double over = center - tsee->window->width / 2;
+				pobj->object->x = tsee->window->width / 2 - pobj->object->texture->rect.w / 2;
+				tsee->world->scroll_x += over;
+			} else if (tsee->world->scroll_x > 0 && center < tsee->window->width / 2) {
+				double under = tsee->window->width / 2 - center;	
+				pobj->object->x = tsee->window->width / 2 - pobj->object->texture->rect.w / 2;
+				tsee->world->scroll_x -= under;
+			}
+		}
 		pobj->object->texture->rect.x = pobj->object->x;
 		pobj->object->texture->rect.y = pobj->object->y;
 		if (pobj->object->y + pobj->object->texture->rect.h > tsee->window->height) {
