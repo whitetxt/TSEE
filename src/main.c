@@ -6,22 +6,22 @@ int main(int argc, char *argv[]) {
 	TSEELog("Initialising TSEE Engine...\n");
 
 	TSEE tsee = TSEECreate(800, 600);
-	TSEELoadSettings(&tsee);
 
 	TSEELog("TSEE Engine initialised.\n");
 
 	TSEELog("Initialising TSEE Components...\n");
 
-	if (TSEEInitRendering(&tsee) != true) {
+	if (!TSEEInitRendering(&tsee)) {
 		TSEECritical("Failed to initialize TSEE Rendering Module.\n");
+		TSEEClose(&tsee);
 		return -1;
 	}
 
-	if (TSEESetWindowTitle(&tsee, "TSEE - Example Game") != true) {
+	if (!TSEESetWindowTitle(&tsee, "TSEE - Example Game")) {
 		TSEEWarn("Failed to set window title.\n");
 	}
 
-	if (TSEEInitText(&tsee, true) != true) {
+	if (!TSEEInitText(&tsee, true)) {
 		TSEECritical("Failed to initialize TSEE Text Module.\n");
 		TSEEClose(&tsee);
 		return -1;
@@ -35,12 +35,19 @@ int main(int argc, char *argv[]) {
 	TSEESetPlayerSpeed(&tsee, 50);
 	TSEESetWorldGravity(&tsee, 15);
 
-	TSEEInitEvents(&tsee);
-	TSEEInitInput(&tsee);
+	if (!TSEEInitEvents(&tsee)) {
+		TSEE_Critical("Failed to initialize TSEE Events Module.\n");
+		TSEEClose(&tsee);
+		return -1;
+	}
+	if (!TSEEInitInput(&tsee)) {
+		TSEE_Critical("Failed to initialize TSEE Input Module.\n");
+		TSEEClose(&tsee);
+		return -1;
+	}
 	//TSEEInitNetworking(&tsee); // NOTE: COMING SOON!!
 
 	while (tsee.window->running) {
-		//TSEEApplyFriction(&tsee);
 		TSEEHandleEvents(&tsee);
 		TSEECalculateDT(&tsee);
 		TSEEPerformPhysics(&tsee);
