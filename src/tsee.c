@@ -33,6 +33,9 @@ TSEE TSEECreate(int width, int height) {
 	tsee.dt = 0;
 	tsee.last_time = 0;
 	tsee.current_time = SDL_GetPerformanceCounter();
+	
+	// Setup UI
+	tsee.ui = malloc(sizeof(*tsee.ui));
 
 	// Load basic settings
 	TSEELoadSettings(&tsee);
@@ -64,6 +67,13 @@ bool TSEEInitAll(TSEE *tsee) {
 		return false;
 	}
 	TSEELog("Initialised TSEE Input.\n");
+	if (!TSEEInitUI(tsee)) {
+		TSEECritical("Failed to initialize TSEE UI Module.\n");
+		TSEEClose(tsee);
+		return false;
+	}
+	TSEELog("Initialised TSEE UI.\n");
+	TSEELog("All TSEE modules initialised.\n");
 	return true;
 }
 

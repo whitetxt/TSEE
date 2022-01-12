@@ -175,11 +175,22 @@ bool TSEEHandleEvents(TSEE *tsee);
 // Initialises TSEE input and includes some basic functions for movement of the player.
 bool TSEEInitInput(TSEE *tsee);
 
-// Basic key press and release functions.
+// Basic key press and release function.
 void TSEEKeyPress(void *tsee, SDL_Keycode key);
+
+// Basic key press and release function.
 void TSEEKeyRelease(void *tsee, SDL_Keycode key);
 
 // !! tsee_parallax.c !!
 
+// Creates a parallax background.
 bool TSEECreateParallax(TSEE *tsee, TSEE_Texture *texture, int distanceFromCamera);
+
+// Renders all the parallax backgrounds.
 bool TSEERenderParallax(TSEE *tsee);
+
+// !! tsee_ui.c !!
+
+// Initialises the UI system.
+// MUST be called after TSEEInitText
+bool TSEEInitUI(TSEE *tsee);

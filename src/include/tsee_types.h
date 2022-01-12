@@ -103,6 +103,7 @@ typedef struct TSEE_Events {
 	void (*keyrelease) (void *tsee, SDL_Keycode keycode);
 } TSEE_Events;
 
+// TSEE's system of keeping track of what's initialised.
 typedef struct TSEE_Init {
 	bool rendering;
 	bool text;
@@ -110,6 +111,23 @@ typedef struct TSEE_Init {
 	bool input;
 	bool ui;
 } TSEE_Init;
+
+// A child to a top-level toolbar button.
+typedef struct {
+	TSEE_Text *text;
+	void (*callback) (void *tsee);
+} TSEE_Toolbar_Child;
+
+// Top-level button on the toolbar.
+typedef struct TSEE_Toolbar_Object {
+	TSEE_Text *texture;
+	TSEE_Array *buttons; // Array of TSEE_Toolbar_Child
+} TSEE_Toolbar_Object;
+
+// TSEE's UI struct. Keeps track of all UI elements and what's enabled.
+typedef struct TSEE_UI {
+	TSEE_Array *toolbar; // Array of TSEE_Toolbar_Object
+} TSEE_UI;
 
 // The main TSEE object, create using TSEECreate(width, height).
 typedef struct TSEE {
@@ -120,6 +138,7 @@ typedef struct TSEE {
 	TSEE_Events *events;
 	TSEE_Player *player;
 	TSEE_Init *init;
+	TSEE_UI *ui;
 	Uint64 last_time;
 	Uint64 current_time;
 	double dt;
