@@ -40,27 +40,27 @@ TSEE TSEECreate(int width, int height) {
 }
 
 bool TSEEInitAll(TSEE *tsee) {
-	if (!TSEEInitRendering(&tsee)) {
+	if (!TSEEInitRendering(tsee)) {
 		TSEECritical("Failed to initialize TSEE Rendering Module.\n");
-		TSEEClose(&tsee);
+		TSEEClose(tsee);
 		return false;
 	}
 	TSEELog("Initialised TSEE Rendering.\n");
-	if (!TSEEInitText(&tsee, true)) {
+	if (!TSEEInitText(tsee, true)) {
 		TSEECritical("Failed to initialize TSEE Text Module.\n");
-		TSEEClose(&tsee);
+		TSEEClose(tsee);
 		return false;
 	}
 	TSEELog("Initialised TSEE Text.\n");
-	if (!TSEEInitEvents(&tsee)) {
+	if (!TSEEInitEvents(tsee)) {
 		TSEECritical("Failed to initialize TSEE Events Module.\n");
-		TSEEClose(&tsee);
+		TSEEClose(tsee);
 		return false;
 	}
 	TSEELog("Initialised TSEE Events.\n");
-	if (!TSEEInitInput(&tsee)) {
+	if (!TSEEInitInput(tsee)) {
 		TSEECritical("Failed to initialize TSEE Input Module.\n");
-		TSEEClose(&tsee);
+		TSEEClose(tsee);
 		return false;
 	}
 	TSEELog("Initialised TSEE Input.\n");
