@@ -1,6 +1,9 @@
 #include "include/tsee.h"
 
 bool TSEEInitRendering(TSEE *tsee) {
+	if (tsee->init->rendering) {
+		return true;
+	}
 	if (SDL_Init(SDL_INIT_EVERYTHING) < 0) {
 		TSEEError("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
 		return false;
