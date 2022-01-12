@@ -35,7 +35,7 @@ bool TSEERenderAll(TSEE *tsee);
 // !! tsee_objects.c !!
 
 // Creates an object and stores it inside the TSEE
-bool TSEECreateObject(TSEE *tsee, TSEE_Texture *texture);
+int TSEECreateObject(TSEE *tsee, TSEE_Texture *texture);
 
 // Creates a physics object and stores it inside the TSEE
 int TSEECreatePhysicsObject(TSEE *tsee, TSEE_Texture *texture, double mass);
@@ -48,6 +48,13 @@ bool TSEERenderObject(TSEE *tsee, TSEE_Object *obj);
 
 // Performs physics for all physics objects in a TSEE
 bool TSEEPerformPhysics(TSEE *tsee);
+
+// Performs collision for all objects in a TSEE
+// Called from TSEEPerformPhysics
+bool TSEEPerformCollision(TSEE *tsee);
+
+// Sets an object's position by its index
+bool TSEESetObjectPosition(TSEE *tsee, int idx, double x, double y);
 
 // Createa a player object for a physics object
 bool TSEECreatePlayer(TSEE *tsee, TSEE_Physics_Object *pobj);
