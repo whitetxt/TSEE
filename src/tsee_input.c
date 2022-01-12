@@ -1,12 +1,13 @@
 #include "include/tsee.h"
 
 bool TSEEInitInput(TSEE *tsee) {
-	if (!tsee->events) {
+	if (!tsee->init->events) {
 		TSEEWarn("Attempted to inititalise TSEEInput without initialising TSEEEvents");
 		return false;
 	}
 	tsee->events->keypress = TSEEKeyPress;
 	tsee->events->keyrelease = TSEEKeyRelease;
+	tsee->init->input = true;
 	return true;
 }
 
