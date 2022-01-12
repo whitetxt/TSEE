@@ -21,8 +21,6 @@ int main(int argc, char *argv[]) {
 		TSEEWarn("Failed to set window title.\n");
 	}
 
-	TSEELog("TSEE Components initialised.\n");
-
 	int idx = TSEECreatePhysicsObject(&tsee, TSEECreateTextureFromPath(&tsee, "assets/test_image.png"), 1);
 	TSEECreatePlayer(&tsee, TSEEArrayGet(tsee.world->physics_objects, idx));
 	TSEESetPlayerJumpForce(&tsee, 30);
