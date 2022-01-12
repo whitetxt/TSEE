@@ -1,6 +1,9 @@
 #include "include/tsee.h"
 
 bool TSEEInitInput(TSEE *tsee) {
+	if (tsee->init->input) {
+		return true;
+	}
 	if (!tsee->init->events) {
 		TSEEWarn("Attempted to inititalise TSEEInput without initialising TSEEEvents");
 		return false;

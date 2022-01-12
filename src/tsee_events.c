@@ -1,6 +1,9 @@
 #include "include/tsee.h"
 
 bool TSEEInitEvents(TSEE *tsee) {
+	if (tsee->init->events) {
+		return true;
+	}
 	// Setup events
 	tsee->events = malloc(sizeof(*tsee->events));
 	tsee->events->event = malloc(sizeof(*tsee->events->event));
