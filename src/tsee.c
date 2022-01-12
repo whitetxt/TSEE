@@ -1,6 +1,7 @@
 #include "include/tsee.h"
 
 TSEE TSEECreate(int width, int height) {
+	TSEELog("Initialising TSEE Engine...\n");
 	TSEE tsee;
 	tsee.fonts = NULL;
 
@@ -39,10 +40,12 @@ TSEE TSEECreate(int width, int height) {
 
 	// Load basic settings
 	TSEELoadSettings(&tsee);
+	TSEELog("TSEE Engine initialised.\n");
 	return tsee;
 }
 
 bool TSEEInitAll(TSEE *tsee) {
+	TSEELog("Initialising TSEE modules...\n");
 	if (!TSEEInitRendering(tsee)) {
 		TSEECritical("Failed to initialize TSEE Rendering Module.\n");
 		TSEEClose(tsee);

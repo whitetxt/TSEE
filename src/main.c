@@ -3,13 +3,8 @@
 int main(int argc, char *argv[]) {
 	(void)argc;
 	(void)argv;
-	TSEELog("Initialising TSEE Engine...\n");
 
 	TSEE tsee = TSEECreate(800, 600);
-
-	TSEELog("TSEE Engine initialised.\n");
-
-	TSEELog("Initialising TSEE Components...\n");
 
 	if (!TSEEInitAll(&tsee)) {
 		TSEECritical("Failed to initialize TSEE\n");
