@@ -11,20 +11,14 @@ int main(int argc, char *argv[]) {
 
 	TSEELog("Initialising TSEE Components...\n");
 
-	if (!TSEEInitRendering(&tsee)) {
-		TSEECritical("Failed to initialize TSEE Rendering Module.\n");
+	if (!TSEEInitAll(&tsee)) {
+		TSEECritical("Failed to initialize TSEE\n");
 		TSEEClose(&tsee);
 		return -1;
 	}
 
 	if (!TSEESetWindowTitle(&tsee, "TSEE - Example Game")) {
 		TSEEWarn("Failed to set window title.\n");
-	}
-
-	if (!TSEEInitText(&tsee, true)) {
-		TSEECritical("Failed to initialize TSEE Text Module.\n");
-		TSEEClose(&tsee);
-		return -1;
 	}
 
 	TSEELog("TSEE Components initialised.\n");
@@ -39,16 +33,6 @@ int main(int argc, char *argv[]) {
 	TSEECreateParallax(&tsee, TSEECreateTextureFromPath(&tsee, "assets/parallax3.png"), 2);
 	TSEECreateParallax(&tsee, TSEECreateTextureFromPath(&tsee, "assets/parallax4.png"), 1);
 
-	if (!TSEEInitEvents(&tsee)) {
-		TSEECritical("Failed to initialize TSEE Events Module.\n");
-		TSEEClose(&tsee);
-		return -1;
-	}
-	if (!TSEEInitInput(&tsee)) {
-		TSEECritical("Failed to initialize TSEE Input Module.\n");
-		TSEEClose(&tsee);
-		return -1;
-	}
 	//TSEEInitNetworking(&tsee); // NOTE: COMING SOON!!
 
 	while (tsee.window->running) {
