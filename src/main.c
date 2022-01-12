@@ -29,7 +29,17 @@ int main(int argc, char *argv[]) {
 	TSEESetPlayerSpeed(&tsee, 50);
 	TSEESetWorldGravity(&tsee, 15);
 	idx = TSEECreateObject(&tsee, TSEECreateTextureFromPath(&tsee, "assets/test_image.png"));
-	TSEESetObjectPosition(&tsee, idx, 150, 500);
+	TSEESetObjectPosition(&tsee, idx, 150, 600);
+	idx = TSEECreateObject(&tsee, TSEECreateTextureFromPath(&tsee, "assets/test_image.png"));
+	TSEESetObjectPosition(&tsee, idx, 160, 595);
+	idx = TSEECreateObject(&tsee, TSEECreateTextureFromPath(&tsee, "assets/test_image.png"));
+	TSEESetObjectPosition(&tsee, idx, 170, 590);
+	idx = TSEECreateObject(&tsee, TSEECreateTextureFromPath(&tsee, "assets/test_image.png"));
+	TSEESetObjectPosition(&tsee, idx, 180, 585);
+	idx = TSEECreateObject(&tsee, TSEECreateTextureFromPath(&tsee, "assets/test_image.png"));
+	TSEESetObjectPosition(&tsee, idx, 190, 580);
+	idx = TSEECreateObject(&tsee, TSEECreateTextureFromPath(&tsee, "assets/test_image.png"));
+	TSEESetObjectPosition(&tsee, idx, 200, 575);
 	TSEECreateParallax(&tsee, TSEECreateTextureFromPath(&tsee, "assets/parallax1.png"), 6);
 	TSEECreateParallax(&tsee, TSEECreateTextureFromPath(&tsee, "assets/parallax2.png"), 4);
 	TSEECreateParallax(&tsee, TSEECreateTextureFromPath(&tsee, "assets/parallax3.png"), 2);
