@@ -28,6 +28,8 @@ int main(int argc, char *argv[]) {
 	TSEESetPlayerJumpForce(&tsee, 30);
 	TSEESetPlayerSpeed(&tsee, 50);
 	TSEESetWorldGravity(&tsee, 15);
+	idx = TSEECreateObject(&tsee, TSEECreateTextureFromPath(&tsee, "assets/test_image.png"));
+	TSEESetObjectPosition(&tsee, idx, 150, 500);
 	TSEECreateParallax(&tsee, TSEECreateTextureFromPath(&tsee, "assets/parallax1.png"), 6);
 	TSEECreateParallax(&tsee, TSEECreateTextureFromPath(&tsee, "assets/parallax2.png"), 4);
 	TSEECreateParallax(&tsee, TSEECreateTextureFromPath(&tsee, "assets/parallax3.png"), 2);
