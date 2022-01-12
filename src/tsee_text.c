@@ -1,12 +1,23 @@
 #include "include/tsee.h"
 
 bool TSEEInitText(TSEE *tsee, bool loadDefault) {
+	if (tsee->init->text) {
+		return true;
+	}
 	if (TTF_Init() == -1) {
 		TSEEError("Failed to init SDL_TTF: %s\n", TTF_GetError());
 	}
 	tsee->fonts = TSEEArrayCreate();
-	if (loadDefault)
-		return TSEELoadFont(tsee, "fonts/default.ttf", 16, "_default");
+	if (loadDefault) {
+		if (TSEELoadFont(tsee, "fonts/default.ttf", 16, "_default")) {
+			tsee->init->text = true;
+			return true;
+		} else {
+			tsee->init->text = false;
+			return false;
+		}
+	}
+	tsee->init->text = true;
 	return true;
 }
 

@@ -103,6 +103,14 @@ typedef struct TSEE_Events {
 	void (*keyrelease) (void *tsee, SDL_Keycode keycode);
 } TSEE_Events;
 
+typedef struct TSEE_Init {
+	bool rendering;
+	bool text;
+	bool events;
+	bool input;
+	bool ui;
+} TSEE_Init;
+
 // The main TSEE object, create using TSEECreate(width, height).
 typedef struct TSEE {
 	TSEE_Window *window;
@@ -111,6 +119,7 @@ typedef struct TSEE {
 	TSEE_World *world;
 	TSEE_Events *events;
 	TSEE_Player *player;
+	TSEE_Init *init;
 	Uint64 last_time;
 	Uint64 current_time;
 	double dt;

@@ -25,7 +25,7 @@ bool TSEEInitRendering(TSEE *tsee) {
 		SDL_Quit();
 		return false;
 	}
-
+	tsee->init->rendering = true;
 	return true;
 };
 
