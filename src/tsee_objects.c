@@ -165,9 +165,17 @@ bool TSEEPerformCollision(TSEE *tsee) {
 				if (lowest == amtRight) {
 					pobj->object->texture->rect.x = obj->texture->rect.x - pobj->object->texture->rect.w;
 					pobj->object->x = pobj->object->texture->rect.x;
+					if (amtBottom <= 5) {
+						pobj->object->texture->rect.y = obj->texture->rect.y - pobj->object->texture->rect.h;
+						pobj->object->y = pobj->object->texture->rect.y;
+					}
 				} else if (lowest == amtLeft) {
 					pobj->object->texture->rect.x = obj->texture->rect.x + obj->texture->rect.w;
 					pobj->object->x = pobj->object->texture->rect.x;
+					if (amtBottom <= 5) {
+						pobj->object->texture->rect.y = obj->texture->rect.y - pobj->object->texture->rect.h;
+						pobj->object->y = pobj->object->texture->rect.y;
+					}
 				} else if (lowest == amtTop) {
 					pobj->object->texture->rect.y = obj->texture->rect.y + obj->texture->rect.h;
 					pobj->object->y = pobj->object->texture->rect.y;
