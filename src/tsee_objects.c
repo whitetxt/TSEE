@@ -1,19 +1,17 @@
 #include "include/tsee.h"
 
-bool TSEECreateObject(TSEE *tsee, TSEE_Texture *texture) {
+int TSEECreateObject(TSEE *tsee, TSEE_Texture *texture) {
 	TSEE_Object *obj = malloc(sizeof(*obj));
 	obj->texture = texture;
 	obj->x = texture->rect.x;
 	obj->y = texture->rect.y;
-	return TSEEArrayAppend(tsee->world->objects, obj);
+	TSEEArrayAppend(tsee->world->objects, obj);
+	return tsee->world->objects->size - 1;
 }
 
 int TSEECreatePhysicsObject(TSEE *tsee, TSEE_Texture *texture, double mass) {
-	TSEE_Object *obj = malloc(sizeof(TSEE_Object));
-	obj->texture = texture;
-	obj->x = texture->rect.x;
-	obj->y = texture->rect.y;
-	TSEEArrayAppend(tsee->world->objects, obj);
+	int idx = TSEECreateObject(tsee, texture);
+	TSEE_Object *obj = TSEEArrayGet(tsee->world->objects, idx);
 	TSEE_Physics_Object *pobj = malloc(sizeof(TSEE_Physics_Object));
 	pobj->mass = mass;
 	pobj->velocity.x = 0;
@@ -83,10 +81,24 @@ bool TSEEPerformPhysics(TSEE *tsee) {
 				double over = center - tsee->window->width / 2;
 				pobj->object->x = tsee->window->width / 2 - pobj->object->texture->rect.w / 2;
 				tsee->world->scroll_x += over;
+				for (size_t j = 0; j < tsee->world->objects->size; j++) {
+					TSEE_Object *obj = TSEEArrayGet(tsee->world->objects, j);
+					if (obj != pobj->object) {
+						obj->x -= over;
+						obj->texture->rect.x = obj->x;
+					}
+				}
 			} else if (tsee->world->scroll_x > 0 && center < tsee->window->width / 2) {
 				double under = tsee->window->width / 2 - center;	
 				pobj->object->x = tsee->window->width / 2 - pobj->object->texture->rect.w / 2;
 				tsee->world->scroll_x -= under;
+				for (size_t j = 0; j < tsee->world->objects->size; j++) {
+					TSEE_Object *obj = TSEEArrayGet(tsee->world->objects, j);
+					if (obj != pobj->object) {
+						obj->x += under;
+						obj->texture->rect.x = obj->x;
+					}
+				}
 			}
 			if (pobj->object->x < 0) {
 				pobj->object->x = 0;
@@ -109,6 +121,82 @@ bool TSEEPerformPhysics(TSEE *tsee) {
 		pobj->velocity.x *= 0.9;
 		pobj->velocity.y *= 0.99;
 	}
+	return TSEEPerformCollision(tsee);
+}
+
+bool TSEEPerformCollision(TSEE *tsee) {
+	for (size_t i = 0; i < tsee->world->physics_objects->size; i++) {
+		TSEE_Physics_Object *pobj = TSEEArrayGet(tsee->world->physics_objects, i);
+		for (size_t j = 0; j < tsee->world->objects->size; j++) {
+			TSEE_Object *obj = TSEEArrayGet(tsee->world->objects, j);
+			if (obj == pobj->object) { // Don't collide with ourselves
+				continue;
+			}
+			// If the tile is too far away, don't waste time checking for collision.
+			double diff = pobj->object->x - obj->x;
+			if (diff > obj->texture->rect.w || diff < -pobj->object->texture->rect.w) {
+				continue;
+			}
+			double ydiff = pobj->object->y - obj->y;
+			if (ydiff > obj->texture->rect.h || ydiff < -pobj->object->texture->rect.h) {
+				continue;
+			}
+			// First, check if it collides.
+			if(	pobj->object->texture->rect.x + pobj->object->texture->rect.w > obj->texture->rect.x &&
+				pobj->object->texture->rect.x < obj->texture->rect.x + obj->texture->rect.w &&
+				pobj->object->texture->rect.y + pobj->object->texture->rect.h > obj->texture->rect.y &&
+				pobj->object->texture->rect.y < obj->texture->rect.y + obj->texture->rect.h) {
+				// Figure out collision side
+				int amtRight = abs(pobj->object->texture->rect.x + pobj->object->texture->rect.w - obj->texture->rect.x);
+				int amtLeft = abs(obj->texture->rect.x + obj->texture->rect.w - pobj->object->texture->rect.x);
+				int amtTop = abs(obj->texture->rect.y - pobj->object->texture->rect.y + pobj->object->texture->rect.h);
+				int amtBottom = abs(pobj->object->texture->rect.y + pobj->object->texture->rect.h - obj->texture->rect.y);
+
+				int values[4] = {amtRight, amtLeft, amtTop, amtBottom};
+				int lowest = values[0];
+				// Get lowest value, side it collided on
+				for (int x = 0; x < 4; x++) {
+					if (values[x] < lowest) {
+						lowest = values[x];
+					}
+				}
+
+				// Handle collision side accordingly.
+				if (lowest == amtRight) {
+					pobj->object->texture->rect.x = obj->texture->rect.x - pobj->object->texture->rect.w;
+					pobj->object->x = pobj->object->texture->rect.x;
+				} else if (lowest == amtLeft) {
+					pobj->object->texture->rect.x = obj->texture->rect.x + obj->texture->rect.w;
+					pobj->object->x = pobj->object->texture->rect.x;
+				} else if (lowest == amtTop) {
+					pobj->object->texture->rect.y = obj->texture->rect.y + obj->texture->rect.h;
+					pobj->object->y = pobj->object->texture->rect.y;
+					if (pobj->velocity.y < 0)
+						pobj->velocity.y = 0;
+				} else if (lowest == amtBottom) {
+					pobj->object->texture->rect.y = obj->texture->rect.y - pobj->object->texture->rect.h;
+					pobj->object->y = pobj->object->texture->rect.y;
+					if (pobj == tsee->player->physics_object) {
+						tsee->player->grounded = true;
+					}
+					if (pobj->velocity.y > 0)
+						pobj->velocity.y = 0;
+				}
+			}
+		}
+	}
+	return true;
+}
+
+bool TSEESetObjectPosition(TSEE *tsee, int idx, double x, double y) {
+	TSEE_Object *obj = TSEEArrayGet(tsee->world->objects, idx);
+	if (obj == NULL) {
+		return false;
+	}
+	obj->x = x;
+	obj->y = y;
+	obj->texture->rect.x = x;
+	obj->texture->rect.y = y;
 	return true;
 }
 
