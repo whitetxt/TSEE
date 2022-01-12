@@ -3,6 +3,9 @@
 // Creates a new TSEE object.
 TSEE TSEECreate(int width, int height);
 
+// Initializes all TSEE components.
+bool TSEEInitAll(TSEE *tsee);
+
 // Closes a TSEE object, clears all memory out and deletes it.
 bool TSEEClose(TSEE *tsee);
 
