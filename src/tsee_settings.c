@@ -8,14 +8,14 @@ void TSEESettingsLoadCallback(TSEE *tsee, char *section, char *value) {
 		tsee->window->height = atoi(value);
 		TSEEWindowUpdateSize(tsee);
 	} else {
-		TSEEWarn("Unknown settings section \"%s\" with value \"%s\"\n", section, value);
+		TSEEWarn("Unknown settings section `%s` with value `%s`\n", section, value);
 	}
 }
 
 bool TSEELoadSettings(TSEE *tsee) {
 	FILE *fp = fopen("TSEE-Settings.ini", "r");
 	if (!fp) {
-		TSEEError("Couldn't open settings file \"TSEE-Settings.ini\"\n");
+		TSEEError("Couldn't open settings file `TSEE-Settings.ini`\n");
 		return false;
 	}
 	char buf[512];
@@ -31,7 +31,7 @@ bool TSEELoadSettings(TSEE *tsee) {
 bool TSEESaveSettings(TSEE *tsee) {
 	FILE *fp = fopen("TSEE-Settings.ini", "w");
 	if (!fp) {
-		TSEEError("Couldn't open settings file \"TSEE-Settings.ini\"\nYour settings have been lost.");
+		TSEEError("Couldn't open settings file `TSEE-Settings.ini`\nYour settings have been lost.");
 		return false;
 	}
 	fprintf(fp, "width=%d\n", tsee->window->width);

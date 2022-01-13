@@ -5,12 +5,12 @@ bool TSEEInitRendering(TSEE *tsee) {
 		return true;
 	}
 	if (SDL_Init(SDL_INIT_EVERYTHING) < 0) {
-		TSEEError("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
+		TSEEError("SDL could not initialize (%s)\n", SDL_GetError());
 		return false;
 	}
 
 	if (IMG_Init(IMG_INIT_JPG | IMG_INIT_PNG | IMG_INIT_TIF | IMG_INIT_WEBP) == 0) {
-		TSEEError("SDL_IMG could not initialise! IMG_Error: %s\n", IMG_GetError());
+		TSEEError("SDL_IMG could not initialise (%s)\n", IMG_GetError());
 		return false;
 	}
 
@@ -43,7 +43,7 @@ void TSEEDestroyWindow(TSEE_Window *window) {
 
 bool TSEESetWindowTitle(TSEE *tsee, char *title) {
 	if (tsee->window->window == NULL) {
-		TSEEError("Window is not initialized!\n");
+		TSEEError("Window is not initialized\n");
 		return false;
 	}
 
