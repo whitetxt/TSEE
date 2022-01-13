@@ -108,20 +108,20 @@ bool TSEEArrayFree(TSEE_Array *arr);
 // !! Logging functions !!
 
 // Log something to the console, typically for debugging.
-#define TSEELog(message, format...) \
-		fprintf(stdout, "TSEE [log] (%s): " message "", __func__, ##format)
+#define TSEELog(message, ...) \
+		fprintf(stdout, "TSEE [log] (%s): " message "", __func__, ##__VA_ARGS__)
 
 // Inform the user of a warning, typically used for something important, but not a full error.
-#define TSEEWarn(message, format...) \
-		fprintf(stdout, "TSEE [warn] (%s): " message "", __func__, ##format)
+#define TSEEWarn(message, ...) \
+		fprintf(stdout, "TSEE [warn] (%s): " message "", __func__, ##__VA_ARGS__)
 
 // Inform the user of an error in the console, typically used for something being invalid, but not a full crash.
-#define TSEEError(message, format...) \
-		fprintf(stderr, "TSEE [error] (%s): " message "", __func__, ##format)
+#define TSEEError(message, ...) \
+		fprintf(stderr, "TSEE [error] (%s): " message "", __func__, ##__VA_ARGS__)
 
 // Inform the user of a critical error, should only be used if the program can't continue.
-#define TSEECritical(message, format...) \
-		fprintf(stderr, "TSEE [!! Critical !!] (%s): " message "", __func__, ##format)
+#define TSEECritical(message, ...) \
+		fprintf(stderr, "TSEE [!! Critical !!] (%s): " message "", __func__, ##__VA_ARGS__)
 
 // !! tsee_text.c !!
 

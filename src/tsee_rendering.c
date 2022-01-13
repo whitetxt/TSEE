@@ -30,7 +30,7 @@ bool TSEEInitRendering(TSEE *tsee) {
 	}
 	tsee->init->rendering = true;
 	return true;
-};
+}
 
 void TSEEWindowUpdateSize(TSEE *tsee) {
 	SDL_SetWindowSize(tsee->window->window, tsee->window->width, tsee->window->height);
@@ -50,7 +50,7 @@ bool TSEESetWindowTitle(TSEE *tsee, char *title) {
 	SDL_SetWindowTitle(tsee->window->window, title);
 	tsee->window->title = strdup(title);
 	return true;
-};
+}
 
 bool TSEERenderAll(TSEE *tsee) {
 	SDL_RenderClear(tsee->window->renderer);
