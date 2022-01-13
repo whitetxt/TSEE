@@ -105,19 +105,23 @@ bool TSEEArrayClear(TSEE_Array *arr);
 // Frees a TSEE_Array, freeing all memory.
 bool TSEEArrayFree(TSEE_Array *arr);
 
-// !! tsee_logging.c !!
+// !! Logging functions !!
 
 // Log something to the console, typically for debugging.
-void TSEELog(char *message, ...);
+#define TSEELog(message, format...) \
+		fprintf(stdout, "TSEE [log] (%s): " message "", __func__, ##format)
 
 // Inform the user of a warning, typically used for something important, but not a full error.
-void TSEEWarn(char *message, ...);
+#define TSEEWarn(message, format...) \
+		fprintf(stdout, "TSEE [warn] (%s): " message "", __func__, ##format)
 
 // Inform the user of an error in the console, typically used for something being invalid, but not a full crash.
-void TSEEError(char *message, ...);
+#define TSEEError(message, format...) \
+		fprintf(stderr, "TSEE [error] (%s): " message "", __func__, ##format)
 
 // Inform the user of a critical error, should only be used if the program can't continue.
-void TSEECritical(char *message, ...);
+#define TSEECritical(message, format...) \
+		fprintf(stderr, "TSEE [!! Critical !!] (%s): " message "", __func__, ##format)
 
 // !! tsee_text.c !!
 

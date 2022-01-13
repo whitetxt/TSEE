@@ -3,12 +3,12 @@
 TSEE_Texture *TSEECreateTextureFromPath(TSEE *tsee, char *path) {
 	TSEE_Texture *texture = malloc(sizeof(*texture));
 	if (!texture) {
-		TSEEError("Couldn't malloc memory for texture \"%s\"\n", path);
+		TSEEError("Couldn't malloc memory for texture `%s`\n", path);
 		return NULL;
 	}
 	SDL_Texture *tex = IMG_LoadTexture(tsee->window->renderer, path);
 	if (!tex) {
-		TSEEError("Couldn't load texture from file \"%s\"\n", path);
+		TSEEError("Couldn't load texture from file `%s`\n", path);
 		free(texture);
 		return NULL;
 	}

@@ -39,7 +39,7 @@ bool TSEELoadMap(TSEE *tsee, char *fn) {
 			fread(&texturePath, sizeof(texturePath), 1, fp);
 			TSEE_Texture *texture = TSEECreateTextureFromPath(tsee, texturePath);
 			if (!texture) {
-				TSEEError("Failed to load texture (%s)\n%s\n", texturePath, SDL_GetError());
+				TSEEError("Failed to load texture `%s` (%s)\n", texturePath, SDL_GetError());
 				return false;
 			}
 			TSEEArrayAppend(tsee->textures, texture);
@@ -54,7 +54,7 @@ bool TSEELoadMap(TSEE *tsee, char *fn) {
 			// Open up a stream for SDL to read the surface from
 			SDL_RWops *stream = SDL_RWFromMem(fp, textureSize);
 			if (!stream) { // If the stream couldn't be opened
-				TSEEError("Failed to create SDL_RWops from map file:\n%s\n", SDL_GetError());
+				TSEEError("Failed to create SDL_RWops from map file (%s)\n", SDL_GetError());
 				return false;
 			}
 			// Read the surface and convert to a texture
@@ -63,7 +63,7 @@ bool TSEELoadMap(TSEE *tsee, char *fn) {
 			texture = SDL_CreateTextureFromSurface(tsee->window->renderer, surface);
 			SDL_FreeSurface(surface);
 			if (!texture) { // If the texture could not be created
-				TSEEError("Failed to create texture from surface:\n%s\n", SDL_GetError());
+				TSEEError("Failed to create texture from surface (%s)\n", SDL_GetError());
 				return false;
 			}
 			TSEEArrayAppend(tsee->textures, texture);
