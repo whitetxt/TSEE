@@ -2,7 +2,7 @@
 
 bool TSEEInitUI(TSEE *tsee) {
 	if (!tsee->init->text) {
-		TSEEError("Attempted to init TSEEUI without initialising TSEEText");
+		TSEEError("Attempted to init TSEE UI without initialising TSEE Text.\n");
 		return false;
 	}
 	tsee->ui->toolbar = TSEEArrayCreate();

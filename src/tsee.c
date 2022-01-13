@@ -38,6 +38,14 @@ TSEE TSEECreate(int width, int height) {
 	// Setup UI
 	tsee.ui = malloc(sizeof(*tsee.ui));
 
+	// Setup init stuff
+	tsee.init = malloc(sizeof(*tsee.init));
+	tsee.init->text = false;
+	tsee.init->ui = false;
+	tsee.init->rendering = false;
+	tsee.init->events = false;
+	tsee.init->input = false;
+
 	// Load basic settings
 	TSEELoadSettings(&tsee);
 	TSEELog("TSEE Engine initialised.\n");
