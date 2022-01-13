@@ -21,7 +21,7 @@ bool TSEEArrayAppend(TSEE_Array *arr, void *data) {
 
 bool TSEEArrayInsert(TSEE_Array *arr, void *data, size_t index) {
 	if (index > arr->size) {
-		TSEEWarn("Attempted insert into array (size %d) at index `%d`\n", arr->size, index);
+		TSEEWarn("Attempted insert into array (size %zu) at index `%zu`\n", arr->size, index);
 		return false;
 	}
 	TSEEArrayExtend(arr, 1);
@@ -32,7 +32,7 @@ bool TSEEArrayInsert(TSEE_Array *arr, void *data, size_t index) {
 
 bool TSEEArrayDelete(TSEE_Array *arr, size_t index) {
 	if (index >= arr->size) {
-		TSEEWarn("Attempted delete from array (size %d) at index `%d`\n", arr->size, index);
+		TSEEWarn("Attempted delete from array (size %zu) at index `%zu`\n", arr->size, index);
 		return false;
 	}
 	memmove(arr->data[index + 1], arr->data[index], sizeof(*arr->data) * (arr->size - index));
@@ -42,7 +42,7 @@ bool TSEEArrayDelete(TSEE_Array *arr, size_t index) {
 
 void *TSEEArrayGet(TSEE_Array *arr, size_t index) {
 	if (index >= arr->size) {
-		TSEEWarn("Attempted get from array (size %d) at index `%d`\n", arr->size, index);
+		TSEEWarn("Attempted get from array (size %zu) at index `%zu`\n", arr->size, index);
 		return NULL;
 	}
 	return arr->data[index];
