@@ -103,7 +103,7 @@ typedef struct TSEE_Events {
 	void (*keyrelease) (void *tsee, SDL_Keycode keycode);
 } TSEE_Events;
 
-// TSEE's system of keeping track of what's initialised.
+// TSEE's system of keeping track of what's initialized.
 typedef struct TSEE_Init {
 	bool rendering;
 	bool text;

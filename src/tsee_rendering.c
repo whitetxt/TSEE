@@ -10,7 +10,7 @@ bool TSEEInitRendering(TSEE *tsee) {
 	}
 
 	if (IMG_Init(IMG_INIT_JPG | IMG_INIT_PNG | IMG_INIT_TIF | IMG_INIT_WEBP) == 0) {
-		TSEEError("SDL_IMG could not initialise (%s)\n", IMG_GetError());
+		TSEEError("SDL_IMG could not initialize (%s)\n", IMG_GetError());
 		return false;
 	}
 

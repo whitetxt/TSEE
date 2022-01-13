@@ -17,7 +17,7 @@ bool TSEESetWorldGravity(TSEE *tsee, double gravity);
 
 // !! tsee_rendering.c !!
 
-// Initialises the rendering component of TSEE, and creates a window + renderer.
+// Initializes the rendering component of TSEE, and creates a window + renderer.
 bool TSEEInitRendering(TSEE *tsee);
 
 // Updates the window size for a TSEE object.
@@ -125,7 +125,7 @@ bool TSEEArrayFree(TSEE_Array *arr);
 
 // !! tsee_text.c !!
 
-// Initialises the fonts and loads the default font if desired.
+// Initializes the fonts and loads the default font if desired.
 // TSEE_Fonts use names to keep track of them, so if you want to use a font, specify its name.
 bool TSEEInitText(TSEE *tsee, bool loadDefault);
 
@@ -168,7 +168,7 @@ TSEE_Texture *TSEECreateTextureFromPath(TSEE *tsee, char *path);
 
 // !! tsee_events.c !!
 
-// Initialises events for a TSEE
+// Initializes events for a TSEE
 bool TSEEInitEvents(TSEE *tsee);
 
 // Handles events for a TSEE and calls the callbacks for each event.
@@ -176,7 +176,7 @@ bool TSEEHandleEvents(TSEE *tsee);
 
 // !! tsee_input.c !!
 
-// Initialises TSEE input and includes some basic functions for movement of the player.
+// Initializes TSEE input and includes some basic functions for movement of the player.
 bool TSEEInitInput(TSEE *tsee);
 
 // Basic key press and release function.
@@ -195,6 +195,6 @@ bool TSEERenderParallax(TSEE *tsee);
 
 // !! tsee_ui.c !!
 
-// Initialises the UI system.
+// Initializes the UI system.
 // MUST be called after TSEEInitText
 bool TSEEInitUI(TSEE *tsee);

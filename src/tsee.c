@@ -48,7 +48,7 @@ TSEE TSEECreate(int width, int height) {
 
 	// Load basic settings
 	TSEELoadSettings(&tsee);
-	TSEELog("TSEE Engine initialised.\n");
+	TSEELog("TSEE Engine initialized.\n");
 	return tsee;
 }
 
@@ -59,32 +59,32 @@ bool TSEEInitAll(TSEE *tsee) {
 		TSEEClose(tsee);
 		return false;
 	}
-	TSEELog("Initialised TSEE Rendering.\n");
+	TSEELog("Initialized TSEE Rendering.\n");
 	if (!TSEEInitText(tsee, true)) {
 		TSEECritical("Failed to initialize TSEE Text Module.\n");
 		TSEEClose(tsee);
 		return false;
 	}
-	TSEELog("Initialised TSEE Text.\n");
+	TSEELog("Initialized TSEE Text.\n");
 	if (!TSEEInitEvents(tsee)) {
 		TSEECritical("Failed to initialize TSEE Events Module.\n");
 		TSEEClose(tsee);
 		return false;
 	}
-	TSEELog("Initialised TSEE Events.\n");
+	TSEELog("Initialized TSEE Events.\n");
 	if (!TSEEInitInput(tsee)) {
 		TSEECritical("Failed to initialize TSEE Input Module.\n");
 		TSEEClose(tsee);
 		return false;
 	}
-	TSEELog("Initialised TSEE Input.\n");
+	TSEELog("Initialized TSEE Input.\n");
 	if (!TSEEInitUI(tsee)) {
 		TSEECritical("Failed to initialize TSEE UI Module.\n");
 		TSEEClose(tsee);
 		return false;
 	}
-	TSEELog("Initialised TSEE UI.\n");
-	TSEELog("All TSEE modules initialised.\n");
+	TSEELog("Initialized TSEE UI.\n");
+	TSEELog("All TSEE modules initialized.\n");
 	return true;
 }
 
