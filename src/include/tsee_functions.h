@@ -198,3 +198,9 @@ bool TSEERenderParallax(TSEE *tsee);
 // Initializes the UI system.
 // MUST be called after TSEEInitText
 bool TSEEInitUI(TSEE *tsee);
+
+// Adds a button to the top-level toolbar.
+bool TSEEAddToolbarButton(TSEE *tsee, char *font, char *text);
+
+// Renders all toolbar buttons.
+bool TSEERenderUI(TSEE *tsee);
