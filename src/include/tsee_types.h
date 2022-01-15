@@ -120,7 +120,7 @@ typedef struct {
 
 // Top-level button on the toolbar.
 typedef struct TSEE_Toolbar_Object {
-	TSEE_Text *texture;
+	TSEE_Text *text;
 	TSEE_Array *buttons; // Array of TSEE_Toolbar_Child
 } TSEE_Toolbar_Object;
 
