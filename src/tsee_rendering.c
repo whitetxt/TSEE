@@ -69,6 +69,8 @@ bool TSEERenderAll(TSEE *tsee) {
 		TSEERenderText(tsee, text);
 	}
 
+	TSEERenderUI(tsee);
+
 	SDL_RenderPresent(tsee->window->renderer);
 	return true;
 }
