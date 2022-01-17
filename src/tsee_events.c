@@ -9,6 +9,7 @@ bool TSEEInitEvents(TSEE *tsee) {
 	tsee->events->event = malloc(sizeof(*tsee->events->event));
 	tsee->events->keypress = NULL;
 	tsee->events->keyrelease = NULL;
+	tsee->events->mousemotion = NULL;
 	tsee->init->events = true;
 	return true;
 }

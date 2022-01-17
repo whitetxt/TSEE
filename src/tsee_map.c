@@ -37,7 +37,7 @@ bool TSEELoadMap(TSEE *tsee, char *fn) {
 			fread(&pathSize, sizeof(pathSize), 1, fp);
 			char *texturePath = malloc(sizeof(*texturePath) * pathSize);
 			fread(&texturePath, sizeof(texturePath), 1, fp);
-			TSEE_Texture *texture = TSEECreateTextureFromPath(tsee, texturePath);
+			TSEE_Texture *texture = TSEECreateTexture(tsee, texturePath);
 			if (!texture) {
 				TSEEError("Failed to load texture `%s` (%s)\n", texturePath, SDL_GetError());
 				return false;
