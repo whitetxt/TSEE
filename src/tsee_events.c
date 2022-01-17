@@ -10,6 +10,7 @@ bool TSEEInitEvents(TSEE *tsee) {
 	tsee->events->keypress = NULL;
 	tsee->events->keyrelease = NULL;
 	tsee->events->mousemotion = NULL;
+	tsee->events->mouseclick = NULL;
 	tsee->init->events = true;
 	return true;
 }
@@ -34,6 +35,12 @@ bool TSEEHandleEvents(TSEE *tsee) {
 				tsee->window->mouse = (SDL_Point){tsee->events->event->motion.x, tsee->events->event->motion.y};
 				if (tsee->events->mousemotion) {
 					tsee->events->mousemotion(tsee, tsee->events->event->motion.x, tsee->events->event->motion.y);
+				}
+				break;
+			case SDL_MOUSEBUTTONUP:
+				if (tsee->events->event->button.button == SDL_BUTTON_LEFT) {TSEEUIClick(tsee, tsee->events->event->button.x, tsee->events->event->button.y);} // Checks if the UI is clicked
+				if (tsee->events->mouseclick) {
+					tsee->events->mouseclick(tsee, tsee->events->event->button.x, tsee->events->event->button.y, tsee->events->event->button.button);
 				}
 				break;
 		}
