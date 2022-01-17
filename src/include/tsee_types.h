@@ -104,6 +104,7 @@ typedef struct TSEE_Events {
 	void (*keypress) (void *tsee, SDL_Keycode keycode);
 	void (*keyrelease) (void *tsee, SDL_Keycode keycode);
 	void (*mousemotion) (void *tsee, int x, int y);
+	void (*mouseclick) (void *tsee, int x, int y, int button);
 } TSEE_Events;
 
 // TSEE's system of keeping track of what's initialized.
@@ -125,6 +126,7 @@ typedef struct {
 typedef struct TSEE_Toolbar_Object {
 	TSEE_Text *text;
 	TSEE_Array *buttons; // Array of TSEE_Toolbar_Child
+	bool expanded;
 } TSEE_Toolbar_Object;
 
 // TSEE's UI struct. Keeps track of all UI elements and what's enabled.
