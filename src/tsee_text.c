@@ -84,6 +84,9 @@ TSEE_Text *TSEECreateText(TSEE *tsee, char *fontName, char *text, SDL_Color colo
 		TSEEWarn("Failed to create text `%s` with font `%s` (Failed to create surface)\n", text, fontName);
 	}
 	textObj->texture->texture = SDL_CreateTextureFromSurface(tsee->window->renderer, surf);
+	textObj->texture->rect.x = 0;
+	textObj->texture->rect.y = 0;
+	SDL_QueryTexture(textObj->texture->texture, NULL, NULL, &textObj->texture->rect.w, &textObj->texture->rect.h);
 	return textObj;
 }
 
@@ -92,7 +95,7 @@ bool TSEERenderText(TSEE *tsee, TSEE_Text *text) {
 		TSEEWarn("Failed to render text `%s` (No texture)\n", text->text);
 		return false;
 	}
-	if (SDL_RenderCopy(tsee->window->renderer, text->texture->texture, NULL, &text->texture->rect) == -1) {
+	if (SDL_RenderCopy(tsee->window->renderer, text->texture->texture, NULL, &text->texture->rect) != 0) {
 		TSEEError("Failed to render text `%s` (%s)\n", text->text, SDL_GetError());
 		return false;
 	}

@@ -5,6 +5,9 @@ bool TSEEInitUI(TSEE *tsee) {
 		TSEEError("Attempted to init TSEE UI without initialising TSEE Text.\n");
 		return false;
 	}
+	if (SDL_SetRenderDrawBlendMode(tsee->window->renderer, SDL_BLENDMODE_BLEND) != 0) {
+		TSEEWarn("Failed to set blend mode. Toolbar will appear solid\n%s", SDL_GetError());
+	}
 	tsee->ui->toolbar = TSEEArrayCreate();
 	tsee->init->text = true;
 	return true;
@@ -31,17 +34,23 @@ bool TSEEAddToolbarButton(TSEE *tsee, char *font, char *text) {
 	for (int i = 0; i < idx; i++) {
 		sizeBefore += ((TSEE_Toolbar_Object *)TSEEArrayGet(tsee->ui->toolbar, i))->text->texture->rect.w + 16;
 	}
-	toolbarobj->text->texture->rect.x = sizeBefore;
-	toolbarobj->text->texture->rect.y = 0;
+	toolbarobj->text->texture->rect.x = sizeBefore + 8;
+	toolbarobj->text->texture->rect.y = toolbarobj->text->texture->rect.h / 2;
 	return true;
 }
 
 bool TSEERenderUI(TSEE *tsee) {
 	if (tsee->ui->toolbar->size > 0) {
-		SDL_RenderDrawRect(tsee->window->renderer, &(SDL_Rect){0, 0, tsee->window->width, 32});
+		SDL_SetRenderDrawColor(tsee->window->renderer, 255, 255, 255, 100);
+		SDL_RenderFillRect(tsee->window->renderer, &(SDL_Rect){0, 0, tsee->window->width, 32});
 	}
 	for (size_t i = 0; i < tsee->ui->toolbar->size; i++) {
 		TSEE_Toolbar_Object *toolbarobj = TSEEArrayGet(tsee->ui->toolbar, i);
+		SDL_Rect fatRect = {toolbarobj->text->texture->rect.x - 8, 0, toolbarobj->text->texture->rect.w + 16, 32};
+		if (SDL_PointInRect(&tsee->window->mouse, &fatRect)) {
+			SDL_SetRenderDrawColor(tsee->window->renderer, 255, 255, 255, 50);
+			SDL_RenderFillRect(tsee->window->renderer, &fatRect);
+		}
 		TSEERenderText(tsee, toolbarobj->text);
 	}
 	return true;

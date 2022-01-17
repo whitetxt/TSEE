@@ -29,6 +29,12 @@ bool TSEEHandleEvents(TSEE *tsee) {
 					tsee->events->keyrelease(tsee, tsee->events->event->key.keysym.sym);
 				}
 				break;
+			case SDL_MOUSEMOTION:
+				tsee->window->mouse = (SDL_Point){tsee->events->event->motion.x, tsee->events->event->motion.y};
+				if (tsee->events->mousemotion) {
+					tsee->events->mousemotion(tsee, tsee->events->event->motion.x, tsee->events->event->motion.y);
+				}
+				break;
 		}
 	}
 	return true;
