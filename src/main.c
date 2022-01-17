@@ -11,7 +11,6 @@ int main(int argc, char *argv[]) {
 		TSEEClose(&tsee);
 		return -1;
 	}
-
 	if (!TSEESetWindowTitle(&tsee, "TSEE - Example Game")) {
 		TSEEWarn("Failed to set window title.\n");
 	}
@@ -22,12 +21,18 @@ int main(int argc, char *argv[]) {
 	TSEESetPlayerSpeed(&tsee, 50);
 	TSEESetWorldGravity(&tsee, 15);
 	TSEELog("Creating objects\n");
-	for (size_t i = 0; i < 400; i++) {
-		for (size_t j = 0; j < 100; j++) {
-			idx = TSEECreateObject(&tsee, TSEECreateTexture(&tsee, "assets/test_image.png"));
-			TSEESetObjectPosition(&tsee, idx, i, 595 - j);
-		}
-	}
+	idx = TSEECreateObject(&tsee, TSEECreateTexture(&tsee, "assets/test_image.png"));
+	TSEESetObjectPosition(&tsee, idx, 150, 600);
+	idx = TSEECreateObject(&tsee, TSEECreateTexture(&tsee, "assets/test_image.png"));
+	TSEESetObjectPosition(&tsee, idx, 160, 595);
+	idx = TSEECreateObject(&tsee, TSEECreateTexture(&tsee, "assets/test_image.png"));
+	TSEESetObjectPosition(&tsee, idx, 170, 590);
+	idx = TSEECreateObject(&tsee, TSEECreateTexture(&tsee, "assets/test_image.png"));
+	TSEESetObjectPosition(&tsee, idx, 180, 585);
+	idx = TSEECreateObject(&tsee, TSEECreateTexture(&tsee, "assets/test_image.png"));
+	TSEESetObjectPosition(&tsee, idx, 190, 580);
+	idx = TSEECreateObject(&tsee, TSEECreateTexture(&tsee, "assets/test_image.png"));
+	TSEESetObjectPosition(&tsee, idx, 200, 575);
 	TSEECreateParallax(&tsee, TSEECreateTexture(&tsee, "assets/parallax1.png"), 6);
 	TSEECreateParallax(&tsee, TSEECreateTexture(&tsee, "assets/parallax2.png"), 4);
 	TSEECreateParallax(&tsee, TSEECreateTexture(&tsee, "assets/parallax3.png"), 2);
@@ -49,9 +54,7 @@ int main(int argc, char *argv[]) {
 	if (!TSEESaveSettings(&tsee)) {
 		TSEEError("Failed to save settings. All changes will be lost.\nSorry.");
 	}
-
 	TSEELog("Closing.\n");
-
 	TSEEClose(&tsee);
 	return 0; 
 }
