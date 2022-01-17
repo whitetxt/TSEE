@@ -4,7 +4,7 @@
 #	if __GNUC__ >= 2
 #		define __func__ __FUNCTION__
 #	else
-#		define __func__ "<unknown>"
+#		define __func__ "<unk func>"
 #	endif
 #endif
 
