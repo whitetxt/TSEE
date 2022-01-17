@@ -17,6 +17,7 @@ typedef struct TSEE_Window {
 	int fps;
 	bool running;
 	char *title;
+	SDL_Point mouse;
 } TSEE_Window;
 
 // TSEE fonts, stores the font, its name and size.
@@ -101,6 +102,7 @@ typedef struct TSEE_Events {
 	SDL_Event *event;
 	void (*keypress) (void *tsee, SDL_Keycode keycode);
 	void (*keyrelease) (void *tsee, SDL_Keycode keycode);
+	void (*mousemotion) (void *tsee, int x, int y);
 } TSEE_Events;
 
 // TSEE's system of keeping track of what's initialized.

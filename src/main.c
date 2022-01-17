@@ -38,6 +38,8 @@ int main(int argc, char *argv[]) {
 	TSEECreateParallax(&tsee, TSEECreateTextureFromPath(&tsee, "assets/parallax3.png"), 2);
 	TSEECreateParallax(&tsee, TSEECreateTextureFromPath(&tsee, "assets/parallax4.png"), 1);
 	TSEEAddToolbarButton(&tsee, "_default", "Test");
+	TSEEAddToolbarButton(&tsee, "_default", "Test2");
+	TSEEAddToolbarButton(&tsee, "_default", "Test3");
 
 	//TSEEInitNetworking(&tsee); // NOTE: COMING SOON!!
 

@@ -53,23 +53,32 @@ bool TSEESetWindowTitle(TSEE *tsee, char *title) {
 }
 
 bool TSEERenderAll(TSEE *tsee) {
+	SDL_SetRenderDrawColor(tsee->window->renderer, 0, 0, 0, 255);
 	SDL_RenderClear(tsee->window->renderer);
 	// Render parallax backgrounds
-	TSEERenderParallax(tsee);
+	if (!TSEERenderParallax(tsee)) {
+		TSEEWarn("Failed to render all parallax backgrounds\n");
+	}
 
 	// Render all objects
 	for (size_t i = 0; i < tsee->world->objects->size; i++) {
 		TSEE_Object *obj = TSEEArrayGet(tsee->world->objects, i);
-		TSEERenderObject(tsee, obj);
+		if (!TSEERenderObject(tsee, obj)) {
+			TSEEWarn("Failed to render object\n");
+		}
 	}
 
 	// Render all text
 	for (size_t i = 0; i < tsee->world->text->size; i++) {
 		TSEE_Text *text = TSEEArrayGet(tsee->world->text, i);
-		TSEERenderText(tsee, text);
+		if (!TSEERenderText(tsee, text)) {
+			TSEEWarn("Failed to render text %s\n", text->text);
+		}
 	}
 
-	TSEERenderUI(tsee);
+	if (!TSEERenderUI(tsee)) {
+		TSEEWarn("Failed to render all of UI\n");
+	}
 
 	SDL_RenderPresent(tsee->window->renderer);
 	return true;
