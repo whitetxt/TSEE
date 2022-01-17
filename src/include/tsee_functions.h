@@ -1,3 +1,21 @@
+// !! Logging functions !!
+
+// Log something to the console, typically for debugging.
+#define TSEELog(message, ...) \
+		fprintf(stdout, "TSEE [log] (%s): " message "", __func__, ##__VA_ARGS__)
+
+// Inform the user of a warning, typically used for something important, but not a full error.
+#define TSEEWarn(message, ...) \
+		fprintf(stdout, "TSEE [warn] (%s): " message "", __func__, ##__VA_ARGS__)
+
+// Inform the user of an error in the console, typically used for something being invalid, but not a full crash.
+#define TSEEError(message, ...) \
+		fprintf(stderr, "TSEE [error] (%s): " message "", __func__, ##__VA_ARGS__)
+
+// Inform the user of a critical error, should only be used if the program can't continue.
+#define TSEECritical(message, ...) \
+		fprintf(stderr, "TSEE [!! Critical !!] (%s): " message "", __func__, ##__VA_ARGS__)
+
 // !! tsee.c !!
 
 // Creates a new TSEE object.
@@ -105,24 +123,6 @@ bool TSEEArrayClear(TSEE_Array *arr);
 // Frees a TSEE_Array, freeing all memory.
 bool TSEEArrayFree(TSEE_Array *arr);
 
-// !! Logging functions !!
-
-// Log something to the console, typically for debugging.
-#define TSEELog(message, ...) \
-		fprintf(stdout, "TSEE [log] (%s): " message "", __func__, ##__VA_ARGS__)
-
-// Inform the user of a warning, typically used for something important, but not a full error.
-#define TSEEWarn(message, ...) \
-		fprintf(stdout, "TSEE [warn] (%s): " message "", __func__, ##__VA_ARGS__)
-
-// Inform the user of an error in the console, typically used for something being invalid, but not a full crash.
-#define TSEEError(message, ...) \
-		fprintf(stderr, "TSEE [error] (%s): " message "", __func__, ##__VA_ARGS__)
-
-// Inform the user of a critical error, should only be used if the program can't continue.
-#define TSEECritical(message, ...) \
-		fprintf(stderr, "TSEE [!! Critical !!] (%s): " message "", __func__, ##__VA_ARGS__)
-
 // !! tsee_text.c !!
 
 // Initializes the fonts and loads the default font if desired.
@@ -164,7 +164,10 @@ bool TSEESaveSettings(TSEE *tsee);
 // !! tsee_image.c !!
 
 // Creates a TSEE_Texture from an file path.
-TSEE_Texture *TSEECreateTextureFromPath(TSEE *tsee, char *path);
+TSEE_Texture *TSEECreateTexture(TSEE *tsee, char *path);
+
+// Finds an already loaded TSEE_Texture from a file path.
+TSEE_Texture *TSEEFindTexture(TSEE *tsee, char *path);
 
 // !! tsee_events.c !!
 
