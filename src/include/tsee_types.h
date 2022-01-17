@@ -38,6 +38,7 @@ typedef struct TSEE_Array {
 typedef struct TSEE_Texture {
 	SDL_Texture *texture;
 	SDL_Rect rect;
+	char *path;
 } TSEE_Texture;
 
 // TSEE's text wrapper, keeps track of what the text says.
