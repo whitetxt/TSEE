@@ -53,6 +53,10 @@ bool TSEESetWindowTitle(TSEE *tsee, char *title) {
 }
 
 bool TSEERenderAll(TSEE *tsee) {
+	if (SDL_GetWindowFlags(tsee->window->window) & SDL_WINDOW_MINIMIZED) {
+		SDL_Delay(25);
+		return true;
+	}
 	SDL_SetRenderDrawColor(tsee->window->renderer, 0, 0, 0, 255);
 	SDL_RenderClear(tsee->window->renderer);
 	// Render parallax backgrounds
