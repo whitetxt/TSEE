@@ -20,7 +20,7 @@ bool TSEELoadMap(TSEE *tsee, char *fn) {
 	fread(&mapAuthor, sizeof(mapAuthor), 1, fp);
 	fread(&mapVersion, sizeof(mapVersion), 1, fp);
 	fread(&mapDescription, sizeof(mapDescription), 1, fp);
-	printf("Loading into %s by %s\nVersion %s\n%s\n", mapName, mapAuthor, mapVersion, mapDescription);
+	TSEELog("Loading into %s by %s\nVersion %s\n%s\n", mapName, mapAuthor, mapVersion, mapDescription);
 	// Read the gravity (for some reason its here in the header?)
 	fread(&tsee->world->gravity, sizeof(tsee->world->gravity), 1, fp);
 	int numTextures = 0;
