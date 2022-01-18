@@ -5,7 +5,6 @@ CFLAGS = -g -Wall -Wextra -pedantic -lmingw32 -lSDL2main -lSDL2 -lSDL2_image -lS
 
 files = ${wildcard src/*.c}
 objFiles = ${files:.c=.o}
-dllObj = ${wildcard *.o}
 
 all:
 	${CC} -o ${filename} ${files} ${CFLAGS}
@@ -28,9 +27,3 @@ start:
 
 gdb:
 	cd build && gdb ../${filename}
-
-dll:
-	${CC} -c ${files} ${CFLAGS}
-	${CC} -shared -o TSEE.dll ${dllObj} ${CFLAGS}
-	-rm -rf ${dllObj}
-	${CC} -o ${filename} src/main.c ${CFLAGS} -L./ -lTSEE
