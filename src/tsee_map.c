@@ -26,48 +26,17 @@ bool TSEELoadMap(TSEE *tsee, char *fn) {
 	int numTextures = 0;
 	// Read number of textures for the map
 	fread(&numTextures, sizeof(numTextures), 1, fp);
-	// Read type of texture storage
-	// 0 = Texture path stored
-	// 1 = Texture stored in file
-	Uint8 textureStorageType = -1;
-	fread(&textureStorageType, sizeof(textureStorageType), 1, fp);
-	if (textureStorageType == 0) {
-		for (int i = 0; i < numTextures; i++) {
-			uint64_t pathSize = 0;
-			fread(&pathSize, sizeof(pathSize), 1, fp);
-			char *texturePath = malloc(sizeof(*texturePath) * pathSize);
-			fread(&texturePath, sizeof(texturePath), 1, fp);
-			TSEE_Texture *texture = TSEECreateTexture(tsee, texturePath);
-			if (!texture) {
-				TSEEError("Failed to load texture `%s` (%s)\n", texturePath, SDL_GetError());
-				return false;
-			}
-			TSEEArrayAppend(tsee->textures, texture);
+	for (int i = 0; i < numTextures; i++) {
+		uint64_t pathSize = 0;
+		fread(&pathSize, sizeof(pathSize), 1, fp);
+		char *texturePath = malloc(sizeof(*texturePath) * pathSize);
+		fread(&texturePath, sizeof(texturePath), 1, fp);
+		TSEE_Texture *texture = TSEECreateTexture(tsee, texturePath);
+		if (!texture) {
+			TSEEError("Failed to load texture `%s` (%s)\n", texturePath, SDL_GetError());
+			return false;
 		}
-	} else if (textureStorageType == 1) {
-		for (int i = 0; i < numTextures; i++) {
-			// Get the size of the texture
-			uint64_t textureSize = 0;
-			fread(&textureSize, sizeof(textureSize), 1, fp);
-			SDL_Texture *texture = malloc(sizeof(texture));
-			SDL_Surface *surface = NULL;
-			// Open up a stream for SDL to read the surface from
-			SDL_RWops *stream = SDL_RWFromMem(fp, textureSize);
-			if (!stream) { // If the stream couldn't be opened
-				TSEEError("Failed to create SDL_RWops from map file (%s)\n", SDL_GetError());
-				return false;
-			}
-			// Read the surface and convert to a texture
-			surface = IMG_LoadPNG_RW(stream);
-			SDL_RWclose(stream);
-			texture = SDL_CreateTextureFromSurface(tsee->window->renderer, surface);
-			SDL_FreeSurface(surface);
-			if (!texture) { // If the texture could not be created
-				TSEEError("Failed to create texture from surface (%s)\n", SDL_GetError());
-				return false;
-			}
-			TSEEArrayAppend(tsee->textures, texture);
-		}
+		TSEEArrayAppend(tsee->textures, texture);
 	}
 	// Read map's maximum scroll
 	fread(&tsee->world->max_scroll_x, sizeof(tsee->world->max_scroll_x), 1, fp);
@@ -117,37 +86,11 @@ bool saveMap(TSEE *tsee, char *fn) {
 	// Write the number of textures
 	int numTextures = tsee->textures->size;
 	fwrite(&numTextures, sizeof(numTextures), 1, fp);
-	// Write type of texture storage
-	// 0 = Texture path stored
-	// 1 = Texture stored in file
-	Uint8 textureStorageType = 1;
-	fwrite(&textureStorageType, sizeof(textureStorageType), 1, fp);
-	// Write the textures
-	if (textureStorageType == 0) {
-		return false;
-	} else if (textureStorageType == 1) {
-		SDL_Texture* target = SDL_GetRenderTarget(tsee->window->renderer);
-		for (int i = 0; i < numTextures; i++) {
-			TSEE_Texture *texture = TSEEArrayGet(tsee->textures, i);
-			// Get the size of the texture
-			SDL_SetRenderTarget(tsee->window->renderer, texture);
-
-			SDL_Surface *surface = SDL_CreateRGBSurface(0, texture->rect.w, texture->rect.h, 32, 0, 0, 0, 0);
-			SDL_RenderReadPixels(tsee->window->renderer, NULL, surface->format->format, surface->pixels, surface->pitch);
-			IMG_SavePNG();
-			fwrite(&textureSize, sizeof(textureSize), 1, fp);
-			// Open up a stream for SDL to read the surface from
-			SDL_RWops *stream = SDL_RWFromMem(fp, textureSize);
-			if (!stream) { // If the stream couldn't be opened
-				TSEEError("Failed to create SDL_RWops from map file (%s)\n", SDL_GetError());
-				return false;
-			}
-			// Read the surface and convert to a texture
-			SDL_SavePNG_RW(surface, stream, 0);
-			SDL_FreeSurface(surface);
-			SDL_RWclose(stream);
-		}
-		SDL_SetRenderTarget(tsee->window->renderer, target);
+	for (size_t i = 0; i < tsee->textures->size; i++) {
+		TSEE_Texture *texture = TSEEArrayGet(tsee->textures, i);
+		uint64_t pathSize = strlen(texture->path);
+		fwrite(&pathSize, sizeof(pathSize), 1, fp);
+		fwrite(&texture->path, strlen(texture->path) * sizeof(char), 1, fp);
 	}
 	return true;
 };
