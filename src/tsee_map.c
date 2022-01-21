@@ -93,4 +93,4 @@ bool saveMap(TSEE *tsee, char *fn) {
 		fwrite(&texture->path, strlen(texture->path) * sizeof(char), 1, fp);
 	}
 	return true;
-};
+}
