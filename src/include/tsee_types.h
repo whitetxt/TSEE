@@ -2,8 +2,8 @@
 
 // TSEE's 2D Vector type.
 typedef struct TSEE_Vec2 {
-	double x;
-	double y;
+	float x;
+	float y;
 } TSEE_Vec2;
 
 // !! TSEE TYPES !!
@@ -50,8 +50,8 @@ typedef struct TSEE_Text {
 // TSEE's Object type, keeps track of texture and position.
 typedef struct TSEE_Object {
 	TSEE_Texture *texture;
-	double x;
-	double y;
+	float x;
+	float y;
 } TSEE_Object;
 
 // TSEE's Physics Object type, extends TSEE_Object and has physics related information.
@@ -60,7 +60,7 @@ typedef struct TSEE_Physics_Object {
 	TSEE_Vec2 velocity;
 	TSEE_Vec2 acceleration;
 	TSEE_Vec2 force;
-	double mass;
+	float mass;
 } TSEE_Physics_Object;
 
 // Struct to keep track of all the world's objects.
@@ -69,10 +69,10 @@ typedef struct TSEE_World {
 	TSEE_Array *physics_objects;
 	TSEE_Array *text;
 	TSEE_Array *parallax;
-	double gravity;
-	double scroll_x;
-	double scroll_y;
-	double max_scroll_x;
+	float gravity;
+	float scroll_x;
+	float scroll_y;
+	float max_scroll_x;
 } TSEE_World;
 
 // Struct to keep track of which way the player is moving
@@ -86,7 +86,7 @@ typedef struct TSEE_Player_Movement {
 // Struct for parallax scrolling backgrounds
 typedef struct TSEE_Parallax {
 	TSEE_Texture *texture;
-	double distance;
+	float distance;
 } TSEE_Parallax;
 
 // TSEE's player type, which extends TSEE_Physics_Object.
@@ -94,8 +94,8 @@ typedef struct TSEE_Player {
 	TSEE_Physics_Object *physics_object;
 	TSEE_Player_Movement movement;
 	bool grounded;
-	double jump_force;
-	double speed;
+	float jump_force;
+	float speed;
 } TSEE_Player;
 
 // TSEE's event handling system. 
@@ -146,5 +146,5 @@ typedef struct TSEE {
 	TSEE_UI *ui;
 	Uint64 last_time;
 	Uint64 current_time;
-	double dt;
+	float dt;
 } TSEE;
