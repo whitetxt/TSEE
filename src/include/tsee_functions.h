@@ -217,7 +217,7 @@ bool TSEERenderUI(TSEE *tsee);
 // !! tsee_map.c !!
 
 // Internal helper function to read from a file until it hits a null char.
-bool readFileUntilNull(FILE *fp, char *buffer);
+char *TSEEReadFileUntilNull(FILE *fp);
 
 // Loads a map from a file.
 bool TSEELoadMap(TSEE *tsee, char *path);
