@@ -18,16 +18,20 @@ char *TSEEReadFileUntilNull(FILE *fp) {
 }
 
 bool TSEELoadMap(TSEE *tsee, char *fn) {
+	// Open the file
 	FILE *fp = fopen(fn, "rb");
 	if (fp == NULL) {
 		TSEEError("Failed to open map file (%s)\n", fn);
 		return false;
 	}
+
 	// Clear arrays to be overwritten
 	TSEEArrayClear(tsee->world->objects);
 	TSEEArrayClear(tsee->world->physics_objects);
 	TSEEArrayClear(tsee->world->parallax);
 	TSEEArrayClear(tsee->world->text);
+
+	// Reset the player
 	tsee->player->grounded = true;
 	tsee->player->jump_force = 0;
 	tsee->player->movement.down = false;
@@ -36,6 +40,7 @@ bool TSEELoadMap(TSEE *tsee, char *fn) {
 	tsee->player->movement.right = false;
 	tsee->player->physics_object = NULL;
 	tsee->player->speed = 0;
+
 	// Read all of the map header data
 	char *mapName = NULL;
 	if (!(mapName = TSEEReadFileUntilNull(fp))) return false;
@@ -46,12 +51,14 @@ bool TSEELoadMap(TSEE *tsee, char *fn) {
 	char *mapDescription = NULL;
 	if (!(mapDescription = TSEEReadFileUntilNull(fp))) return false;
 	TSEELog("Loading into %s by %s\nVersion: %s\n%s\n", mapName, mapAuthor, mapVersion, mapDescription);
+
 	// Read the gravity (for some reason its here in the header?)
 	float gravity = 0;
 	fread(&gravity, sizeof(gravity), 1, fp);
-	tsee->world->gravity = gravity;
+	TSEESetWorldGravity(tsee, gravity);
+
+	// Read map's textures
 	size_t numTextures = 0;
-	// Read number of textures for the map
 	fread(&numTextures, sizeof(numTextures), 1, fp);
 	TSEELog("Loading %zu textures\n", numTextures);
 	for (size_t i = 0; i < numTextures; i++) {
@@ -63,11 +70,11 @@ bool TSEELoadMap(TSEE *tsee, char *fn) {
 			return false;
 		}
 	}
-	
+
 	// Read map's parallax layers
 	size_t numParallax = 0;
 	fread(&numParallax, sizeof(numParallax), 1, fp);
-	TSEELog("Loading %zu parallax\n", numParallax);
+	TSEELog("Loading %zu parallax layers\n", numParallax);
 	for (size_t i = 0; i < numParallax; i++) {
 		TSEE_Parallax *parallax = malloc(sizeof(*parallax));
 		size_t textureIdx = -1;
@@ -78,10 +85,11 @@ bool TSEELoadMap(TSEE *tsee, char *fn) {
 			TSEEWarn("Failed to create parallax with texture index `%zu`\n", textureIdx);
 		}
 	}
+
 	// Read objects
 	size_t numObjects = 0;
 	fread(&numObjects, sizeof(numObjects), 1, fp);
-	TSEELog("Loading %zu obj\n", numObjects);
+	TSEELog("Loading %zu objects\n", numObjects);
 	for (size_t i = 0; i < numObjects; i++) {
 		size_t texIdx = 0;
 		fread(&texIdx, sizeof(texIdx), 1, fp);
@@ -91,10 +99,15 @@ bool TSEELoadMap(TSEE *tsee, char *fn) {
 		object->y = 0;
 		fread(&object->x, sizeof(object->x), 1, fp);
 		fread(&object->y, sizeof(object->y), 1, fp);
+		object->texture->rect.x = object->x;
+		object->texture->rect.y = object->y;
+		TSEELog("Loaded object `%s` at (%f, %f, %d, %d) with texture at (%d, %d)\n", object->texture->path, object->x, object->y, object->texture->rect.w, object->texture->rect.h, object->texture->rect.x, object->texture->rect.y);
 	}
+
 	// Read the physics objects
 	size_t numPhysicsObjects = 0;
 	fread(&numPhysicsObjects, sizeof(numPhysicsObjects), 1, fp);
+	TSEELog("Loading %zu physics objects\n", numPhysicsObjects);
 	for (size_t i = 0; i < numPhysicsObjects; i++) {
 		size_t objectIdx = 0;
 		fread(&objectIdx, sizeof(objectIdx), 1, fp);
@@ -105,22 +118,24 @@ bool TSEELoadMap(TSEE *tsee, char *fn) {
 			TSEEWarn("Failed to convert object to physics object\n");
 		}
 	}
-	TSEELog("Physics objects: %zu\n", tsee->world->physics_objects->size);
-	TSEELog("Recorded physics objects: %zu\n", numPhysicsObjects);
+	// !! TODO: figure out why the heck these physics objects are having their masses changed somewhere
+
 	// Read the player
 	int64_t playerIdx = 0;
 	fread(&playerIdx, sizeof(playerIdx), 1, fp);
-	if (playerIdx == -1) {
+	if (playerIdx == -1)
 		TSEEError("Failed to load player index.\n");
-	}
-	TSEECreatePlayer(tsee, TSEEArrayGet(tsee->world->physics_objects, playerIdx));
+	else
+		TSEECreatePlayer(tsee, TSEEArrayGet(tsee->world->physics_objects, playerIdx));
 	float speed = 0;
 	fread(&speed, sizeof(speed), 1, fp);
 	TSEESetPlayerSpeed(tsee, speed);
 	float jumpForce = 0;
 	fread(&jumpForce, sizeof(jumpForce), 1, fp);
 	TSEESetPlayerJumpForce(tsee, jumpForce);
+
 	fclose(fp);
+	TSEELog("Map %s loaded successfully.\n", mapName);
 	return true;
 }
 

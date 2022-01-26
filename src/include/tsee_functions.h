@@ -1,6 +1,6 @@
 // !! Logging functions !!
 
-#ifdef TSEE_DEV_DEBUG
+#ifdef TSEE_DEV
 // Log something to the console, typically for debugging.
 #define TSEELog(message, ...) \
 		fprintf(stdout, "TSEE [Log] (%s:%s:%d): " message "", __func__, __FILE__, __LINE__, ##__VA_ARGS__)
