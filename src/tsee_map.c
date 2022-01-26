@@ -9,6 +9,7 @@ bool readFileUntilNull(FILE *fp, char *buffer) {
 			TSEECritical("Failed realloc for text buffer.\n");
 			return false;
 		}
+		buffer = newPtr;
 		buffer[len - 1] = c;
 	}
 	buffer[len] = '\0';
