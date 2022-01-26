@@ -1,5 +1,6 @@
 // !! Logging functions !!
 
+#ifdef TSEE_DEV_DEBUG
 // Log something to the console, typically for debugging.
 #define TSEELog(message, ...) \
 		fprintf(stdout, "TSEE [Log] (%s:%s:%d): " message "", __func__, __FILE__, __LINE__, ##__VA_ARGS__)
@@ -15,6 +16,26 @@
 // Inform the user of a critical error, should only be used if the program can't continue.
 #define TSEECritical(message, ...) \
 		fprintf(stdout, "TSEE [!! CRITICAL !!] (%s:%s:%d): " message "", __func__, __FILE__, __LINE__, ##__VA_ARGS__)
+
+#else
+
+// Log something to the console, typically for debugging.
+#define TSEELog(message, ...) \
+		fprintf(stdout, "TSEE [Log] (%s): " message "", __func__, ##__VA_ARGS__)
+
+// Inform the user of a warning, typically used for something important, but not a full error.
+#define TSEEWarn(message, ...) \
+		fprintf(stdout, "TSEE [Warn] (%s): " message "", __func__, ##__VA_ARGS__)
+
+// Inform the user of an error in the console, typically used for something being invalid, but not a full crash.
+#define TSEEError(message, ...) \
+		fprintf(stdout, "TSEE [Error] (%s): " message "", __func__, ##__VA_ARGS__)
+
+// Inform the user of a critical error, should only be used if the program can't continue.
+#define TSEECritical(message, ...) \
+		fprintf(stdout, "TSEE [!! CRITICAL !!] (%s): " message "", __func__, ##__VA_ARGS__)
+
+#endif
 
 // !! tsee.c !!
 
