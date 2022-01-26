@@ -1,4 +1,5 @@
 #include "include/main.h"
+#define TSEE_DEV
 
 void quitGame(void *t) {
 	TSEE *tsee = (TSEE *)t;
