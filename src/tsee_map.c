@@ -1,19 +1,20 @@
 #include "include/tsee.h"
 
-bool readFileUntilNull(FILE *fp, char *buffer) {
+char *TSEEReadFileUntilNull(FILE *fp) {
 	char c;
 	int len = 0;
+	char *buffer = NULL;
 	while ((c = getc(fp)) != 0) {
 		char *newPtr = realloc(buffer, sizeof(*buffer) * (++len));
 		if (!newPtr) {
 			TSEECritical("Failed realloc for text buffer.\n");
-			return false;
+			return NULL;
 		}
 		buffer = newPtr;
 		buffer[len - 1] = c;
 	}
 	buffer[len] = '\0';
-	return true;
+	return buffer;
 }
 
 bool TSEELoadMap(TSEE *tsee, char *fn) {
@@ -29,13 +30,13 @@ bool TSEELoadMap(TSEE *tsee, char *fn) {
 	TSEEArrayClear(tsee->world->text);
 	// Read all of the map header data
 	char *mapName = NULL;
-	if (!readFileUntilNull(fp, mapName)) return false;
+	if (!(mapName = TSEEReadFileUntilNull(fp))) return false;
 	char *mapAuthor = NULL;
-	if (!readFileUntilNull(fp, mapAuthor)) return false;
+	if (!(mapAuthor = TSEEReadFileUntilNull(fp))) return false;
 	char *mapVersion = NULL;
-	if(!readFileUntilNull(fp, mapVersion)) return false;
+	if (!(mapVersion = TSEEReadFileUntilNull(fp))) return false;
 	char *mapDescription = NULL;
-	if(!readFileUntilNull(fp, mapDescription)) return false;
+	if (!(mapDescription = TSEEReadFileUntilNull(fp))) return false;
 	TSEELog("Loading into %s by %s\nVersion: %s\n%s\n", mapName, mapAuthor, mapVersion, mapDescription);
 	free(mapName);
 	free(mapAuthor);
