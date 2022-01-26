@@ -213,3 +213,11 @@ bool TSEEUIClick(TSEE *tsee, int x, int y);
 
 // Renders all toolbar buttons.
 bool TSEERenderUI(TSEE *tsee);
+
+// !! tsee_map.c !!
+
+// Loads a map from a file.
+bool TSEELoadMap(TSEE *tsee, char *path);
+
+// Saves a map to a file.
+bool TSEESaveMap(TSEE *tsee, char *path);

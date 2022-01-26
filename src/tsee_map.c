@@ -66,35 +66,49 @@ bool TSEELoadMap(TSEE *tsee, char *fn) {
 	return true;
 }
 
-bool saveMap(TSEE *tsee, char *fn) {
+bool TSEESaveMap(TSEE *tsee, char *fn) {
 	FILE *fp = fopen(fn, "wb");
 	if (fp == NULL) {
 		TSEEError("Failed to open map file (%s)\n", fn);
 		return false;
 	}
 	// Write the map header
-	char mapName[32] = "Test Map";
-	char mapAuthor[64] = "Test Author";
-	char mapVersion[8] = "1.0";
-	char mapDescription[512] = "Test Description";
-	fwrite(&mapName, sizeof(mapName), 1, fp);
-	fwrite(&mapAuthor, sizeof(mapAuthor), 1, fp);
-	fwrite(&mapVersion, sizeof(mapVersion), 1, fp);
-	fwrite(&mapDescription, sizeof(mapDescription), 1, fp);
+	char *mapName = "Test Map";
+	size_t mapNameSize = strlen(mapName);
+	char *mapAuthor = "Test Author";
+	size_t mapAuthorSize = strlen(mapAuthor);
+	char *mapVersion = "1.0";
+	size_t mapVersionSize = strlen(mapVersion);
+	char *mapDescription = "Test Description";
+	size_t mapDescriptionSize = strlen(mapDescription);
+	fwrite(&mapNameSize, sizeof(mapNameSize), 1, fp);
+	fwrite(mapName, sizeof(*mapName) * mapNameSize, 1, fp);
+	fwrite(&mapAuthorSize, sizeof(mapAuthorSize), 1, fp);
+	fwrite(mapAuthor, sizeof(*mapAuthor) * mapAuthorSize, 1, fp);
+	fwrite(&mapVersionSize, sizeof(mapVersionSize), 1, fp);
+	fwrite(mapVersion, sizeof(*mapVersion) * mapVersionSize, 1, fp);
+	fwrite(&mapDescriptionSize, sizeof(mapDescriptionSize), 1, fp);
+	fwrite(mapDescription, sizeof(*mapDescription) * mapDescriptionSize, 1, fp);
 	// Write the gravity
-	fwrite(&tsee->world->gravity, sizeof(tsee->world->gravity), 1, fp);
+	float gravity = tsee->world->gravity;
+	fwrite(&gravity, sizeof(gravity), 1, fp);
 	// Write the number of textures
-	int numTextures = tsee->textures->size;
+	size_t numTextures = tsee->textures->size;
 	fwrite(&numTextures, sizeof(numTextures), 1, fp);
 	for (size_t i = 0; i < tsee->textures->size; i++) {
 		TSEE_Texture *texture = TSEEArrayGet(tsee->textures, i);
-		uint64_t pathSize = strlen(texture->path);
+		size_t pathSize = strlen(texture->path);
+		char toWrite[pathSize];
+		memset(toWrite, 0, sizeof(char) * pathSize);
+		for (size_t j = 0; j < pathSize; j++) {
+			toWrite[j] = texture->path[j];
+		}
 		fwrite(&pathSize, sizeof(pathSize), 1, fp);
-		fwrite(&texture->path, strlen(texture->path) * sizeof(char), 1, fp);
+		fwrite(texture->path, pathSize * sizeof(char), 1, fp);
 	}
 	// Write the parallax backgrounds with texture indexes.
 	fwrite(&tsee->world->parallax->size, sizeof(tsee->world->parallax->size), 1, fp);
-	for (size_t i = 0; i < tsee->world->parallax; i++) {
+	for (size_t i = 0; i < tsee->world->parallax->size; i++) {
 		TSEE_Parallax *parallax = TSEEArrayGet(tsee->world->parallax, i);
 		for (size_t j = 0; j < tsee->textures->size; j++) {
 			TSEE_Texture *texture = TSEEArrayGet(tsee->textures, j);
@@ -137,7 +151,7 @@ bool saveMap(TSEE *tsee, char *fn) {
 		fwrite(&object->mass, sizeof(object->mass), 1, fp);
 	}
 	// Write which physics object is the player
-	uint64_t playerIdx = -1;
+	int playerIdx = -1;
 	if (tsee->player != NULL) {
 		for (size_t i = 0; i < tsee->world->physics_objects->size; i++) {
 			TSEE_Physics_Object *object = TSEEArrayGet(tsee->world->physics_objects, i);
@@ -149,6 +163,9 @@ bool saveMap(TSEE *tsee, char *fn) {
 		if (playerIdx == -1) {
 			TSEEError("Failed to find player physics object in map file\n");
 		}
-		fwrite(&playerIdx, sizeof(playerIdx), 1, fp);
+		Sint64 towrite = playerIdx;
+		fwrite(&towrite, sizeof(towrite), 1, fp);
 	}
+	TSEELog("Saved map to %s\n", fn);
+	return true;
 }
