@@ -180,7 +180,6 @@ bool TSEESaveMap(TSEE *tsee, char *fn) {
 			if (strcmp(texture->path, object->texture->path) == 0) {
 				size_t textureIdx = j;
 				fwrite(&textureIdx, sizeof(textureIdx), 1, fp);
-				TSEELog("Written texture idx\n");
 				written = true;
 				break;
 			}
