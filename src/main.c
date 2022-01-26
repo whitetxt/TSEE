@@ -51,8 +51,6 @@ int main(int argc, char *argv[]) {
 	TSEEAddToolbarChild(&tsee, TSEEArrayGet(tsee.ui->toolbar, 1), "_default", "Save", saveMap);
 	TSEEAddToolbarChild(&tsee, TSEEArrayGet(tsee.ui->toolbar, 1), "_default", "Load", loadMap);
 
-	//TSEEInitNetworking(&tsee); // NOTE: COMING SOON!!
-
 	while (tsee.window->running) {
 		TSEEHandleEvents(&tsee);
 		TSEECalculateDT(&tsee);
