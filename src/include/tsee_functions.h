@@ -2,19 +2,19 @@
 
 // Log something to the console, typically for debugging.
 #define TSEELog(message, ...) \
-		fprintf(stdout, "TSEE [log] (%s): " message "", __func__, ##__VA_ARGS__)
+		fprintf(stdout, "TSEE [log] (%s:%s:%s): " message "", __func__, __FILE__, __LINE__, ##__VA_ARGS__)
 
 // Inform the user of a warning, typically used for something important, but not a full error.
 #define TSEEWarn(message, ...) \
-		fprintf(stdout, "TSEE [warn] (%s): " message "", __func__, ##__VA_ARGS__)
+		fprintf(stdout, "TSEE [warn] (%s:%s:%s): " message "", __func__, __FILE__, __LINE__, ##__VA_ARGS__)
 
 // Inform the user of an error in the console, typically used for something being invalid, but not a full crash.
 #define TSEEError(message, ...) \
-		fprintf(stderr, "TSEE [error] (%s): " message "", __func__, ##__VA_ARGS__)
+		fprintf(stdout, "TSEE [error] (%s:%s:%s): " message "", __func__, __FILE__, __LINE__, ##__VA_ARGS__)
 
 // Inform the user of a critical error, should only be used if the program can't continue.
 #define TSEECritical(message, ...) \
-		fprintf(stderr, "TSEE [!! Critical !!] (%s): " message "", __func__, ##__VA_ARGS__)
+		fprintf(stdout, "TSEE [!! CRITICAL !!] (%s:%s:%s): " message "", __func__, __FILE__, __LINE__, ##__VA_ARGS__)
 
 // !! tsee.c !!
 
@@ -31,7 +31,7 @@ bool TSEEClose(TSEE *tsee);
 bool TSEECalculateDT(TSEE *tsee);
 
 // Sets the world's gravity
-bool TSEESetWorldGravity(TSEE *tsee, double gravity);
+bool TSEESetWorldGravity(TSEE *tsee, float gravity);
 
 // !! tsee_rendering.c !!
 
@@ -56,10 +56,10 @@ bool TSEERenderAll(TSEE *tsee);
 int TSEECreateObject(TSEE *tsee, TSEE_Texture *texture);
 
 // Creates a physics object and stores it inside the TSEE
-int TSEECreatePhysicsObject(TSEE *tsee, TSEE_Texture *texture, double mass);
+int TSEECreatePhysicsObject(TSEE *tsee, TSEE_Texture *texture, float mass);
 
 // Converts a regular object into a physics object
-bool TSEEConvertObjectToPhysicsObject(TSEE *tsee, TSEE_Object *obj, double mass);
+bool TSEEConvertObjectToPhysicsObject(TSEE *tsee, TSEE_Object *obj, float mass);
 
 // Renders an object
 bool TSEERenderObject(TSEE *tsee, TSEE_Object *obj);
@@ -72,16 +72,16 @@ bool TSEEPerformPhysics(TSEE *tsee);
 bool TSEEPerformCollision(TSEE *tsee);
 
 // Sets an object's position by its index
-bool TSEESetObjectPosition(TSEE *tsee, int idx, double x, double y);
+bool TSEESetObjectPosition(TSEE *tsee, int idx, float x, float y);
 
 // Createa a player object for a physics object
 bool TSEECreatePlayer(TSEE *tsee, TSEE_Physics_Object *pobj);
 
 // Sets the player's jump force
-bool TSEESetPlayerJumpForce(TSEE *tsee, double force);
+bool TSEESetPlayerJumpForce(TSEE *tsee, float force);
 
 // Sets the player's speed
-bool TSEESetPlayerSpeed(TSEE *tsee, double speed);
+bool TSEESetPlayerSpeed(TSEE *tsee, float speed);
 
 // Applies a force to a physics object
 bool TSEEApplyForce(TSEE_Physics_Object *pobj, TSEE_Vec2 force);
@@ -93,7 +93,7 @@ bool TSEEVec2Add(TSEE_Vec2 *final, TSEE_Vec2 *add);
 bool TSEEVec2Normalise(TSEE_Vec2 *vec);
 
 // Multiplies a vector by a scalar
-bool TSEEVec2Multiply(TSEE_Vec2 *vec, double mult);
+bool TSEEVec2Multiply(TSEE_Vec2 *vec, float mult);
 
 // !! tsee_array.c !!
 
