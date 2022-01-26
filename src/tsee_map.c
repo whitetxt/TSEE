@@ -12,6 +12,7 @@ bool readFileUntilNull(FILE *fp, char *buffer) {
 		buffer[len - 1] = c;
 	}
 	buffer[len] = '\0';
+	return true;
 }
 
 bool TSEELoadMap(TSEE *tsee, char *fn) {
