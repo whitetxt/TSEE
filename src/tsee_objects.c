@@ -10,6 +10,10 @@ int TSEECreateObject(TSEE *tsee, TSEE_Texture *texture) {
 }
 
 int TSEECreatePhysicsObject(TSEE *tsee, TSEE_Texture *texture, float mass) {
+	if (mass == 0) {
+		TSEEWarn("Attempted to convert a physics object with no mass.\n");
+		return false;
+	}
 	int idx = TSEECreateObject(tsee, texture);
 	TSEE_Object *obj = TSEEArrayGet(tsee->world->objects, idx);
 	TSEE_Physics_Object *pobj = malloc(sizeof(TSEE_Physics_Object));
@@ -26,6 +30,10 @@ int TSEECreatePhysicsObject(TSEE *tsee, TSEE_Texture *texture, float mass) {
 }
 
 bool TSEEConvertObjectToPhysicsObject(TSEE *tsee, TSEE_Object *obj, float mass) {
+	if (mass == 0) {
+		TSEEWarn("Attempted to convert a physics object with no mass.\n");
+		return false;
+	}
 	TSEE_Physics_Object *pobj = malloc(sizeof(TSEE_Physics_Object));
 	pobj->mass = mass;
 	pobj->velocity.x = 0;
@@ -214,6 +222,10 @@ bool TSEECreatePlayer(TSEE *tsee, TSEE_Physics_Object *pobj) {
 }
 
 bool TSEEApplyForce(TSEE_Physics_Object *pobj, TSEE_Vec2 force) {
+	if (pobj->mass == 0) {
+		TSEEWarn("Attempted to apply force to physics object with no mass.\n");
+		return false;
+	}
 	pobj->acceleration.x += force.x / pobj->mass;
 	pobj->acceleration.y += force.y / pobj->mass;
 	return true;
