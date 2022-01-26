@@ -5,6 +5,16 @@ void quitGame(void *t) {
 	tsee->window->running = false;
 }
 
+void saveMap(void *t) {
+	TSEE *tsee = (TSEE *)t;
+	TSEESaveMap(tsee, "map.tsee_map");
+}
+
+void loadMap(void *t) {
+	TSEE *tsee = (TSEE *)t;
+	TSEELoadMap(tsee, "map.tsee_map");
+}
+
 int main(int argc, char *argv[]) {
 	(void)argc;
 	(void)argv;
@@ -35,10 +45,11 @@ int main(int argc, char *argv[]) {
 	TSEECreateParallax(&tsee, TSEECreateTexture(&tsee, "assets/parallax2.png"), 4);
 	TSEECreateParallax(&tsee, TSEECreateTexture(&tsee, "assets/parallax3.png"), 2);
 	TSEECreateParallax(&tsee, TSEECreateTexture(&tsee, "assets/parallax4.png"), 1);
-	TSEEAddToolbarButton(&tsee, "_default", "Test");
-	TSEEAddToolbarButton(&tsee, "_default", "Test2");
-	TSEEAddToolbarButton(&tsee, "_default", "Test3");
+	TSEEAddToolbarButton(&tsee, "_default", "Home");
 	TSEEAddToolbarChild(&tsee, TSEEArrayGet(tsee.ui->toolbar, 0), "_default", "Quit", quitGame);
+	TSEEAddToolbarButton(&tsee, "_default", "Maps");
+	TSEEAddToolbarChild(&tsee, TSEEArrayGet(tsee.ui->toolbar, 1), "_default", "Save", saveMap);
+	TSEEAddToolbarChild(&tsee, TSEEArrayGet(tsee.ui->toolbar, 1), "_default", "Load", loadMap);
 
 	//TSEEInitNetworking(&tsee); // NOTE: COMING SOON!!
 
