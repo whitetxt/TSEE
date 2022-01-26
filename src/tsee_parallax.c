@@ -1,18 +1,33 @@
 #include "include/tsee.h"
 
 bool TSEECreateParallax(TSEE *tsee, TSEE_Texture *texture, int distanceFromCamera) {
-	if (distanceFromCamera < 0) {
+	if (distanceFromCamera <= 0) {
 		TSEEError("Distance from camera must be greater than 0 (Recieved %d)\n", distanceFromCamera);
 		return false;
 	}
+
 	TSEE_Parallax *parallax = malloc(sizeof(TSEE_Parallax));
-	if (parallax == NULL) {
+	if (!parallax) {
 		return false;
 	}
+
 	parallax->texture = texture;
 	parallax->distance = distanceFromCamera;
 	parallax->texture->rect.y = tsee->window->height - texture->rect.h;
-	TSEEArrayAppend(tsee->world->parallax, parallax);
+	bool inserted = false;
+
+	for (size_t j = 0; j < tsee->world->parallax->size; j++) {
+		TSEE_Parallax *parallax2 = TSEEArrayGet(tsee->world->parallax, j);
+		if (parallax->distance > parallax2->distance) {
+			TSEEArrayInsert(tsee->world->parallax, parallax, j);
+			inserted = true;
+			break;
+		}
+	}
+
+	if (!inserted) {
+		TSEEArrayAppend(tsee->world->parallax, parallax);
+	}
 	return true;
 }
 
