@@ -102,12 +102,12 @@ bool TSEEClose(TSEE *tsee) {
 bool TSEECalculateDT(TSEE *tsee) {
 	tsee->last_time = tsee->current_time;
 	tsee->current_time = SDL_GetPerformanceCounter();
-	tsee->dt = (double) ( (tsee->current_time - tsee->last_time) * 1000 / (double) SDL_GetPerformanceFrequency() );
+	tsee->dt = (float) ( (tsee->current_time - tsee->last_time) * 1000 / (float) SDL_GetPerformanceFrequency() );
 	tsee->dt = tsee->dt * 0.001; // Convert from ms to s
 	return true;
 }
 
-bool TSEESetWorldGravity(TSEE *tsee, double gravity) {
+bool TSEESetWorldGravity(TSEE *tsee, float gravity) {
 	tsee->world->gravity = gravity;
 	return true;
 }

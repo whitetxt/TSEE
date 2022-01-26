@@ -9,7 +9,7 @@ int TSEECreateObject(TSEE *tsee, TSEE_Texture *texture) {
 	return tsee->world->objects->size - 1;
 }
 
-int TSEECreatePhysicsObject(TSEE *tsee, TSEE_Texture *texture, double mass) {
+int TSEECreatePhysicsObject(TSEE *tsee, TSEE_Texture *texture, float mass) {
 	int idx = TSEECreateObject(tsee, texture);
 	TSEE_Object *obj = TSEEArrayGet(tsee->world->objects, idx);
 	TSEE_Physics_Object *pobj = malloc(sizeof(TSEE_Physics_Object));
@@ -25,7 +25,7 @@ int TSEECreatePhysicsObject(TSEE *tsee, TSEE_Texture *texture, double mass) {
 	return tsee->world->physics_objects->size - 1;
 }
 
-bool TSEEConvertObjectToPhysicsObject(TSEE *tsee, TSEE_Object *obj, double mass) {
+bool TSEEConvertObjectToPhysicsObject(TSEE *tsee, TSEE_Object *obj, float mass) {
 	TSEE_Physics_Object *pobj = malloc(sizeof(TSEE_Physics_Object));
 	pobj->mass = mass;
 	pobj->velocity.x = 0;
@@ -46,12 +46,12 @@ bool TSEERenderObject(TSEE *tsee, TSEE_Object *obj) {
 	return true;
 }
 
-bool TSEESetPlayerJumpForce(TSEE *tsee, double force) {
+bool TSEESetPlayerJumpForce(TSEE *tsee, float force) {
 	tsee->player->jump_force = force;
 	return true;
 }
 
-bool TSEESetPlayerSpeed(TSEE *tsee, double speed) {
+bool TSEESetPlayerSpeed(TSEE *tsee, float speed) {
 	tsee->player->speed = speed;
 	return true;
 }
@@ -59,7 +59,7 @@ bool TSEESetPlayerSpeed(TSEE *tsee, double speed) {
 bool TSEEPerformPhysics(TSEE *tsee) {
 	for (size_t i = 0; i < tsee->world->physics_objects->size; i++) {
 		TSEE_Physics_Object *pobj = TSEEArrayGet(tsee->world->physics_objects, i);
-		double gravity = tsee->world->gravity * pobj->mass;
+		float gravity = tsee->world->gravity * pobj->mass;
 		if (tsee->player->physics_object == pobj) {
 			TSEE_Vec2 force = {tsee->player->movement.right - tsee->player->movement.left, tsee->player->movement.down - tsee->player->movement.up};
 			if (tsee->player->grounded && tsee->player->movement.up) {
@@ -76,9 +76,9 @@ bool TSEEPerformPhysics(TSEE *tsee) {
 		pobj->object->x += pobj->velocity.x * tsee->dt;
 		pobj->object->y += pobj->velocity.y * tsee->dt;
 		if (tsee->player->physics_object == pobj) {
-			double center = pobj->object->x + pobj->object->texture->rect.w / 2;
+			float center = pobj->object->x + pobj->object->texture->rect.w / 2;
 			if (center > tsee->window->width / 2) {
-				double over = center - tsee->window->width / 2;
+				float over = center - tsee->window->width / 2;
 				pobj->object->x = tsee->window->width / 2 - pobj->object->texture->rect.w / 2;
 				tsee->world->scroll_x += over;
 				for (size_t j = 0; j < tsee->world->objects->size; j++) {
@@ -89,7 +89,7 @@ bool TSEEPerformPhysics(TSEE *tsee) {
 					}
 				}
 			} else if (tsee->world->scroll_x > 0 && center < tsee->window->width / 2) {
-				double under = tsee->window->width / 2 - center;	
+				float under = tsee->window->width / 2 - center;	
 				pobj->object->x = tsee->window->width / 2 - pobj->object->texture->rect.w / 2;
 				tsee->world->scroll_x -= under;
 				for (size_t j = 0; j < tsee->world->objects->size; j++) {
@@ -133,11 +133,11 @@ bool TSEEPerformCollision(TSEE *tsee) {
 				continue;
 			}
 			// If the tile is too far away, don't waste time checking for collision.
-			double diff = pobj->object->x - obj->x;
+			float diff = pobj->object->x - obj->x;
 			if (diff > obj->texture->rect.w || diff < -pobj->object->texture->rect.w) {
 				continue;
 			}
-			double ydiff = pobj->object->y - obj->y;
+			float ydiff = pobj->object->y - obj->y;
 			if (ydiff > obj->texture->rect.h || ydiff < -pobj->object->texture->rect.h) {
 				continue;
 			}
@@ -196,7 +196,7 @@ bool TSEEPerformCollision(TSEE *tsee) {
 	return true;
 }
 
-bool TSEESetObjectPosition(TSEE *tsee, int idx, double x, double y) {
+bool TSEESetObjectPosition(TSEE *tsee, int idx, float x, float y) {
 	TSEE_Object *obj = TSEEArrayGet(tsee->world->objects, idx);
 	if (obj == NULL) {
 		return false;
@@ -226,7 +226,7 @@ bool TSEEVec2Add(TSEE_Vec2 *final, TSEE_Vec2 *add) {
 }
 
 bool TSEEVec2Normalise(TSEE_Vec2 *vec) {
-	double len = sqrt(vec->x * vec->x + vec->y * vec->y);
+	float len = sqrt(vec->x * vec->x + vec->y * vec->y);
 	if (len == 0) {
 		return false;
 	}
@@ -235,7 +235,7 @@ bool TSEEVec2Normalise(TSEE_Vec2 *vec) {
 	return true;
 }
 
-bool TSEEVec2Multiply(TSEE_Vec2 *vec, double mult) {
+bool TSEEVec2Multiply(TSEE_Vec2 *vec, float mult) {
 	vec->x *= mult;
 	vec->y *= mult;
 	return true;
