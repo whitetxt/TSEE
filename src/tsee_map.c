@@ -53,6 +53,7 @@ bool TSEELoadMap(TSEE *tsee, char *fn) {
 	size_t numTextures = 0;
 	// Read number of textures for the map
 	fread(&numTextures, sizeof(numTextures), 1, fp);
+	TSEELog("Loading %zu textures\n", numTextures);
 	for (size_t i = 0; i < numTextures; i++) {
 		char *texturePath = NULL;
 		if (!(texturePath = TSEEReadFileUntilNull(fp))) return false;
@@ -66,6 +67,7 @@ bool TSEELoadMap(TSEE *tsee, char *fn) {
 	// Read map's parallax layers
 	size_t numParallax = 0;
 	fread(&numParallax, sizeof(numParallax), 1, fp);
+	TSEELog("Loading %zu parallax\n", numParallax);
 	for (size_t i = 0; i < numParallax; i++) {
 		TSEE_Parallax *parallax = malloc(sizeof(*parallax));
 		size_t textureIdx = -1;
@@ -79,8 +81,9 @@ bool TSEELoadMap(TSEE *tsee, char *fn) {
 	// Read objects
 	size_t numObjects = 0;
 	fread(&numObjects, sizeof(numObjects), 1, fp);
-	for (size_t i = 0; i < tsee->world->objects->size; i++) {
-		uint64_t texIdx = 0;
+	TSEELog("Loading %zu obj\n", numObjects);
+	for (size_t i = 0; i < numObjects; i++) {
+		size_t texIdx = 0;
 		fread(&texIdx, sizeof(texIdx), 1, fp);
 		int idx = TSEECreateObject(tsee, TSEEArrayGet(tsee->textures, texIdx));
 		TSEE_Object *object = TSEEArrayGet(tsee->world->objects, idx);
@@ -93,15 +96,19 @@ bool TSEELoadMap(TSEE *tsee, char *fn) {
 	size_t numPhysicsObjects = 0;
 	fread(&numPhysicsObjects, sizeof(numPhysicsObjects), 1, fp);
 	for (size_t i = 0; i < numPhysicsObjects; i++) {
-		uint64_t objectIdx = 0;
+		size_t objectIdx = 0;
 		fread(&objectIdx, sizeof(objectIdx), 1, fp);
 		float mass = 0;
 		fread(&mass, sizeof(mass), 1, fp);
 		TSEE_Object *object = TSEEArrayGet(tsee->world->objects, objectIdx);
-		TSEEConvertObjectToPhysicsObject(tsee, object, mass);
+		if (!TSEEConvertObjectToPhysicsObject(tsee, object, mass)) {
+			TSEEWarn("Failed to convert object to physics object\n");
+		}
 	}
+	TSEELog("Physics objects: %zu\n", tsee->world->physics_objects->size);
+	TSEELog("Recorded physics objects: %zu\n", numPhysicsObjects);
 	// Read the player
-	Sint64 playerIdx = 0;
+	int64_t playerIdx = 0;
 	fread(&playerIdx, sizeof(playerIdx), 1, fp);
 	if (playerIdx == -1) {
 		TSEEError("Failed to load player index.\n");
@@ -166,14 +173,20 @@ bool TSEESaveMap(TSEE *tsee, char *fn) {
 	// Write the objects with texture indexes.
 	fwrite(&tsee->world->objects->size, sizeof(tsee->world->objects->size), 1, fp);
 	for (size_t i = 0; i < tsee->world->objects->size; i++) {
+		bool written = false;
 		TSEE_Object *object = TSEEArrayGet(tsee->world->objects, i);
 		for (size_t j = 0; j < tsee->textures->size; j++) {
 			TSEE_Texture *texture = TSEEArrayGet(tsee->textures, j);
-			if (texture == object->texture) {
-				uint64_t textureIdx = j;
+			if (strcmp(texture->path, object->texture->path) == 0) {
+				size_t textureIdx = j;
 				fwrite(&textureIdx, sizeof(textureIdx), 1, fp);
+				TSEELog("Written texture idx\n");
+				written = true;
 				break;
 			}
+		}
+		if (!written) {
+			TSEEError("Couldn't write texture idx for texture!!\n");
 		}
 		fwrite(&object->x, sizeof(object->x), 1, fp);
 		fwrite(&object->y, sizeof(object->y), 1, fp);
@@ -186,7 +199,7 @@ bool TSEESaveMap(TSEE *tsee, char *fn) {
 		for (size_t j = 0; j < tsee->world->objects->size; j++) {
 			TSEE_Object *object2 = TSEEArrayGet(tsee->world->objects, j);
 			if (object2 == object->object) {
-				uint64_t objectIdx = j;
+				size_t objectIdx = j;
 				fwrite(&objectIdx, sizeof(objectIdx), 1, fp);
 				break;
 			}
@@ -206,7 +219,7 @@ bool TSEESaveMap(TSEE *tsee, char *fn) {
 		if (playerIdx == -1) {
 			TSEEError("Failed to find player physics object in map file\n");
 		}
-		Sint64 towrite = playerIdx;
+		int64_t towrite = playerIdx;
 		fwrite(&towrite, sizeof(towrite), 1, fp);
 		fwrite(&tsee->player->jump_force, sizeof(tsee->player->jump_force), 1, fp);
 		fwrite(&tsee->player->speed, sizeof(tsee->player->speed), 1, fp);
