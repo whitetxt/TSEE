@@ -1,7 +1,7 @@
 filename = build/TSEE.exe
 
 CC = gcc
-CFLAGS = -g -Wall -Wextra -pedantic -lmingw32 -lSDL2main -lSDL2 -lSDL2_image -lSDL2_ttf -lws2_32
+CFLAGS = -g -Wall -Wextra -pedantic -lmingw32 -lSDL2main -lSDL2 -lSDL2_image -lSDL2_ttf
 
 files = ${wildcard src/*.c}
 objFiles = ${files:.c=.o}
