@@ -11,7 +11,7 @@ int TSEECreateObject(TSEE *tsee, TSEE_Texture *texture) {
 
 int TSEECreatePhysicsObject(TSEE *tsee, TSEE_Texture *texture, float mass) {
 	if (mass == 0) {
-		TSEEWarn("Attempted to convert a physics object with no mass.\n");
+		TSEEWarn("Attempted to create a physics object with no mass.\n");
 		return false;
 	}
 	int idx = TSEECreateObject(tsee, texture);
@@ -43,7 +43,7 @@ bool TSEEConvertObjectToPhysicsObject(TSEE *tsee, TSEE_Object *obj, float mass) 
 	pobj->force.x = 0;
 	pobj->force.y = 0;
 	pobj->object = obj;
-	return TSEEArrayAppend(tsee->world->physics_objects, obj);
+	return TSEEArrayAppend(tsee->world->physics_objects, pobj);
 }
 
 bool TSEERenderObject(TSEE *tsee, TSEE_Object *obj) {

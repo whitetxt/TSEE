@@ -93,7 +93,8 @@ bool TSEELoadMap(TSEE *tsee, char *fn) {
 	for (size_t i = 0; i < numObjects; i++) {
 		size_t texIdx = 0;
 		fread(&texIdx, sizeof(texIdx), 1, fp);
-		int idx = TSEECreateObject(tsee, TSEEArrayGet(tsee->textures, texIdx));
+		TSEE_Texture *tex = TSEEArrayGet(tsee->textures, texIdx);
+		int idx = TSEECreateObject(tsee, TSEECreateTexture(tsee, tex->path));
 		TSEE_Object *object = TSEEArrayGet(tsee->world->objects, idx);
 		object->x = 0;
 		object->y = 0;
