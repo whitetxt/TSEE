@@ -119,7 +119,6 @@ bool TSEELoadMap(TSEE *tsee, char *fn) {
 			TSEEWarn("Failed to convert object to physics object\n");
 		}
 	}
-	// !! TODO: figure out why the heck these physics objects are having their masses changed somewhere
 
 	// Read the player
 	int64_t playerIdx = 0;

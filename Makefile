@@ -1,7 +1,7 @@
-filename = build/TSEE.exe
+filename = build/TSEE
 
 CC = gcc
-CFLAGS = -g -Wall -Wextra -pedantic -lmingw32 -lSDL2main -lSDL2 -lSDL2_image -lSDL2_ttf
+CFLAGS = -g -Wall -Wextra -pedantic -lz -lm `pkg-config --cflags --libs sdl2 SDL2_image SDL2_ttf`
 
 files = ${wildcard src/*.c}
 objFiles = ${files:.c=.o}
@@ -13,16 +13,10 @@ clean:
 	-rm -rf ${filename}
 	-rm -rf ${objFiles}
 
-new:
-	-rm -rf ${filename}
-	-rm -rf ${objFiles}
-	${CC} -o ${filename} ${files} ${CFLAGS}
+new: clean all
 
-run:
-	${CC} -o ${filename} ${files} ${CFLAGS}
-	cd build && ../${filename}
-
-start:
+start: all
+	chmod +x ${filename}
 	cd build && ../${filename}
 
 gdb:

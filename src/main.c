@@ -33,9 +33,9 @@ int main(int argc, char *argv[]) {
 
 	int idx = TSEECreatePhysicsObject(&tsee, TSEECreateTexture(&tsee, "assets/test_image.png"), 1);
 	TSEECreatePlayer(&tsee, TSEEArrayGet(tsee.world->physics_objects, idx));
-	TSEESetPlayerJumpForce(&tsee, 30);
+	TSEESetPlayerJumpForce(&tsee, 75);
 	TSEESetPlayerSpeed(&tsee, 50);
-	TSEESetWorldGravity(&tsee, 15);
+	TSEESetWorldGravity(&tsee, 250);
 	idx = TSEECreateObject(&tsee, TSEECreateTexture(&tsee, "assets/test_image.png"));
 	TSEESetObjectPosition(&tsee, idx, 160, 595);
 	idx = TSEECreateObject(&tsee, TSEECreateTexture(&tsee, "assets/test_image.png"));
@@ -53,6 +53,14 @@ int main(int argc, char *argv[]) {
 	TSEEAddToolbarChild(&tsee, TSEEArrayGet(tsee.ui->toolbar, 1), "_default", "Load", loadMap);
 
 	while (tsee.window->running) {
+		/*
+		For multiple physics steps per frame
+		while (!TSEEReadyToRender(&tsee)) {
+			TSEEHandleEvents(&tsee);
+			TSEECalculateDT(&tsee);
+			TSEEPerformPhysics(&tsee);
+		}
+		TSEELog("Physics steps: %d\n", num);*/
 		TSEEHandleEvents(&tsee);
 		TSEECalculateDT(&tsee);
 		TSEEPerformPhysics(&tsee);

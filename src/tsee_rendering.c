@@ -28,6 +28,19 @@ bool TSEEInitRendering(TSEE *tsee) {
 		SDL_Quit();
 		return false;
 	}
+
+	if (SDL_GetCurrentDisplayMode(0, &tsee->window->mode) != 0) {
+		TSEEWarn("Failed to get display mode (%s)\n", SDL_GetError());
+		tsee->window->fps = 60;
+	} else {
+		tsee->window->fps = tsee->window->mode.refresh_rate;
+		if (tsee->window->fps == 0) {
+			TSEEWarn("Unspecified refresh rate.\n");
+			tsee->window->fps = 60;
+		}
+	}
+	TSEELog("Framerate: %d\n", tsee->window->fps);
+
 	tsee->init->rendering = true;
 	return true;
 }
@@ -53,6 +66,7 @@ bool TSEESetWindowTitle(TSEE *tsee, char *title) {
 }
 
 bool TSEERenderAll(TSEE *tsee) {
+	Uint64 start = SDL_GetPerformanceCounter();
 	if (SDL_GetWindowFlags(tsee->window->window) & SDL_WINDOW_MINIMIZED) {
 		SDL_Delay(25);
 		return true;
@@ -84,6 +98,47 @@ bool TSEERenderAll(TSEE *tsee) {
 		TSEEWarn("Failed to render all of UI\n");
 	}
 
+	if (tsee->debug->active) {
+		char text[64];
+		int height_off = 64;
+		sprintf(text, "Event: %f ms", tsee->debug->event_time);
+		TSEE_Text *tex = TSEECreateText(tsee, "_default", text, (SDL_Color){255, 255, 255, SDL_ALPHA_OPAQUE});
+		tex->texture->rect.x = 0;
+		tex->texture->rect.y = height_off;
+		height_off += tex->texture->rect.h;
+		SDL_SetRenderDrawColor(tsee->window->renderer, 100, 100, 100, 255);
+		SDL_RenderFillRect(tsee->window->renderer, &tex->texture->rect);
+		TSEERenderText(tsee, tex);
+		sprintf(text, "Physics: %f ms", tsee->debug->physics_time);
+		tex = TSEECreateText(tsee, "_default", text, (SDL_Color){255, 255, 255, SDL_ALPHA_OPAQUE});
+		tex->texture->rect.x = 0;
+		tex->texture->rect.y = height_off;
+		height_off += tex->texture->rect.h;
+		SDL_SetRenderDrawColor(tsee->window->renderer, 100, 100, 100, 255);
+		SDL_RenderFillRect(tsee->window->renderer, &tex->texture->rect);
+		TSEERenderText(tsee, tex);
+		sprintf(text, "Render: %f ms", tsee->debug->render_time);
+		tex = TSEECreateText(tsee, "_default", text, (SDL_Color){255, 255, 255, SDL_ALPHA_OPAQUE});
+		tex->texture->rect.x = 0;
+		tex->texture->rect.y = height_off;
+		height_off += tex->texture->rect.h;
+		SDL_SetRenderDrawColor(tsee->window->renderer, 100, 100, 100, 255);
+		SDL_RenderFillRect(tsee->window->renderer, &tex->texture->rect);
+		TSEERenderText(tsee, tex);
+		sprintf(text, "Frame: %f ms", tsee->debug->frame_time);
+		tex = TSEECreateText(tsee, "_default", text, (SDL_Color){255, 255, 255, SDL_ALPHA_OPAQUE});
+		tex->texture->rect.x = 0;
+		tex->texture->rect.y = height_off;
+		SDL_SetRenderDrawColor(tsee->window->renderer, 100, 100, 100, 255);
+		SDL_RenderFillRect(tsee->window->renderer, &tex->texture->rect);
+		TSEERenderText(tsee, tex);
+		free(tex);
+	}
+
 	SDL_RenderPresent(tsee->window->renderer);
+	tsee->debug->framerate = 1000 / (tsee->window->lastRender - SDL_GetPerformanceCounter()) / (double)SDL_GetPerformanceFrequency();
+	tsee->window->lastRender = SDL_GetPerformanceCounter();
+	tsee->debug->render_time = (tsee->window->lastRender - start) * 1000 / (double)SDL_GetPerformanceFrequency();
+	tsee->debug->frame_time = tsee->debug->event_time + tsee->debug->physics_time + tsee->debug->render_time;
 	return true;
 }
