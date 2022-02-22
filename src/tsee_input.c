@@ -29,6 +29,9 @@ void TSEEKeyPress(void *tsee, SDL_Keycode keycode) {
 		case SDLK_d:
 			tseeReal->player->movement.right = true;
 			break;
+		case SDLK_F3:
+			tseeReal->debug->active = !tseeReal->debug->active;
+			break;
 	}
 }
 
