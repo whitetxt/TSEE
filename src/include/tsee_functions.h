@@ -54,6 +54,11 @@ bool TSEECalculateDT(TSEE *tsee);
 // Sets the world's gravity
 bool TSEESetWorldGravity(TSEE *tsee, float gravity);
 
+// Determines if we are ready to render or not.
+// If returns true, time since last render is >= than the fps.
+// If returns false, time since last render is < than the fps.
+bool TSEEReadyToRender(TSEE *tsee);
+
 // !! tsee_rendering.c !!
 
 // Initializes the rendering component of TSEE, and creates a window + renderer.

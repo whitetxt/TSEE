@@ -46,6 +46,15 @@ TSEE TSEECreate(int width, int height) {
 	tsee.init->events = false;
 	tsee.init->input = false;
 
+	// Setup Debugging Counters
+	tsee.debug = malloc(sizeof(*tsee.debug));
+	tsee.debug->event_time = 0;
+	tsee.debug->physics_time = 0;
+	tsee.debug->render_time = 0;
+	tsee.debug->frame_time = 0;
+	tsee.debug->framerate = 0;
+	tsee.debug->active = false;
+
 	// Load basic settings
 	TSEELoadSettings(&tsee);
 	TSEELog("TSEE Engine initialized.\n");
@@ -102,12 +111,18 @@ bool TSEEClose(TSEE *tsee) {
 bool TSEECalculateDT(TSEE *tsee) {
 	tsee->last_time = tsee->current_time;
 	tsee->current_time = SDL_GetPerformanceCounter();
-	tsee->dt = (float) ( (tsee->current_time - tsee->last_time) * 1000 / (float) SDL_GetPerformanceFrequency() );
-	tsee->dt = tsee->dt * 0.001; // Convert from ms to s
+	tsee->dt = (float) ( (tsee->current_time - tsee->last_time) / (float) SDL_GetPerformanceFrequency() );
 	return true;
 }
 
 bool TSEESetWorldGravity(TSEE *tsee, float gravity) {
 	tsee->world->gravity = gravity;
 	return true;
+}
+
+bool TSEEReadyToRender(TSEE *tsee) {
+	float timeBetweenFrames = 1.0f / tsee->window->fps;
+	float dt = (float) ( (SDL_GetPerformanceCounter() - tsee->window->lastRender) * 1000 / (float) SDL_GetPerformanceFrequency() );
+	dt = dt * 0.001; // Convert from ms to s
+	return dt >= timeBetweenFrames;
 }

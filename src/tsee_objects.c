@@ -22,8 +22,6 @@ int TSEECreatePhysicsObject(TSEE *tsee, TSEE_Texture *texture, float mass) {
 	pobj->velocity.y = 0;
 	pobj->acceleration.x = 0;
 	pobj->acceleration.y = 0;
-	pobj->force.x = 0;
-	pobj->force.y = 0;
 	pobj->object = obj;
 	TSEEArrayAppend(tsee->world->physics_objects, pobj);
 	return tsee->world->physics_objects->size - 1;
@@ -40,8 +38,6 @@ bool TSEEConvertObjectToPhysicsObject(TSEE *tsee, TSEE_Object *obj, float mass) 
 	pobj->velocity.y = 0;
 	pobj->acceleration.x = 0;
 	pobj->acceleration.y = 0;
-	pobj->force.x = 0;
-	pobj->force.y = 0;
 	pobj->object = obj;
 	return TSEEArrayAppend(tsee->world->physics_objects, pobj);
 }
@@ -65,22 +61,20 @@ bool TSEESetPlayerSpeed(TSEE *tsee, float speed) {
 }
 
 bool TSEEPerformPhysics(TSEE *tsee) {
+	Uint64 start = SDL_GetPerformanceCounter();
+	// TODO: Decouple movement & jumping from frame-rate.
 	for (size_t i = 0; i < tsee->world->physics_objects->size; i++) {
 		TSEE_Physics_Object *pobj = TSEEArrayGet(tsee->world->physics_objects, i);
-		float gravity = tsee->world->gravity * pobj->mass;
-		if (tsee->player->physics_object == pobj) {
+		/*if (tsee->player->physics_object == pobj) {
 			TSEE_Vec2 force = {tsee->player->movement.right - tsee->player->movement.left, tsee->player->movement.down - tsee->player->movement.up};
 			if (tsee->player->grounded && tsee->player->movement.up) {
 				force.y = -gravity * tsee->player->jump_force;
+				tsee->player->grounded = false;
 			}
-			TSEEVec2Multiply(&force, pobj->mass);
 			force.x *= tsee->player->speed;
-			TSEEApplyForce(pobj, force);
-		}
-		TSEEApplyForce(pobj, (TSEE_Vec2){0, gravity});
-		TSEEVec2Add(&pobj->velocity, &pobj->acceleration);
+		}*/
 		pobj->velocity.x += pobj->acceleration.x * tsee->dt;
-		pobj->velocity.y += pobj->acceleration.y * tsee->dt;
+		pobj->velocity.y += pobj->acceleration.y * tsee->dt + tsee->world->gravity * tsee->dt;
 		pobj->object->x += pobj->velocity.x * tsee->dt;
 		pobj->object->y += pobj->velocity.y * tsee->dt;
 		if (tsee->player->physics_object == pobj) {
@@ -125,11 +119,11 @@ bool TSEEPerformPhysics(TSEE *tsee) {
 				tsee->player->grounded = false;
 			}
 		}
-		TSEEVec2Multiply(&pobj->acceleration, 0);
-		pobj->velocity.x *= 0.9;
-		pobj->velocity.y *= 0.99;
 	}
-	return TSEEPerformCollision(tsee);
+	bool retVal = TSEEPerformCollision(tsee);
+	Uint64 end = SDL_GetPerformanceCounter();
+	tsee->debug->physics_time = (end - start) * 1000 / (double)SDL_GetPerformanceFrequency();
+	return retVal;
 }
 
 bool TSEEPerformCollision(TSEE *tsee) {

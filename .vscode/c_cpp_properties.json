@@ -3,15 +3,16 @@
         {
             "name": "Win64",
             "includePath": [
-                "C:\\msys64\\mingw64\\include",
-                "${workspaceFolder}/**"
+                "/usr/include",
+                "${workspaceFolder}/**",
+                "/usr/include/SDL2"
             ],
             "defines": [
                 "_DEBUG",
                 "UNICODE",
                 "_UNICODE"
             ],
-            "compilerPath": "C:\\msys64\\mingw64\\bin\\gcc.exe",
+            "compilerPath": "/usr/bin/gcc",
             "cStandard": "gnu17",
             "cppStandard": "gnu++14",
             "intelliSenseMode": "gcc-x64",

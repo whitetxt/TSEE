@@ -16,6 +16,7 @@ bool TSEEInitEvents(TSEE *tsee) {
 }
 
 bool TSEEHandleEvents(TSEE *tsee) {
+	Uint64 start = SDL_GetPerformanceCounter();
 	while (SDL_PollEvent(tsee->events->event)) {
 		switch (tsee->events->event->type) {
 			case SDL_QUIT:
@@ -45,5 +46,7 @@ bool TSEEHandleEvents(TSEE *tsee) {
 				break;
 		}
 	}
+	Uint64 end = SDL_GetPerformanceCounter();
+	tsee->debug->event_time = (end - start) * 1000/ (double) SDL_GetPerformanceFrequency();
 	return true;
 }

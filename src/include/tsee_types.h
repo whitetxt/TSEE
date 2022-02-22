@@ -18,6 +18,8 @@ typedef struct TSEE_Window {
 	bool running;
 	char *title;
 	SDL_Point mouse;
+	SDL_DisplayMode mode;
+	Uint64 lastRender;
 } TSEE_Window;
 
 // TSEE fonts, stores the font, its name and size.
@@ -59,7 +61,6 @@ typedef struct TSEE_Physics_Object {
 	TSEE_Object *object;
 	TSEE_Vec2 velocity;
 	TSEE_Vec2 acceleration;
-	TSEE_Vec2 force;
 	float mass;
 } TSEE_Physics_Object;
 
@@ -134,6 +135,15 @@ typedef struct TSEE_UI {
 	TSEE_Array *toolbar; // Array of TSEE_Toolbar_Object
 } TSEE_UI;
 
+typedef struct TSEE_Debug {
+	double event_time;
+	double physics_time;
+	double render_time;
+	double frame_time;
+	double framerate;
+	bool active;
+} TSEE_Debug;
+
 // The main TSEE object, create using TSEECreate(width, height).
 typedef struct TSEE {
 	TSEE_Window *window;
@@ -144,6 +154,7 @@ typedef struct TSEE {
 	TSEE_Player *player;
 	TSEE_Init *init;
 	TSEE_UI *ui;
+	TSEE_Debug *debug;
 	Uint64 last_time;
 	Uint64 current_time;
 	float dt;
