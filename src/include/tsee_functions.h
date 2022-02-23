@@ -3,19 +3,19 @@
 #ifdef TSEE_DEV
 // Log something to the console, typically for debugging.
 #define TSEELog(message, ...) \
-		fprintf(stdout, "TSEE [Log] (%s:%s:%d): " message "", __func__, __FILE__, __LINE__, ##__VA_ARGS__)
+		fprintf(stdout, "TSEE [Log] (%s:%d): " message "", __FILE__, __LINE__, ##__VA_ARGS__)
 
 // Inform the user of a warning, typically used for something important, but not a full error.
 #define TSEEWarn(message, ...) \
-		fprintf(stdout, "TSEE [Warn] (%s:%s:%d): " message "", __func__, __FILE__, __LINE__, ##__VA_ARGS__)
+		fprintf(stdout, "TSEE [Warn] (%s:%d): " message "", __FILE__, __LINE__, ##__VA_ARGS__)
 
 // Inform the user of an error in the console, typically used for something being invalid, but not a full crash.
 #define TSEEError(message, ...) \
-		fprintf(stdout, "TSEE [Error] (%s:%s:%d): " message "", __func__, __FILE__, __LINE__, ##__VA_ARGS__)
+		fprintf(stdout, "TSEE [Error] (%s:%d): " message "", __FILE__, __LINE__, ##__VA_ARGS__)
 
 // Inform the user of a critical error, should only be used if the program can't continue.
 #define TSEECritical(message, ...) \
-		fprintf(stdout, "TSEE [!! CRITICAL !!] (%s:%s:%d): " message "", __func__, __FILE__, __LINE__, ##__VA_ARGS__)
+		fprintf(stdout, "TSEE [!! CRITICAL !!] (%s:%d): " message "", __FILE__, __LINE__, ##__VA_ARGS__)
 
 #else
 
@@ -40,7 +40,7 @@
 // !! tsee.c !!
 
 // Creates a new TSEE object.
-TSEE TSEECreate(int width, int height);
+TSEE *TSEECreate(int width, int height);
 
 // Initializes all TSEE components.
 bool TSEEInitAll(TSEE *tsee);
@@ -121,6 +121,12 @@ bool TSEEVec2Normalise(TSEE_Vec2 *vec);
 // Multiplies a vector by a scalar
 bool TSEEVec2Multiply(TSEE_Vec2 *vec, float mult);
 
+// Destroys a TSEE_Object, freeing memory
+void TSEEDestroyObject(TSEE_Object *obj, bool destroyTexture);
+
+// Destroys a TSEE_Physics_Object, freeing memory
+void TSEEDestroyPhysicsObject(TSEE_Physics_Object *pobj, bool destroyObject, bool destroyTexture);
+
 // !! tsee_array.c !!
 
 // Creates a TSEE_Array with size 0.
@@ -146,8 +152,8 @@ void *TSEEArrayGet(TSEE_Array *arr, size_t index);
 // Clears a TSEE_Array, deleting all data and setting size to 0.
 bool TSEEArrayClear(TSEE_Array *arr);
 
-// Frees a TSEE_Array, freeing all memory.
-bool TSEEArrayFree(TSEE_Array *arr);
+// Frees a TSEE_Array, does not free data.
+bool TSEEDestroyArray(TSEE_Array *arr);
 
 // !! tsee_text.c !!
 
@@ -174,6 +180,9 @@ TSEE_Text *TSEECreateText(TSEE *tsee, char *fontName, char *text, SDL_Color colo
 // Renders the supplied TSEE_Text object to the TSEE
 bool TSEERenderText(TSEE *tsee, TSEE_Text *text);
 
+// Destroys a TSEE_Text, freeing memory.
+void TSEEDestroyText(TSEE_Text *text, bool destroyTexture);
+
 // !! tsee_settings.c !!
 
 // Callback for TSEE's settings loading system. Do not use.
@@ -194,6 +203,9 @@ TSEE_Texture *TSEECreateTexture(TSEE *tsee, char *path);
 
 // Finds an already loaded TSEE_Texture from a file path.
 TSEE_Texture *TSEEFindTexture(TSEE *tsee, char *path);
+
+// Frees a TSEE_Texture.
+void TSEEDestroyTexture(TSEE_Texture *tex);
 
 // !! tsee_events.c !!
 
@@ -221,6 +233,9 @@ bool TSEECreateParallax(TSEE *tsee, TSEE_Texture *texture, int distanceFromCamer
 
 // Renders all the parallax backgrounds.
 bool TSEERenderParallax(TSEE *tsee);
+
+// Destroys a parallax object
+void TSEEDestroyParallax(TSEE_Parallax *para, bool destroyTexture);
 
 // !! tsee_ui.c !!
 

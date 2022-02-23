@@ -47,6 +47,6 @@ bool TSEEHandleEvents(TSEE *tsee) {
 		}
 	}
 	Uint64 end = SDL_GetPerformanceCounter();
-	tsee->debug->event_time = (end - start) * 1000/ (double) SDL_GetPerformanceFrequency();
+	tsee->debug->event_time += (end - start) * 1000/ (double) SDL_GetPerformanceFrequency();
 	return true;
 }

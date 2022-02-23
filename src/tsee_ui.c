@@ -24,7 +24,7 @@ bool TSEEAddToolbarButton(TSEE *tsee, char *font, char *text) {
 	toolbarobj->text = TSEECreateText(tsee, font, text, (SDL_Color){255, 255, 255, 255});
 	if (!toolbarobj->text) {
 		TSEEError("Failed to create toolbar button texture\n");
-		TSEEArrayFree(toolbarobj->buttons);
+		TSEEDestroyArray(toolbarobj->buttons);
 		free(toolbarobj);
 		return false;
 	}
