@@ -4,7 +4,7 @@ TSEE_Texture *TSEECreateTexture(TSEE *tsee, char *path) {
 	for (size_t i = 0; i < tsee->textures->size; i++) {
 		TSEE_Texture *existingTexture = (TSEE_Texture *)TSEEArrayGet(tsee->textures, i);
 		if (strcmp(existingTexture->path, path) == 0) {
-			TSEE_Texture *newTexture = malloc(sizeof(TSEE_Texture));
+			TSEE_Texture *newTexture = malloc(sizeof(*newTexture));
 			newTexture->texture = existingTexture->texture;
 			SDL_QueryTexture(newTexture->texture, NULL, NULL, &newTexture->rect.w, &newTexture->rect.h);
 			newTexture->rect = (SDL_Rect){0, 0, newTexture->rect.w, newTexture->rect.h};
@@ -43,4 +43,13 @@ TSEE_Texture *TSEEFindTexture(TSEE *tsee, char *path) {
 	}
 	TSEEWarn("Couldn't find loaded texture `%s`\n", path);
 	return NULL;
+}
+
+void TSEEDestroyTexture(TSEE_Texture *tex) {
+	if (!tex) {
+		return;
+	}
+	SDL_DestroyTexture(tex->texture);
+	free(tex->path);
+	free(tex);
 }

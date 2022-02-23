@@ -52,21 +52,15 @@ bool TSEEArrayClear(TSEE_Array *arr) {
 	if (!arr) {
 		return false;
 	}
-	for (size_t i = 0; i < arr->size; i++) {
-		free(arr->data[i]);
-	}
 	free(arr->data);
 	arr->data = NULL;
 	arr->size = 0;
 	return true;
 }
 
-bool TSEEArrayFree(TSEE_Array *arr) {
+bool TSEEDestroyArray(TSEE_Array *arr) {
 	if (!arr) {
 		return false;
-	}
-	for (size_t i = 0; i < arr->size; i++) {
-		free(arr->data[i]);
 	}
 	free(arr->data);
 	free(arr);
