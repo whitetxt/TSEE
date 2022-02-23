@@ -122,7 +122,7 @@ bool TSEEPerformPhysics(TSEE *tsee) {
 	}
 	bool retVal = TSEEPerformCollision(tsee);
 	Uint64 end = SDL_GetPerformanceCounter();
-	tsee->debug->physics_time = (end - start) * 1000 / (double)SDL_GetPerformanceFrequency();
+	tsee->debug->physics_time += (end - start) * 1000 / (double)SDL_GetPerformanceFrequency();
 	return retVal;
 }
 
@@ -245,4 +245,16 @@ bool TSEEVec2Multiply(TSEE_Vec2 *vec, float mult) {
 	vec->x *= mult;
 	vec->y *= mult;
 	return true;
+}
+
+void TSEEDestroyObject(TSEE_Object *obj, bool destroyTexture) {
+	if (destroyTexture)
+		TSEEDestroyTexture(obj->texture);
+	free(obj);
+}
+
+void TSEEDestroyPhysicsObject(TSEE_Physics_Object *pobj, bool destroyObject, bool destroyTexture) {
+	if (destroyObject)
+		TSEEDestroyObject(pobj->object, destroyTexture);
+	free(pobj);
 }

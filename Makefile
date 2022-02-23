@@ -1,7 +1,7 @@
 filename = build/TSEE
 
 CC = gcc
-CFLAGS = -g -Wall -Wextra -pedantic -lz -lm `pkg-config --cflags --libs sdl2 SDL2_image SDL2_ttf`
+CFLAGS = -g -Wall -Wextra -pedantic -lz -lm `pkg-config --cflags --libs sdl2 SDL2_image SDL2_ttf libfyaml`
 
 files = ${wildcard src/*.c}
 objFiles = ${files:.c=.o}
@@ -21,3 +21,6 @@ start: all
 
 gdb:
 	cd build && gdb ../${filename}
+
+vg:
+	cd build && valgrind --leak-check=full --track-origins=yes -s ../${filename} 

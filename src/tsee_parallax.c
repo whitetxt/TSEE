@@ -6,7 +6,7 @@ bool TSEECreateParallax(TSEE *tsee, TSEE_Texture *texture, int distanceFromCamer
 		return false;
 	}
 
-	TSEE_Parallax *parallax = malloc(sizeof(TSEE_Parallax));
+	TSEE_Parallax *parallax = malloc(sizeof(*parallax));
 	if (!parallax) {
 		return false;
 	}
@@ -14,6 +14,37 @@ bool TSEECreateParallax(TSEE *tsee, TSEE_Texture *texture, int distanceFromCamer
 	parallax->texture = texture;
 	parallax->distance = distanceFromCamera;
 	parallax->texture->rect.y = tsee->window->height - texture->rect.h;
+	bool inserted = false;
+
+	for (size_t j = 0; j < tsee->world->parallax->size; j++) {
+		TSEE_Parallax *parallax2 = TSEEArrayGet(tsee->world->parallax, j);
+		if (parallax->distance > parallax2->distance) {
+			TSEEArrayInsert(tsee->world->parallax, parallax, j);
+			inserted = true;
+			break;
+		}
+	}
+
+	if (!inserted) {
+		TSEEArrayAppend(tsee->world->parallax, parallax);
+	}
+	return true;
+}
+
+bool TSEECreateParallaxFromObject(TSEE *tsee, TSEE_Object *obj, int distanceFromCamera) {
+	if (distanceFromCamera <= 0) {
+		TSEEError("Distance from camera must be greater than 0 (Recieved %d)\n", distanceFromCamera);
+		return false;
+	}
+
+	TSEE_Parallax *parallax = malloc(sizeof(*parallax));
+	if (!parallax) {
+		return false;
+	}
+
+	parallax->texture = obj->texture;
+	parallax->distance = distanceFromCamera;
+	parallax->texture->rect.y = tsee->window->height - obj->texture->rect.h;
 	bool inserted = false;
 
 	for (size_t j = 0; j < tsee->world->parallax->size; j++) {
@@ -70,4 +101,11 @@ bool TSEERenderParallax(TSEE *tsee) {
 		}
 	}
 	return true;
+}
+
+void TSEEDestroyParallax(TSEE_Parallax *para, bool destroyTexture) {
+	if (destroyTexture) {
+		TSEEDestroyTexture(para->texture);
+	}
+	free(para);
 }
