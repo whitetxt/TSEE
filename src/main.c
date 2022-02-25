@@ -33,9 +33,9 @@ int main(int argc, char *argv[]) {
 
 	int idx = TSEECreatePhysicsObject(tsee, TSEECreateTexture(tsee, "assets/test_image.png"), 1);
 	TSEECreatePlayer(tsee, TSEEArrayGet(tsee->world->physics_objects, idx));
-	TSEESetPlayerJumpForce(tsee, 75);
+	TSEESetPlayerJumpForce(tsee, 2);
 	TSEESetPlayerSpeed(tsee, 50);
-	TSEESetWorldGravity(tsee, 250);
+	TSEESetWorldGravity(tsee, 350);
 	idx = TSEECreateObject(tsee, TSEECreateTexture(tsee, "assets/test_image.png"));
 	TSEESetObjectPosition(tsee, idx, 160, 595);
 	idx = TSEECreateObject(tsee, TSEECreateTexture(tsee, "assets/test_image.png"));
@@ -47,10 +47,10 @@ int main(int argc, char *argv[]) {
 	TSEECreateParallax(tsee, TSEECreateTexture(tsee, "assets/parallax3.png"), 2);
 	TSEECreateParallax(tsee, TSEECreateTexture(tsee, "assets/parallax4.png"), 1);
 	TSEEAddToolbarButton(tsee, "_default", "Home");
-	TSEEAddToolbarChild(tsee, TSEEArrayGet(tsee->ui->toolbar, 0), "_default", "Quit", quitGame);
+	TSEEAddToolbarChild(tsee, "Home", "_default", "Quit", quitGame);
 	TSEEAddToolbarButton(tsee, "_default", "Maps");
-	TSEEAddToolbarChild(tsee, TSEEArrayGet(tsee->ui->toolbar, 1), "_default", "Save", saveMap);
-	TSEEAddToolbarChild(tsee, TSEEArrayGet(tsee->ui->toolbar, 1), "_default", "Load", loadMap);
+	TSEEAddToolbarChild(tsee, "Maps", "_default", "Save", saveMap);
+	TSEEAddToolbarChild(tsee, "Maps", "_default", "Load", loadMap);
 
 	while (tsee->window->running) {
 		/*

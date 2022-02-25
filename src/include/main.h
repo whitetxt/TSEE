@@ -7,3 +7,4 @@
 #include <stdlib.h>
 #include <math.h>
 #include "tsee.h"
+#include "tinyfiledialogs.h"
