@@ -39,7 +39,18 @@ bool TSEEAddToolbarButton(TSEE *tsee, char *font, char *text) {
 	return true;
 }
 
-bool TSEEAddToolbarChild(TSEE *tsee, TSEE_Toolbar_Object *parent, char *font, char *text, void (*cb) (void *tsee)) {
+bool TSEEAddToolbarChild(TSEE *tsee, char *parentName, char *font, char *text, void (*cb) (void *tsee)) {
+	TSEE_Toolbar_Object *parent = NULL;
+	for (size_t i = 0; i < tsee->ui->toolbar->size; i++) {
+		TSEE_Toolbar_Object *obj = TSEEArrayGet(tsee->ui->toolbar, i);
+		if (strcmp(obj->text->text, parentName) == 0) {
+			parent = obj;
+			break;
+		}
+	}
+	if (!parent) {
+		TSEEError("Failed to find toolbar button with name `%s`\n", parentName);
+	}
 	TSEE_Toolbar_Child *child = malloc(sizeof(*child));
 	child->text = TSEECreateText(tsee, font, text, (SDL_Color){255, 255, 255, 255});
 	if (!child->text) {

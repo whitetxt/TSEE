@@ -52,6 +52,7 @@ bool TSEEClose(TSEE *tsee);
 bool TSEECalculateDT(TSEE *tsee);
 
 // Sets the world's gravity
+// Measured in pixels/second
 bool TSEESetWorldGravity(TSEE *tsee, float gravity);
 
 // Determines if we are ready to render or not.
@@ -104,9 +105,11 @@ bool TSEESetObjectPosition(TSEE *tsee, int idx, float x, float y);
 bool TSEECreatePlayer(TSEE *tsee, TSEE_Physics_Object *pobj);
 
 // Sets the player's jump force
+// Measured as a multiple of gravity.
 bool TSEESetPlayerJumpForce(TSEE *tsee, float force);
 
 // Sets the player's speed
+// Measured in pixels/second.
 bool TSEESetPlayerSpeed(TSEE *tsee, float speed);
 
 // Applies a force to a physics object
@@ -247,7 +250,7 @@ bool TSEEInitUI(TSEE *tsee);
 bool TSEEAddToolbarButton(TSEE *tsee, char *font, char *text);
 
 // Adds a child button to a parent button.
-bool TSEEAddToolbarChild(TSEE *tsee, TSEE_Toolbar_Object *parent, char *font, char *text, void (*cb) (void *tsee));
+bool TSEEAddToolbarChild(TSEE *tsee, char *parentName, char *font, char *text, void (*cb) (void *tsee));
 
 // Checks if the UI was clicked
 bool TSEEUIClick(TSEE *tsee, int x, int y);

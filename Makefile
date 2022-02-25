@@ -3,8 +3,11 @@ filename = build/TSEE
 CC = gcc
 CFLAGS = -g -Wall -Wextra -pedantic -lz -lm `pkg-config --cflags --libs sdl2 SDL2_image SDL2_ttf libfyaml`
 
-files = ${wildcard src/*.c}
+files = ${wildcard src/tsee*.c} src/main.c ${wildcard src/ext/*.c}
 objFiles = ${files:.c=.o}
+
+editor_files = ${wildcard src/tsee*.c} src/editor.c ${wildcard src/ext/*.c}
+editor_fn = build/TSEE_Editor
 
 all:
 	${CC} -o ${filename} ${files} ${CFLAGS}
@@ -23,4 +26,11 @@ gdb:
 	cd build && gdb ../${filename}
 
 vg:
-	cd build && valgrind --leak-check=full --track-origins=yes -s ../${filename} 
+	cd build && valgrind --leak-check=full --track-origins=yes -s ../${filename}
+
+editor:
+	${CC} -o ${editor_fn} ${editor_files} ${CFLAGS}
+
+estart: editor
+	chmod +x ${editor_fn}
+	cd build && ../${editor_fn}
