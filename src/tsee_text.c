@@ -52,9 +52,10 @@ bool TSEEUnloadFont(TSEE *tsee, char *name) {
 
 bool TSEEUnloadAllFonts(TSEE *tsee) {
 	for (size_t i = 0; i < tsee->fonts->size; i++) {
-		TSEE_Font *font = tsee->fonts->data[i];
+		TSEE_Font *font = TSEEArrayGet(tsee->fonts, i);
 		TTF_CloseFont(font->font);
 		free(font->name);
+		free(font);
 	}
 	TSEEDestroyArray(tsee->fonts);
 	return true;
@@ -62,7 +63,7 @@ bool TSEEUnloadAllFonts(TSEE *tsee) {
 
 TTF_Font *TSEEGetFont(TSEE *tsee, char *name) {
 	for (size_t i = 0; i < tsee->fonts->size; i++) {
-		TSEE_Font *data = tsee->fonts->data[i];
+		TSEE_Font *data = TSEEArrayGet(tsee->fonts, i);
 		if (strcmp(data->name, name) == 0) {
 			return data->font;
 		}
@@ -95,8 +96,9 @@ TSEE_Text *TSEECreateText(TSEE *tsee, char *fontName, char *text, SDL_Color colo
 }
 
 void TSEEDestroyText(TSEE_Text *text, bool destroyTexture) {
-	if (destroyTexture)
+	if (destroyTexture) {
 		TSEEDestroyTexture(text->texture);
+	}
 	free(text->text);
 	free(text);
 }

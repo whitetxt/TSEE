@@ -52,6 +52,7 @@ void TSEEWindowUpdateSize(TSEE *tsee) {
 void TSEEDestroyWindow(TSEE_Window *window) {
 	SDL_DestroyRenderer(window->renderer);
 	SDL_DestroyWindow(window->window);
+	free(window->title);
 }
 
 bool TSEESetWindowTitle(TSEE *tsee, char *title) {
@@ -109,6 +110,7 @@ bool TSEERenderAll(TSEE *tsee) {
 		SDL_SetRenderDrawColor(tsee->window->renderer, 100, 100, 100, 255);
 		SDL_RenderFillRect(tsee->window->renderer, &tex->texture->rect);
 		TSEERenderText(tsee, tex);
+		TSEEDestroyText(tex, true);
 		sprintf(text, "Physics: %.3f ms", tsee->debug->physics_time);
 		tex = TSEECreateText(tsee, "_default", text, (SDL_Color){255, 255, 255, SDL_ALPHA_OPAQUE});
 		tex->texture->rect.x = 0;
@@ -117,6 +119,7 @@ bool TSEERenderAll(TSEE *tsee) {
 		SDL_SetRenderDrawColor(tsee->window->renderer, 100, 100, 100, 255);
 		SDL_RenderFillRect(tsee->window->renderer, &tex->texture->rect);
 		TSEERenderText(tsee, tex);
+		TSEEDestroyText(tex, true);
 		sprintf(text, "Render: %.3f ms", tsee->debug->render_time);
 		tex = TSEECreateText(tsee, "_default", text, (SDL_Color){255, 255, 255, SDL_ALPHA_OPAQUE});
 		tex->texture->rect.x = 0;
@@ -125,6 +128,7 @@ bool TSEERenderAll(TSEE *tsee) {
 		SDL_SetRenderDrawColor(tsee->window->renderer, 100, 100, 100, 255);
 		SDL_RenderFillRect(tsee->window->renderer, &tex->texture->rect);
 		TSEERenderText(tsee, tex);
+		TSEEDestroyText(tex, true);
 		sprintf(text, "Frame: %.3f ms", tsee->debug->frame_time);
 		tex = TSEECreateText(tsee, "_default", text, (SDL_Color){255, 255, 255, SDL_ALPHA_OPAQUE});
 		tex->texture->rect.x = 0;
@@ -136,9 +140,9 @@ bool TSEERenderAll(TSEE *tsee) {
 	}
 
 	SDL_RenderPresent(tsee->window->renderer);
-	tsee->debug->framerate = 1000 / (tsee->window->lastRender - SDL_GetPerformanceCounter()) / (double)SDL_GetPerformanceFrequency();
-	tsee->window->lastRender = SDL_GetPerformanceCounter();
-	tsee->debug->render_time = (tsee->window->lastRender - start) * 1000 / (double)SDL_GetPerformanceFrequency();
+	tsee->debug->framerate = 1000 / (tsee->window->last_render - SDL_GetPerformanceCounter()) / (double)SDL_GetPerformanceFrequency();
+	tsee->window->last_render = SDL_GetPerformanceCounter();
+	tsee->debug->render_time = (tsee->window->last_render - start) * 1000 / (double)SDL_GetPerformanceFrequency();
 	tsee->debug->frame_time = tsee->debug->event_time + tsee->debug->physics_time + tsee->debug->render_time;
 	tsee->debug->event_time = 0;
 	tsee->debug->physics_time = 0;
