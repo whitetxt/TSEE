@@ -62,7 +62,6 @@ bool TSEESetPlayerSpeed(TSEE *tsee, float speed) {
 
 bool TSEEPerformPhysics(TSEE *tsee) {
 	Uint64 start = SDL_GetPerformanceCounter();
-	// TODO: Decouple movement & jumping from frame-rate.
 	for (size_t i = 0; i < tsee->world->physics_objects->size; i++) {
 		TSEE_Physics_Object *pobj = TSEEArrayGet(tsee->world->physics_objects, i);
 		if (tsee->player->physics_object == pobj) {
@@ -74,7 +73,6 @@ bool TSEEPerformPhysics(TSEE *tsee) {
 			force.x *= tsee->player->speed;
 			TSEEVec2Multiply(&force, tsee->player->speed);
 			TSEEApplyForce(pobj, force);
-			TSEELog("Position: %f, %f\n", pobj->object->x, pobj->object->y);
 		}
 		pobj->velocity.x += pobj->acceleration.x * tsee->dt;
 		pobj->velocity.y += (pobj->acceleration.y + tsee->world->gravity)* tsee->dt;
@@ -218,6 +216,11 @@ bool TSEESetObjectPosition(TSEE *tsee, int idx, float x, float y) {
 
 bool TSEECreatePlayer(TSEE *tsee, TSEE_Physics_Object *pobj) {
 	tsee->player->physics_object = pobj;
+	tsee->player->grounded = false;
+	tsee->player->movement.up = false;
+	tsee->player->movement.down = false;
+	tsee->player->movement.left = false;
+	tsee->player->movement.right = false;
 	return true;
 }
 

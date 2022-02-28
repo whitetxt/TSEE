@@ -26,7 +26,7 @@ gdb:
 	cd build && gdb ../${filename}
 
 vg:
-	cd build && valgrind --leak-check=full --track-origins=yes -s ../${filename}
+	cd build && valgrind --leak-check=full --show-possibly-lost=no --show-reachable=no -s ../${filename}
 
 editor:
 	${CC} -o ${editor_fn} ${editor_files} ${CFLAGS}
