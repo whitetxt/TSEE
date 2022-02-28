@@ -19,7 +19,7 @@ typedef struct TSEE_Window {
 	char *title;
 	SDL_Point mouse;
 	SDL_DisplayMode mode;
-	Uint64 lastRender;
+	Uint64 last_render;
 } TSEE_Window;
 
 // TSEE fonts, stores the font, its name and size.
@@ -115,6 +115,7 @@ typedef struct TSEE_Init {
 	bool events;
 	bool input;
 	bool ui;
+	bool animation;
 } TSEE_Init;
 
 // A child to a top-level toolbar button.
@@ -133,6 +134,7 @@ typedef struct TSEE_Toolbar_Object {
 // TSEE's UI struct. Keeps track of all UI elements and what's enabled.
 typedef struct TSEE_UI {
 	TSEE_Array *toolbar; // Array of TSEE_Toolbar_Object
+	bool toolbar_enabled;
 } TSEE_UI;
 
 typedef struct TSEE_Debug {
@@ -144,16 +146,28 @@ typedef struct TSEE_Debug {
 	bool active;
 } TSEE_Debug;
 
+typedef struct TSEE_Animation {
+	TSEE_Texture *texture;
+	bool active;
+} TSEE_Animation;
+
+typedef struct TSEE_Animations {
+	TSEE_Array *animations;
+	double animation_timer;
+} TSEE_Animations;
+
 // The main TSEE object, create using TSEECreate(width, height).
 typedef struct TSEE {
 	TSEE_Window *window;
 	TSEE_Array *textures;
+	TSEE_Array *texture_copies;
 	TSEE_Array *fonts;
 	TSEE_World *world;
 	TSEE_Events *events;
 	TSEE_Player *player;
 	TSEE_Init *init;
 	TSEE_UI *ui;
+	TSEE_Animations *animations;
 	TSEE_Debug *debug;
 	Uint64 last_time;
 	Uint64 current_time;

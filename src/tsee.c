@@ -11,6 +11,7 @@ TSEE *TSEECreate(int width, int height) {
 	tsee->window->height = height;
 	tsee->window->running = true;
 	tsee->window->fps = 60;
+	tsee->window->last_render = 0;
 
 	// Setup world + textures
 	tsee->world = malloc(sizeof(*tsee->world));
@@ -21,6 +22,7 @@ TSEE *TSEECreate(int width, int height) {
 	tsee->world->scroll_x = 0;
 	tsee->world->scroll_y = 0;
 	tsee->textures = TSEEArrayCreate();
+	tsee->texture_copies = TSEEArrayCreate();
 
 	// Setup player
 	tsee->player = malloc(sizeof(*tsee->player));
@@ -45,6 +47,7 @@ TSEE *TSEECreate(int width, int height) {
 	tsee->init->rendering = false;
 	tsee->init->events = false;
 	tsee->init->input = false;
+	tsee->init->animation = false;
 
 	// Setup Debugging Counters
 	tsee->debug = malloc(sizeof(*tsee->debug));
@@ -124,15 +127,39 @@ bool TSEEClose(TSEE *tsee) {
 		TSEEDestroyTexture(tex);
 	}
 	TSEEDestroyArray(tsee->textures);
+	for (size_t i = 0; i < tsee->texture_copies->size; i++) {
+		TSEE_Texture *tex = TSEEArrayGet(tsee->texture_copies, i);
+		free(tex->path);
+		free(tex);
+	}
+	TSEEDestroyArray(tsee->texture_copies);
 	TSEEUnloadAllFonts(tsee);
-	TSEEDestroyWindow(tsee->window);
+	
 	free(tsee->player);
 	free(tsee->world);
-	free(tsee->window->title);
-	free(tsee->window);
+	
 	free(tsee->events->event);
 	free(tsee->events);
+	for (size_t i = 0; i < tsee->ui->toolbar->size; i++) {
+		TSEE_Toolbar_Object *obj = TSEEArrayGet(tsee->ui->toolbar, i);
+		TSEEDestroyText(obj->text, true);
+		for (size_t j = 0; j < obj->buttons->size; j++) {
+			TSEE_Toolbar_Child *child = TSEEArrayGet(obj->buttons, j);
+			TSEEDestroyText(child->text, true);
+			free(child);
+		}
+		TSEEDestroyArray(obj->buttons);
+		free(obj);
+	}
+	TSEEDestroyArray(tsee->ui->toolbar);
+	if (tsee->init->animation) {
+		TSEEDestroyArray(tsee->animations->animations);
+		free(tsee->animations);
+	}
 	free(tsee->ui);
+
+	TSEEDestroyWindow(tsee->window);
+	free(tsee->window);
 	if (tsee->init->text)
 		TTF_Quit();
 	if (tsee->init->rendering) {
@@ -159,6 +186,6 @@ bool TSEESetWorldGravity(TSEE *tsee, float gravity) {
 
 bool TSEEReadyToRender(TSEE *tsee) {
 	float timeBetweenFrames = 1.0f / tsee->window->fps;
-	float dt = (float) ( (SDL_GetPerformanceCounter() - tsee->window->lastRender) / (float) SDL_GetPerformanceFrequency() );
+	float dt = (float) ( (SDL_GetPerformanceCounter() - tsee->window->last_render) / (float) SDL_GetPerformanceFrequency() );
 	return dt >= timeBetweenFrames;
 }

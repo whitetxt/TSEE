@@ -9,6 +9,7 @@ TSEE_Texture *TSEECreateTexture(TSEE *tsee, char *path) {
 			SDL_QueryTexture(newTexture->texture, NULL, NULL, &newTexture->rect.w, &newTexture->rect.h);
 			newTexture->rect = (SDL_Rect){0, 0, newTexture->rect.w, newTexture->rect.h};
 			newTexture->path = strdup(path);
+			TSEEArrayAppend(tsee->texture_copies, newTexture);
 			return newTexture;
 		}
 	}
