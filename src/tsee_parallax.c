@@ -6,7 +6,7 @@ bool TSEECreateParallax(TSEE *tsee, TSEE_Texture *texture, int distanceFromCamer
 		return false;
 	}
 
-	TSEE_Parallax *parallax = malloc(sizeof(*parallax));
+	TSEE_Parallax *parallax = xmalloc(sizeof(*parallax));
 	if (!parallax) {
 		return false;
 	}
@@ -37,7 +37,7 @@ bool TSEECreateParallaxFromObject(TSEE *tsee, TSEE_Object *obj, int distanceFrom
 		return false;
 	}
 
-	TSEE_Parallax *parallax = malloc(sizeof(*parallax));
+	TSEE_Parallax *parallax = xmalloc(sizeof(*parallax));
 	if (!parallax) {
 		return false;
 	}
@@ -107,5 +107,5 @@ void TSEEDestroyParallax(TSEE_Parallax *para, bool destroyTexture) {
 	if (destroyTexture) {
 		TSEEDestroyTexture(para->texture);
 	}
-	free(para);
+	xfree(para);
 }

@@ -23,7 +23,7 @@ bool TSEEInitText(TSEE *tsee, bool loadDefault) {
 }
 
 bool TSEELoadFont(TSEE *tsee, char *path, int size, char *name) {
-	TSEE_Font *font = malloc(sizeof(*font));
+	TSEE_Font *font = xmalloc(sizeof(*font));
 	font->font = TTF_OpenFont(path, size);
 	if (font->font == NULL) {
 		TSEEWarn("Failed to load font `%s` (%s)\n", path, TTF_GetError());
@@ -40,8 +40,8 @@ bool TSEEUnloadFont(TSEE *tsee, char *name) {
 		TSEE_Font *font = tsee->fonts->data[i];
 		if (strcmp(font->name, name) == 0) {
 			TTF_CloseFont(font->font);
-			free(font->name);
-			free(font);
+			xfree(font->name);
+			xfree(font);
 			TSEEArrayDelete(tsee->fonts, i);
 			return true;
 		}
@@ -54,8 +54,8 @@ bool TSEEUnloadAllFonts(TSEE *tsee) {
 	for (size_t i = 0; i < tsee->fonts->size; i++) {
 		TSEE_Font *font = TSEEArrayGet(tsee->fonts, i);
 		TTF_CloseFont(font->font);
-		free(font->name);
-		free(font);
+		xfree(font->name);
+		xfree(font);
 	}
 	TSEEDestroyArray(tsee->fonts);
 	return true;
@@ -73,14 +73,14 @@ TTF_Font *TSEEGetFont(TSEE *tsee, char *name) {
 }
 
 TSEE_Text *TSEECreateText(TSEE *tsee, char *fontName, char *text, SDL_Color color) {
-	TSEE_Text *textObj = malloc(sizeof(*textObj));
+	TSEE_Text *textObj = xmalloc(sizeof(*textObj));
 	TTF_Font *font = TSEEGetFont(tsee, fontName);
 	if (!font) {
 		TSEEWarn("Failed to create text `%s` with font `%s` (Failed to get font)\n", text, fontName);
 		return NULL;
 	}
 	textObj->text = strdup(text);
-	textObj->texture = malloc(sizeof(*textObj->texture));
+	textObj->texture = xmalloc(sizeof(*textObj->texture));
 	textObj->texture->path = strdup("Rendered Text");
 	SDL_Surface *surf = TTF_RenderText_Blended(font, text, color);
 	if (!surf) {
@@ -99,8 +99,8 @@ void TSEEDestroyText(TSEE_Text *text, bool destroyTexture) {
 	if (destroyTexture) {
 		TSEEDestroyTexture(text->texture);
 	}
-	free(text->text);
-	free(text);
+	xfree(text->text);
+	xfree(text);
 }
 
 bool TSEERenderText(TSEE *tsee, TSEE_Text *text) {

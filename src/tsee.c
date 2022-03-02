@@ -2,11 +2,11 @@
 
 TSEE *TSEECreate(int width, int height) {
 	TSEELog("Initialising TSEE Engine...\n");
-	TSEE *tsee = malloc(sizeof(*tsee));
+	TSEE *tsee = xmalloc(sizeof(*tsee));
 	tsee->fonts = NULL;
 
 	// Setup window + renderer
-	tsee->window = malloc(sizeof(*tsee->window));
+	tsee->window = xmalloc(sizeof(*tsee->window));
 	tsee->window->width = width;
 	tsee->window->height = height;
 	tsee->window->running = true;
@@ -14,7 +14,7 @@ TSEE *TSEECreate(int width, int height) {
 	tsee->window->last_render = 0;
 
 	// Setup world + textures
-	tsee->world = malloc(sizeof(*tsee->world));
+	tsee->world = xmalloc(sizeof(*tsee->world));
 	tsee->world->objects = TSEEArrayCreate();
 	tsee->world->physics_objects = TSEEArrayCreate();
 	tsee->world->text = TSEEArrayCreate();
@@ -25,7 +25,7 @@ TSEE *TSEECreate(int width, int height) {
 	tsee->texture_copies = TSEEArrayCreate();
 
 	// Setup player
-	tsee->player = malloc(sizeof(*tsee->player));
+	tsee->player = xmalloc(sizeof(*tsee->player));
 	tsee->player->physics_object = NULL;
 	tsee->player->movement.up = false;
 	tsee->player->movement.down = false;
@@ -38,10 +38,10 @@ TSEE *TSEECreate(int width, int height) {
 	tsee->current_time = SDL_GetPerformanceCounter();
 	
 	// Setup UI
-	tsee->ui = malloc(sizeof(*tsee->ui));
+	tsee->ui = xmalloc(sizeof(*tsee->ui));
 
 	// Setup init stuff
-	tsee->init = malloc(sizeof(*tsee->init));
+	tsee->init = xmalloc(sizeof(*tsee->init));
 	tsee->init->text = false;
 	tsee->init->ui = false;
 	tsee->init->rendering = false;
@@ -50,7 +50,7 @@ TSEE *TSEECreate(int width, int height) {
 	tsee->init->animation = false;
 
 	// Setup Debugging Counters
-	tsee->debug = malloc(sizeof(*tsee->debug));
+	tsee->debug = xmalloc(sizeof(*tsee->debug));
 	tsee->debug->event_time = 0;
 	tsee->debug->physics_time = 0;
 	tsee->debug->render_time = 0;
@@ -129,46 +129,46 @@ bool TSEEClose(TSEE *tsee) {
 	TSEEDestroyArray(tsee->textures);
 	for (size_t i = 0; i < tsee->texture_copies->size; i++) {
 		TSEE_Texture *tex = TSEEArrayGet(tsee->texture_copies, i);
-		free(tex->path);
-		free(tex);
+		xfree(tex->path);
+		xfree(tex);
 	}
 	TSEEDestroyArray(tsee->texture_copies);
 	TSEEUnloadAllFonts(tsee);
 	
-	free(tsee->player);
-	free(tsee->world);
+	xfree(tsee->player);
+	xfree(tsee->world);
 	
-	free(tsee->events->event);
-	free(tsee->events);
+	xfree(tsee->events->event);
+	xfree(tsee->events);
 	for (size_t i = 0; i < tsee->ui->toolbar->size; i++) {
 		TSEE_Toolbar_Object *obj = TSEEArrayGet(tsee->ui->toolbar, i);
 		TSEEDestroyText(obj->text, true);
 		for (size_t j = 0; j < obj->buttons->size; j++) {
 			TSEE_Toolbar_Child *child = TSEEArrayGet(obj->buttons, j);
 			TSEEDestroyText(child->text, true);
-			free(child);
+			xfree(child);
 		}
 		TSEEDestroyArray(obj->buttons);
-		free(obj);
+		xfree(obj);
 	}
 	TSEEDestroyArray(tsee->ui->toolbar);
 	if (tsee->init->animation) {
 		TSEEDestroyArray(tsee->animations->animations);
-		free(tsee->animations);
+		xfree(tsee->animations);
 	}
-	free(tsee->ui);
+	xfree(tsee->ui);
 
 	TSEEDestroyWindow(tsee->window);
-	free(tsee->window);
+	xfree(tsee->window);
 	if (tsee->init->text)
 		TTF_Quit();
 	if (tsee->init->rendering) {
 		IMG_Quit();
 		SDL_Quit();
 	}
-	free(tsee->init);
-	free(tsee->debug);
-	free(tsee);
+	xfree(tsee->init);
+	xfree(tsee->debug);
+	xfree(tsee);
 	return true;
 }
 
