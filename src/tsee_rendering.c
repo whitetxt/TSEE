@@ -52,7 +52,7 @@ void TSEEWindowUpdateSize(TSEE *tsee) {
 void TSEEDestroyWindow(TSEE_Window *window) {
 	SDL_DestroyRenderer(window->renderer);
 	SDL_DestroyWindow(window->window);
-	free(window->title);
+	xfree(window->title);
 }
 
 bool TSEESetWindowTitle(TSEE *tsee, char *title) {

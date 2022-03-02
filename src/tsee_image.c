@@ -4,7 +4,7 @@ TSEE_Texture *TSEECreateTexture(TSEE *tsee, char *path) {
 	for (size_t i = 0; i < tsee->textures->size; i++) {
 		TSEE_Texture *existingTexture = (TSEE_Texture *)TSEEArrayGet(tsee->textures, i);
 		if (strcmp(existingTexture->path, path) == 0) {
-			TSEE_Texture *newTexture = malloc(sizeof(*newTexture));
+			TSEE_Texture *newTexture = xmalloc(sizeof(*newTexture));
 			newTexture->texture = existingTexture->texture;
 			SDL_QueryTexture(newTexture->texture, NULL, NULL, &newTexture->rect.w, &newTexture->rect.h);
 			newTexture->rect = (SDL_Rect){0, 0, newTexture->rect.w, newTexture->rect.h};
@@ -13,7 +13,7 @@ TSEE_Texture *TSEECreateTexture(TSEE *tsee, char *path) {
 			return newTexture;
 		}
 	}
-	TSEE_Texture *texture = malloc(sizeof(*texture));
+	TSEE_Texture *texture = xmalloc(sizeof(*texture));
 	if (!texture) {
 		TSEEError("Couldn't malloc memory for texture `%s`\n", path);
 		return NULL;
@@ -21,7 +21,7 @@ TSEE_Texture *TSEECreateTexture(TSEE *tsee, char *path) {
 	SDL_Texture *tex = IMG_LoadTexture(tsee->window->renderer, path);
 	if (!tex) {
 		TSEEError("Couldn't load texture from file `%s`\n", path);
-		free(texture);
+		xfree(texture);
 		return NULL;
 	}
 	texture->texture = tex;
@@ -51,6 +51,6 @@ void TSEEDestroyTexture(TSEE_Texture *tex) {
 		return;
 	}
 	SDL_DestroyTexture(tex->texture);
-	free(tex->path);
-	free(tex);
+	xfree(tex->path);
+	xfree(tex);
 }
