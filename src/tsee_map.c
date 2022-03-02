@@ -76,7 +76,7 @@ bool TSEELoadMap(TSEE *tsee, char *fn) {
 	fread(&numParallax, sizeof(numParallax), 1, fp);
 	TSEELog("Loading %zu parallax layers\n", numParallax);
 	for (size_t i = 0; i < numParallax; i++) {
-		TSEE_Parallax *parallax = malloc(sizeof(*parallax));
+		TSEE_Parallax *parallax = xmalloc(sizeof(*parallax));
 		size_t textureIdx = -1;
 		fread(&textureIdx, sizeof(textureIdx), 1, fp);
 		size_t dist = 0;

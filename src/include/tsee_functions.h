@@ -268,3 +268,14 @@ bool TSEELoadMap(TSEE *tsee, char *path);
 
 // Saves a map to a file.
 bool TSEESaveMap(TSEE *tsee, char *path);
+
+// !! tsee_safety.c !!
+
+// Safely frees memory, and raises an error if it fails.
+void xfree(void *ptr);
+
+// Safely mallocs memory, and raises an error if it fails.
+void *xmalloc(size_t size);
+
+// Prints a backtrace to stdout.
+void TSEEBacktrace();

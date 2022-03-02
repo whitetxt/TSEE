@@ -1,7 +1,7 @@
 #include "include/tsee.h"
 
 TSEE_Array *TSEEArrayCreate() {
-	TSEE_Array *array = malloc(sizeof(*array));
+	TSEE_Array *array = xmalloc(sizeof(*array));
 	array->data = NULL;
 	array->size = 0;
 	return array;
@@ -52,7 +52,7 @@ bool TSEEArrayClear(TSEE_Array *arr) {
 	if (!arr) {
 		return false;
 	}
-	free(arr->data);
+	xfree(arr->data);
 	arr->data = NULL;
 	arr->size = 0;
 	return true;
@@ -62,7 +62,7 @@ bool TSEEDestroyArray(TSEE_Array *arr) {
 	if (!arr) {
 		return false;
 	}
-	free(arr->data);
-	free(arr);
+	xfree(arr->data);
+	xfree(arr);
 	return true;
 }

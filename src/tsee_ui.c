@@ -15,18 +15,18 @@ bool TSEEInitUI(TSEE *tsee) {
 }
 
 bool TSEEAddToolbarButton(TSEE *tsee, char *font, char *text) {
-	TSEE_Toolbar_Object *toolbarobj = malloc(sizeof(*toolbarobj));
+	TSEE_Toolbar_Object *toolbarobj = xmalloc(sizeof(*toolbarobj));
 	toolbarobj->buttons = TSEEArrayCreate();
 	if (!toolbarobj->buttons) {
 		TSEEError("Failed to create toolbar button array.\n");
-		free(toolbarobj);
+		xfree(toolbarobj);
 		return false;
 	}
 	toolbarobj->text = TSEECreateText(tsee, font, text, (SDL_Color){255, 255, 255, 255});
 	if (!toolbarobj->text) {
 		TSEEError("Failed to create toolbar button texture\n");
 		TSEEDestroyArray(toolbarobj->buttons);
-		free(toolbarobj);
+		xfree(toolbarobj);
 		return false;
 	}
 	TSEEArrayAppend(tsee->ui->toolbar, toolbarobj);
@@ -52,11 +52,11 @@ bool TSEEAddToolbarChild(TSEE *tsee, char *parentName, char *font, char *text, v
 	if (!parent) {
 		TSEEError("Failed to find toolbar button with name `%s`\n", parentName);
 	}
-	TSEE_Toolbar_Child *child = malloc(sizeof(*child));
+	TSEE_Toolbar_Child *child = xmalloc(sizeof(*child));
 	child->text = TSEECreateText(tsee, font, text, (SDL_Color){255, 255, 255, 255});
 	if (!child->text) {
 		TSEEError("Failed to create toolbar child texture\n");
-		free(child);
+		xfree(child);
 		return false;
 	}
 	child->text->texture->rect = (SDL_Rect){parent->text->texture->rect.x + parent->text->texture->rect.w / 2 - child->text->texture->rect.w / 2, 

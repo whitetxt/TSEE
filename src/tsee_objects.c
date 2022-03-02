@@ -1,7 +1,7 @@
 #include "include/tsee.h"
 
 int TSEECreateObject(TSEE *tsee, TSEE_Texture *texture) {
-	TSEE_Object *obj = malloc(sizeof(*obj));
+	TSEE_Object *obj = xmalloc(sizeof(*obj));
 	obj->texture = texture;
 	obj->x = texture->rect.x;
 	obj->y = texture->rect.y;
@@ -16,7 +16,7 @@ int TSEECreatePhysicsObject(TSEE *tsee, TSEE_Texture *texture, float mass) {
 	}
 	int idx = TSEECreateObject(tsee, texture);
 	TSEE_Object *obj = TSEEArrayGet(tsee->world->objects, idx);
-	TSEE_Physics_Object *pobj = malloc(sizeof(TSEE_Physics_Object));
+	TSEE_Physics_Object *pobj = xmalloc(sizeof(TSEE_Physics_Object));
 	pobj->mass = mass;
 	pobj->velocity.x = 0;
 	pobj->velocity.y = 0;
@@ -32,7 +32,7 @@ bool TSEEConvertObjectToPhysicsObject(TSEE *tsee, TSEE_Object *obj, float mass) 
 		TSEEWarn("Attempted to convert a physics object with no mass.\n");
 		return false;
 	}
-	TSEE_Physics_Object *pobj = malloc(sizeof(TSEE_Physics_Object));
+	TSEE_Physics_Object *pobj = xmalloc(sizeof(TSEE_Physics_Object));
 	pobj->mass = mass;
 	pobj->velocity.x = 0;
 	pobj->velocity.y = 0;
@@ -259,11 +259,11 @@ bool TSEEVec2Multiply(TSEE_Vec2 *vec, float mult) {
 void TSEEDestroyObject(TSEE_Object *obj, bool destroyTexture) {
 	if (destroyTexture)
 		TSEEDestroyTexture(obj->texture);
-	free(obj);
+	xfree(obj);
 }
 
 void TSEEDestroyPhysicsObject(TSEE_Physics_Object *pobj, bool destroyObject, bool destroyTexture) {
 	if (destroyObject)
 		TSEEDestroyObject(pobj->object, destroyTexture);
-	free(pobj);
+	xfree(pobj);
 }
