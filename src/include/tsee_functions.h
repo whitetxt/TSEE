@@ -37,6 +37,12 @@
 
 #endif
 
+#define xfree(ptr) \
+		_xfree(ptr, __FILE__, __LINE__);
+
+#define xmalloc(size) \
+		_xmalloc(size, __FILE__, __LINE__);
+
 // !! tsee.c !!
 
 // Creates a new TSEE object.
@@ -272,10 +278,12 @@ bool TSEESaveMap(TSEE *tsee, char *path);
 // !! tsee_safety.c !!
 
 // Safely frees memory, and raises an error if it fails.
-void xfree(void *ptr);
+// USE xfree() NOT _xfree()
+void _xfree(void *ptr, char *file, int line);
 
 // Safely mallocs memory, and raises an error if it fails.
-void *xmalloc(size_t size);
+// USE xmalloc() NOT _xmalloc()
+void *_xmalloc(size_t size, char *file, int line);
 
 // Prints a backtrace to stdout.
 void TSEEBacktrace();
