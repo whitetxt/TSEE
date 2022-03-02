@@ -16,21 +16,21 @@ void TSEEBacktrace() {
 	xfree(strings);
 }
 
-void *xmalloc(size_t size) {
+void *_xmalloc(size_t size, char *file, int line) {
 	void *ptr = malloc(size);
 	if (!ptr) {
-		TSEEError("Failed to allocate %zu bytes\n", size);
+		TSEEError("Failed to allocate %zu bytes\nCalled from %s:%d\n", size, file, line);
 		TSEEBacktrace();
 		return NULL;
 	}
 	return ptr;
 }
 
-void xfree(void *ptr) {
+void _xfree(void *ptr, char *file, int line) {
 	if (ptr) {
 		free(ptr);
 	} else {
-		TSEEError("Tried to free NULL pointer.\n");
+		TSEEError("Tried to free NULL pointer.\nCalled from %s:%d\n", file, line);
 		TSEEBacktrace();
 	}
 }
