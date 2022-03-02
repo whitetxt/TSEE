@@ -1,7 +1,7 @@
 filename = build/TSEE
 
 CC = gcc
-CFLAGS = -g -Wall -Wextra -pedantic -lz -lm `pkg-config --cflags --libs sdl2 SDL2_image SDL2_ttf libfyaml`
+CFLAGS = -g -Wall -Wextra -pedantic -lz -lm -rdynamic `pkg-config --cflags --libs sdl2 SDL2_image SDL2_ttf libfyaml`
 
 files = ${wildcard src/tsee*.c} src/main.c ${wildcard src/ext/*.c}
 objFiles = ${files:.c=.o}
