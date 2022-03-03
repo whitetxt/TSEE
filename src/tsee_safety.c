@@ -34,3 +34,23 @@ void _xfree(void *ptr, char *file, int line) {
 		TSEEBacktrace();
 	}
 }
+
+void *_xrealloc(void *ptr, size_t size, char *file, int line) {
+	void *newPtr = realloc(ptr, size);
+	if (!newPtr) {
+		TSEEError("Failed to realloc %zu bytes\nCalled from %s:%d\n", size, file, line);
+		TSEEBacktrace();
+		return NULL;
+	}
+	return newPtr;
+}
+
+void *_xmemmove(void *dst, const void *src, size_t size, char *file, int line) {
+	void *newPtr = memmove(dst, src, size);
+	if (!newPtr) {
+		TSEEError("Failed to memmove %zu bytes\nCalled from %s:%d\n", size, file, line);
+		TSEEBacktrace();
+		return NULL;
+	}
+	return newPtr;
+}
