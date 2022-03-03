@@ -43,6 +43,12 @@
 #define xmalloc(size) \
 		_xmalloc(size, __FILE__, __LINE__);
 
+#define xrealloc(ptr, size) \
+		_xrealloc(ptr, size, __FILE__, __LINE__);
+
+#define xmemmove(dst, src, size) \
+		_xmemmove(dst, src, size, __FILE__, __LINE__);
+
 // !! tsee.c !!
 
 // Creates a new TSEE object.
@@ -284,6 +290,14 @@ void _xfree(void *ptr, char *file, int line);
 // Safely mallocs memory, and raises an error if it fails.
 // USE xmalloc() NOT _xmalloc()
 void *_xmalloc(size_t size, char *file, int line);
+
+// Safely reallocs memory, and raises an error if it fails.
+// USE xrealloc() NOT _xrealloc()
+void *_xrealloc(void *ptr, size_t size, char *file, int line);
+
+// Safely moves memory, and raises an error if it fails.
+// USE xmemmove() NOT _xmemmove()
+void *_xmemmove(void *dst, const void *src, size_t size, char *file, int line);
 
 // Prints a backtrace to stdout.
 void TSEEBacktrace();

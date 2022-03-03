@@ -5,7 +5,7 @@ char *TSEEReadFileUntilNull(FILE *fp) {
 	int len = 0;
 	char *buffer = NULL;
 	while ((c = getc(fp)) != 0 && c != EOF) {
-		char *newPtr = realloc(buffer, sizeof(*buffer) * (++len));
+		char *newPtr = xrealloc(buffer, sizeof(*buffer) * (++len));
 		if (!newPtr) {
 			TSEECritical("Failed realloc for text buffer.\n");
 			return NULL;
