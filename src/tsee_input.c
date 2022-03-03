@@ -36,6 +36,7 @@ void TSEEKeyPress(void *tsee, SDL_Keycode keycode) {
 			tseeReal->ui->toolbar_enabled = !tseeReal->ui->toolbar_enabled;
 			break;
 	}
+	TSEELog("Movement (WASD): %d, %d, %d, %d\n", tseeReal->player->movement.up, tseeReal->player->movement.left, tseeReal->player->movement.down, tseeReal->player->movement.right);
 }
 
 void TSEEKeyRelease(void *tsee, SDL_Keycode keycode) {
@@ -54,4 +55,5 @@ void TSEEKeyRelease(void *tsee, SDL_Keycode keycode) {
 			tseeReal->player->movement.right = false;
 			break;
 	}
+	TSEELog("Movement (WASD): %d, %d, %d, %d\n", tseeReal->player->movement.up, tseeReal->player->movement.left, tseeReal->player->movement.down, tseeReal->player->movement.right);
 }
