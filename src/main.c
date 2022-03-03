@@ -33,9 +33,9 @@ int main(int argc, char *argv[]) {
 
 	int idx = TSEECreatePhysicsObject(tsee, TSEECreateTexture(tsee, "assets/test_image.png"), 1);
 	TSEECreatePlayer(tsee, TSEEArrayGet(tsee->world->physics_objects, idx));
-	TSEESetPlayerJumpForce(tsee, 2);
-	TSEESetPlayerSpeed(tsee, 50);
-	TSEESetWorldGravity(tsee, 350);
+	TSEESetPlayerJumpForce(tsee, 60);
+	TSEESetPlayerSpeed(tsee, 1500);
+	TSEESetWorldGravity(tsee, 800);
 	idx = TSEECreateObject(tsee, TSEECreateTexture(tsee, "assets/test_image.png"));
 	TSEESetObjectPosition(tsee, idx, 160, 595);
 	idx = TSEECreateObject(tsee, TSEECreateTexture(tsee, "assets/test_image.png"));

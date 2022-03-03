@@ -18,9 +18,11 @@ clean:
 
 new: clean all
 
-start: all
+run: 
 	chmod +x ${filename}
 	cd build && ../${filename}
+
+start: all run
 
 gdb:
 	cd build && gdb ../${filename}
@@ -31,6 +33,8 @@ vg:
 editor:
 	${CC} -o ${editor_fn} ${editor_files} ${CFLAGS}
 
-estart: editor
+erun: 
 	chmod +x ${editor_fn}
 	cd build && ../${editor_fn}
+
+estart: editor erun
