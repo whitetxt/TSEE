@@ -63,6 +63,7 @@ bool TSEESetPlayerSpeed(TSEE *tsee, float speed) {
 bool TSEEPerformPhysics(TSEE *tsee) {
 	Uint64 start = SDL_GetPerformanceCounter();
 	for (size_t i = 0; i < tsee->world->physics_objects->size; i++) {
+		// Main Physics Loop
 		TSEE_Physics_Object *pobj = TSEEArrayGet(tsee->world->physics_objects, i);
 		if (tsee->player->physics_object == pobj) {
 			TSEE_Vec2 force = {tsee->player->movement.right - tsee->player->movement.left, tsee->player->movement.down - tsee->player->movement.up};
@@ -71,13 +72,14 @@ bool TSEEPerformPhysics(TSEE *tsee) {
 				tsee->player->grounded = false;
 			}
 			force.x *= tsee->player->speed;
-			TSEEVec2Multiply(&force, tsee->player->speed);
 			TSEEApplyForce(pobj, force);
 		}
 		pobj->velocity.x += pobj->acceleration.x * tsee->dt;
-		pobj->velocity.y += (pobj->acceleration.y + tsee->world->gravity)* tsee->dt;
+		pobj->velocity.y += (pobj->acceleration.y + tsee->world->gravity) * tsee->dt;
 		pobj->object->x += pobj->velocity.x * tsee->dt;
 		pobj->object->y += pobj->velocity.y * tsee->dt;
+
+		// Center all other objects around player
 		if (tsee->player->physics_object == pobj) {
 			float center = pobj->object->x + pobj->object->texture->rect.w / 2;
 			if (center > tsee->window->width / 2) {
@@ -107,6 +109,8 @@ bool TSEEPerformPhysics(TSEE *tsee) {
 				pobj->object->x = 0;
 			}
 		}
+
+		// Clamp y to window height
 		if (pobj->object->y + pobj->object->texture->rect.h > tsee->window->height) {
 			pobj->velocity.y = 0;
 			pobj->object->y = tsee->window->height - pobj->object->texture->rect.h;
@@ -118,11 +122,15 @@ bool TSEEPerformPhysics(TSEE *tsee) {
 				tsee->player->grounded = false;
 			}
 		}
+
+		// Move texture
 		pobj->object->texture->rect.x = pobj->object->x;
 		pobj->object->texture->rect.y = pobj->object->y;
+
+		// Reset & apply friction.
 		pobj->acceleration.x = 0;
 		pobj->acceleration.y = 0;
-		pobj->velocity.x *= 0.95;
+		pobj->velocity.x *= 0.96;
 	}
 	bool retVal = TSEEPerformCollision(tsee);
 	Uint64 end = SDL_GetPerformanceCounter();
@@ -138,11 +146,13 @@ bool TSEEPerformCollision(TSEE *tsee) {
 			if (obj == pobj->object) { // Don't collide with ourselves
 				continue;
 			}
+
 			// If the tile is too far away, don't waste time checking for collision.
 			float diff = pobj->object->x - obj->x;
 			if (diff > obj->texture->rect.w || diff < -pobj->object->texture->rect.w) {
 				continue;
 			}
+
 			float ydiff = pobj->object->y - obj->y;
 			if (ydiff > obj->texture->rect.h || ydiff < -pobj->object->texture->rect.h) {
 				continue;
@@ -152,6 +162,7 @@ bool TSEEPerformCollision(TSEE *tsee) {
 				pobj->object->texture->rect.x < obj->texture->rect.x + obj->texture->rect.w &&
 				pobj->object->texture->rect.y + pobj->object->texture->rect.h > obj->texture->rect.y &&
 				pobj->object->texture->rect.y < obj->texture->rect.y + obj->texture->rect.h) {
+
 				// Figure out collision side
 				int amtRight = abs(pobj->object->texture->rect.x + pobj->object->texture->rect.w - obj->texture->rect.x);
 				int amtLeft = abs(obj->texture->rect.x + obj->texture->rect.w - pobj->object->texture->rect.x);

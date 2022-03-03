@@ -125,8 +125,10 @@ bool TSEELoadMap(TSEE *tsee, char *fn) {
 	fread(&playerIdx, sizeof(playerIdx), 1, fp);
 	if (playerIdx == -1)
 		TSEEError("Failed to load player index.\n");
-	else
+	else {
+		TSEELog("Loaded player index %zu\n", playerIdx);
 		TSEECreatePlayer(tsee, TSEEArrayGet(tsee->world->physics_objects, playerIdx));
+	}
 	float speed = 0;
 	fread(&speed, sizeof(speed), 1, fp);
 	TSEESetPlayerSpeed(tsee, speed);
