@@ -3,11 +3,8 @@ filename = build/TSEE
 CC = gcc
 CFLAGS = -g -Wall -Wextra -pedantic -lz -lm -rdynamic `pkg-config --cflags --libs sdl2 SDL2_image SDL2_ttf libfyaml`
 
-files = ${wildcard src/tsee*.c} src/main.c ${wildcard src/ext/*.c}
+files = ${wildcard src/*.c src/tsee/*/*.c}
 objFiles = ${files:.c=.o}
-
-editor_files = ${wildcard src/tsee*.c} src/editor.c ${wildcard src/ext/*.c}
-editor_fn = build/TSEE_Editor
 
 all:
 	${CC} -o ${filename} ${files} ${CFLAGS}
