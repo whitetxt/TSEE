@@ -12,7 +12,7 @@ Objects:
 /**
  * @brief Creates an object from 
  * 
- * @param tsee TSEE Object
+ * @param tsee TSEE object
  * @param texture Texture to use
  * @param attributes TSEE_Object_Attributes OR'd together
  * @return TSEE_Object 

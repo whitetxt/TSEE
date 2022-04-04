@@ -1,5 +1,12 @@
 #include "../tsee.h"
 
+/**
+ * @brief Initialises the text subsystem.
+ * 
+ * @param tsee TSEE object to initialise text for.
+ * @param loadDefault True to load the default font, false to not.
+ * @return true on success, false on fail.
+ */
 bool TSEE_Text_Init(TSEE *tsee, bool loadDefault) {
 	if (tsee->init->text) {
 		return true;
@@ -22,57 +29,16 @@ bool TSEE_Text_Init(TSEE *tsee, bool loadDefault) {
 	return true;
 }
 
-bool TSEE_Font_Load(TSEE *tsee, char *path, int size, char *name) {
-	TSEE_Font *font = xmalloc(sizeof(*font));
-	font->font = TTF_OpenFont(path, size);
-	if (font->font == NULL) {
-		TSEE_Warn("Failed to load font `%s` (%s)\n", path, TTF_GetError());
-		return false;
-	}
-	font->name = strdup(name);
-	font->size = size;
-	TSEE_Array_Append(tsee->fonts, font);
-	return true;
-}
-
-bool TSEE_Font_Unload(TSEE *tsee, char *name) {
-	for (size_t i = 0; i < tsee->fonts->size; i++) {
-		TSEE_Font *font = tsee->fonts->data[i];
-		if (strcmp(font->name, name) == 0) {
-			TTF_CloseFont(font->font);
-			xfree(font->name);
-			xfree(font);
-			TSEE_Array_Delete(tsee->fonts, i);
-			return true;
-		}
-	}
-	TSEE_Warn("Attempted to unload non-existant font `%s`\n", name);
-	return false;
-}
-
-bool TSEE_Font_UnloadAll(TSEE *tsee) {
-	for (size_t i = 0; i < tsee->fonts->size; i++) {
-		TSEE_Font *font = TSEE_Array_Get(tsee->fonts, i);
-		TTF_CloseFont(font->font);
-		xfree(font->name);
-		xfree(font);
-	}
-	TSEE_Array_Destroy(tsee->fonts);
-	return true;
-}
-
-TTF_Font *TSEE_Font_Get(TSEE *tsee, char *name) {
-	for (size_t i = 0; i < tsee->fonts->size; i++) {
-		TSEE_Font *data = TSEE_Array_Get(tsee->fonts, i);
-		if (strcmp(data->name, name) == 0) {
-			return data->font;
-		}
-	}
-	TSEE_Warn("Failed to find font `%s`\n", name);
-	return NULL;
-}
-
-TSEE_Text *TSEE_Text_Create(TSEE *tsee, char *fontName, char *text, SDL_Color color) {
+/**
+ * @brief Creates a text object with from a font, text and colour.
+ * 
+ * @param tsee TSEE object to create the text for.
+ * @param fontName Name of the font to use.
+ * @param text Text to display.
+ * @param color Colour of the text.
+ * @return TSEE_Text* 
+ */
+TSEE_Object *TSEE_Text_Create(TSEE *tsee, char *fontName, char *text, SDL_Color color) {
 	TSEE_Text *textObj = xmalloc(sizeof(*textObj));
 	TTF_Font *font = TSEE_Font_Get(tsee, fontName);
 	if (!font) {
@@ -95,6 +61,12 @@ TSEE_Text *TSEE_Text_Create(TSEE *tsee, char *fontName, char *text, SDL_Color co
 	return textObj;
 }
 
+/**
+ * @brief Destroy a text object.
+ * 
+ * @param text Text object to destroy.
+ * @param destroyTexture True to destroy the texture, false to not.
+ */
 void TSEE_Text_Destroy(TSEE_Text *text, bool destroyTexture) {
 	if (destroyTexture) {
 		TSEE_Texture_Destroy(text->texture);
@@ -103,6 +75,13 @@ void TSEE_Text_Destroy(TSEE_Text *text, bool destroyTexture) {
 	xfree(text);
 }
 
+/**
+ * @brief Render a text object to a TSEE object.
+ * 
+ * @param tsee TSEE object to render the text to.
+ * @param text Text object to render.
+ * @return true on success, false on fail.
+ */
 bool TSEE_Text_Render(TSEE *tsee, TSEE_Text *text) {
 	if (!text->texture) {
 		TSEE_Warn("Failed to render text `%s` (No texture)\n", text->text);

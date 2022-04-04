@@ -14,4 +14,5 @@ typedef struct TSEE_Toolbar_Object {
 // TSEE's UI struct. Keeps track of all UI elements and what's enabled.
 typedef struct TSEE_UI {
 	TSEE_Array *toolbar; // Array of TSEE_Toolbar_Object
+	bool toolbar_enabled;
 } TSEE_UI;

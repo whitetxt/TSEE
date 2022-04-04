@@ -1,5 +1,11 @@
 #include "../tsee.h"
 
+/**
+ * @brief Initialises the UI subsystem.
+ * 
+ * @param tsee TSEE object to initialise UI for.
+ * @return true on success, false on fail.
+ */
 bool TSEE_UI_Init(TSEE *tsee) {
 	if (!tsee->init->text) {
 		TSEE_Error("Attempted to init TSEE UI without initialising TSEE Text.\n");
@@ -14,6 +20,14 @@ bool TSEE_UI_Init(TSEE *tsee) {
 	return true;
 }
 
+/**
+ * @brief Adds a button to the toolbar of a TSEE object.
+ * 
+ * @param tsee TSEE to add the button to.
+ * @param font Font to use for the button.
+ * @param text Text for the button.
+ * @return true on success, false on fail.
+ */
 bool TSEE_Toolbar_AddButton(TSEE *tsee, char *font, char *text) {
 	TSEE_Toolbar_Object *toolbarobj = xmalloc(sizeof(*toolbarobj));
 	toolbarobj->buttons = TSEE_Array_Create();
@@ -40,6 +54,16 @@ bool TSEE_Toolbar_AddButton(TSEE *tsee, char *font, char *text) {
 	return true;
 }
 
+/**
+ * @brief Adds a child button to a top-level button in the toolbar.
+ * 
+ * @param tsee TSEE object to add the child to.
+ * @param parentName Name of the parent (top-level) button.
+ * @param font Font to use for the text.
+ * @param text Text to display on the child.
+ * @param cb Callback to use when the button is clicked.
+ * @return true on success, false on fail.
+ */
 bool TSEE_Toolbar_AddChild(TSEE *tsee, char *parentName, char *font, char *text, void (*cb) (void *tsee)) {
 	TSEE_Toolbar_Object *parent = NULL;
 	for (size_t i = 0; i < tsee->ui->toolbar->size; i++) {
@@ -68,6 +92,14 @@ bool TSEE_Toolbar_AddChild(TSEE *tsee, char *parentName, char *font, char *text,
 	return true;
 }
 
+/**
+ * @brief Handles if a button is clicked when the mouse is pressed.
+ * 
+ * @param tsee TSEE object to check against.
+ * @param x X position of the mouse.
+ * @param y Y position of the mouse.
+ * @return true on success, false on fail.
+ */
 bool TSEE_UI_Click(TSEE *tsee, int x, int y) {
 	SDL_Point m = {x, y};
 	for (size_t i = 0; i < tsee->ui->toolbar->size; i++) {
@@ -88,8 +120,14 @@ bool TSEE_UI_Click(TSEE *tsee, int x, int y) {
 	return false;
 }
 
+/**
+ * @brief Renders the UI of a TSEE object.
+ * 
+ * @param tsee TSEE object to render the UI of.
+ * @return true on success, false on fail.
+ */
 bool TSEE_UI_Render(TSEE *tsee) {
-	//if (tsee->ui->toolbar_enabled) {
+	if (tsee->ui->toolbar_enabled) {
 		if (tsee->ui->toolbar->size > 0) {
 			SDL_SetRenderDrawColor(tsee->window->renderer, 255, 255, 255, 75);
 			SDL_RenderFillRect(tsee->window->renderer, &(SDL_Rect){0, 0, tsee->window->width, 32});
@@ -120,6 +158,6 @@ bool TSEE_UI_Render(TSEE *tsee) {
 			}
 			TSEE_Text_Render(tsee, toolbarobj->text);
 		}
-	//}
+	}
 	return true;
 }

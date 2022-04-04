@@ -1,5 +1,10 @@
 #include "../tsee.h"
 
+/**
+ * @brief Create a TSEE_Array, to store anything.
+ * 
+ * @return TSEE_Array* 
+ */
 TSEE_Array *TSEE_Array_Create() {
 	TSEE_Array *array = xmalloc(sizeof(*array));
 	array->data = NULL;
@@ -7,18 +12,40 @@ TSEE_Array *TSEE_Array_Create() {
 	return array;
 } 
 
+/**
+ * @brief Increase an array's size by "size".
+ * 
+ * @param arr Array to extend
+ * @param size Size to increase the array by.
+ * @return int - The new size of the array.
+ */
 int TSEE_Array_Extend(TSEE_Array *arr, int size) {
 	arr->data = xrealloc(arr->data, sizeof(*arr->data) * (arr->size + size));
 	arr->size += size;
-	return arr->size - 1;
+	return arr->size;
 }
 
+/**
+ * @brief Append data to the end of an array.
+ * 
+ * @param arr Array to append to
+ * @param data Data to append
+ * @return true on success, false on fail.
+ */
 bool TSEE_Array_Append(TSEE_Array *arr, void *data) {
-	int idx = TSEE_Array_Extend(arr, 1);
-	arr->data[idx] = data;
+	int size = TSEE_Array_Extend(arr, 1);
+	arr->data[size - 1] = data;
 	return true;
 }
 
+/**
+ * @brief Inserts an item into an array at the given index.
+ * 
+ * @param arr The array to insert into
+ * @param data The data to insert into the array
+ * @param index The index to insert the data at
+ * @return true on success, false on fail.
+ */
 bool TSEE_Array_Insert(TSEE_Array *arr, void *data, size_t index) {
 	if (index > arr->size) {
 		TSEE_Warn("Attempted insert into array (size %zu) at index `%zu`\n", arr->size, index);
@@ -30,6 +57,13 @@ bool TSEE_Array_Insert(TSEE_Array *arr, void *data, size_t index) {
 	return true;
 }
 
+/**
+ * @brief Deletes an item at the given index from an array.
+ * 
+ * @param arr Array to delete from
+ * @param index Index of the item to delete.
+ * @return true on success, false on fail.
+ */
 bool TSEE_Array_Delete(TSEE_Array *arr, size_t index) {
 	if (index >= arr->size) {
 		TSEE_Warn("Attempted delete from array (size %zu) at index `%zu`\n", arr->size, index);
@@ -44,6 +78,13 @@ bool TSEE_Array_Delete(TSEE_Array *arr, size_t index) {
 	return true;
 }
 
+/**
+ * @brief Gets the item at the given index from an array.
+ * 
+ * @param arr Array to get the item from
+ * @param index Index of the item
+ * @return void* 
+ */
 void *TSEE_Array_Get(TSEE_Array *arr, size_t index) {
 	if (index >= arr->size) {
 		TSEE_Warn("Attempted get from array (size %zu) at index `%zu`\n", arr->size, index);
@@ -52,6 +93,13 @@ void *TSEE_Array_Get(TSEE_Array *arr, size_t index) {
 	return arr->data[index];
 }
 
+/**
+ * @brief Clears an array of all its data.
+ * Note: Does not free the data.
+ * 
+ * @param arr Array to clear
+ * @return true on success, false on fail.
+ */
 bool TSEE_Array_Clear(TSEE_Array *arr) {
 	if (!arr) return false;
 	if (arr->data)
@@ -61,6 +109,13 @@ bool TSEE_Array_Clear(TSEE_Array *arr) {
 	return true;
 }
 
+/**
+ * @brief Destroys an array, freeing itself.
+ * Note: Does not free the array's data.
+ * 
+ * @param arr Array to destroy
+ * @return true on success, false on fail.
+ */
 bool TSEE_Array_Destroy(TSEE_Array *arr) {
 	if (!arr) return false;
 	if (arr->data)
