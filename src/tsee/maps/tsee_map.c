@@ -1,5 +1,11 @@
 #include "../tsee.h"
 
+/**
+ * @brief Reads from a file pointer until a null character is hit.
+ * 
+ * @param fp File pointer to read from.
+ * @return char* 
+ */
 char *TSEE_ReadFile_UntilNull(FILE *fp) {
 	char c;
 	int len = 0;
@@ -17,6 +23,13 @@ char *TSEE_ReadFile_UntilNull(FILE *fp) {
 	return buffer;
 }
 
+/**
+ * @brief Loads a TSEE map from a file
+ * 
+ * @param tsee TSEE object to load the map into.
+ * @param fn File name to load from.
+ * @return true on success, false on fail.
+ */
 bool TSEE_Map_Load(TSEE *tsee, char *fn) {
 	// Open the file
 	FILE *fp = fopen(fn, "rb");
@@ -91,7 +104,7 @@ bool TSEE_Map_Load(TSEE *tsee, char *fn) {
 		size_t texIdx = 0;
 		fread(&texIdx, sizeof(texIdx), 1, fp);
 		TSEE_Texture *tex = TSEE_Array_Get(tsee->textures, texIdx);
-		int idx = TSEE_Create_Object(tsee, TSEE_Texture_Create(tsee, tex->path));
+		int idx = TSEE_Object_Create(tsee, TSEE_Texture_Create(tsee, tex->path));
 		TSEE_Object *object = TSEE_Array_Get(tsee->world->objects, idx);
 		object->x = 0;
 		object->y = 0;
@@ -138,6 +151,13 @@ bool TSEE_Map_Load(TSEE *tsee, char *fn) {
 	return true;
 }
 
+/**
+ * @brief Saves the current TSEE to a map file
+ * 
+ * @param tsee TSEE object to save.
+ * @param fn File name to save to.
+ * @return true on success, false on fail.
+ */
 bool TSEE_Map_Save(TSEE *tsee, char *fn) {
 	FILE *fp = fopen(fn, "wb");
 	if (fp == NULL) {

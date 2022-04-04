@@ -1,5 +1,11 @@
 #include "../tsee.h"
 
+/**
+ * @brief Initialise the input subsystem.
+ * 
+ * @param tsee TSEE object to initialise input for.
+ * @return true on success, false on fail.
+ */
 bool TSEE_Input_Init(TSEE *tsee) {
 	if (tsee->init->input) {
 		return true;
@@ -14,6 +20,12 @@ bool TSEE_Input_Init(TSEE *tsee) {
 	return true;
 }
 
+/**
+ * @brief Callback for key press events.
+ * 
+ * @param tsee TSEE object to update.
+ * @param keycode Keycode for the pressed button.
+ */
 void TSEE_Key_Press(void *tsee, SDL_Keycode keycode) {
 	TSEE *tseeReal = tsee;
 	switch (keycode) {
@@ -36,9 +48,14 @@ void TSEE_Key_Press(void *tsee, SDL_Keycode keycode) {
 			//tseeReal->ui->toolbar_enabled = !tseeReal->ui->toolbar_enabled;
 			break;
 	}
-	TSEE_Log("Movement (WASD): %d, %d, %d, %d\n", tseeReal->player->movement.up, tseeReal->player->movement.left, tseeReal->player->movement.down, tseeReal->player->movement.right);
 }
 
+/**
+ * @brief Callback for the key release event.
+ * 
+ * @param tsee TSEE object to update.
+ * @param keycode Keycode for the released button.
+ */
 void TSEE_Key_Release(void *tsee, SDL_Keycode keycode) {
 	TSEE *tseeReal = tsee;
 	switch (keycode) {
@@ -55,5 +72,4 @@ void TSEE_Key_Release(void *tsee, SDL_Keycode keycode) {
 			tseeReal->player->movement.right = false;
 			break;
 	}
-	TSEE_Log("Movement (WASD): %d, %d, %d, %d\n", tseeReal->player->movement.up, tseeReal->player->movement.left, tseeReal->player->movement.down, tseeReal->player->movement.right);
 }

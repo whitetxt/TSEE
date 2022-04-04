@@ -2,6 +2,7 @@ typedef enum TSEE_Object_Attributes {
 	TSEE_PHYSICS_ENABLED = 1,
 	TSEE_PARALLAX = 2,
 	TSEE_TEXT_OBJECT = 4,
+	TSEE_STATIC = 8,
 } TSEE_Object_Attributes;
 
 typedef struct TSEE_Physics_Data {
