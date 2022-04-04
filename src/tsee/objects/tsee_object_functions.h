@@ -6,6 +6,7 @@ bool TSEE_Player_Create(TSEE *tsee, TSEE_Object *pobj);
 bool TSEE_Player_SetJumpForce(TSEE *tsee, float force);
 bool TSEE_Player_SetSpeed(TSEE *tsee, float speed);
 bool TSEE_Object_Render(TSEE *tsee, TSEE_Object *object);
+void TSEE_Object_Destroy(TSEE_Object *object, bool destroyTexture);
 
 // Attributes
 
@@ -15,7 +16,7 @@ void TSEE_Attributes_Set(TSEE_Object_Attributes *attr, TSEE_Object_Attributes to
 // Parallax
 
 bool TSEE_Parallax_Create(TSEE *tsee, TSEE_Texture *texture, float distanceFromCamera);
-bool TSEE_Parallax_Render(TSEE *tsee);
+bool TSEE_Parallax_Render(TSEE *tsee, TSEE_Object *parallax);
 void TSEE_Parallax_Destroy(TSEE_Object *para, bool destroyTexture);
 
 // Text

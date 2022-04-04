@@ -118,7 +118,7 @@ bool TSEE_Close(TSEE *tsee) {
 	tsee->window->running = false;
 	for (size_t i = 0; i < tsee->world->objects->size; i++) {
 		TSEE_Object *obj = TSEE_Array_Get(tsee->world->objects, i);
-		TSEEDestroyObject(obj, false);
+		TSEE_Object_Destroy(obj, false);
 	}
 	TSEE_Array_Destroy(tsee->world->objects);
 	for (size_t i = 0; i < tsee->textures->size; i++) {
@@ -135,10 +135,10 @@ bool TSEE_Close(TSEE *tsee) {
 	xfree(tsee->events);
 	for (size_t i = 0; i < tsee->ui->toolbar->size; i++) {
 		TSEE_Toolbar_Object *obj = TSEE_Array_Get(tsee->ui->toolbar, i);
-		TSEE_Object_Destroy(obj->text, true);
+		TSEE_Text_Destroy(obj->text, true);
 		for (size_t j = 0; j < obj->buttons->size; j++) {
 			TSEE_Toolbar_Child *child = TSEE_Array_Get(obj->buttons, j);
-			TSEE_Object_Destroy(child->text, true);
+			TSEE_Text_Destroy(child->text, true);
 			xfree(child);
 		}
 		TSEE_Array_Destroy(obj->buttons);
