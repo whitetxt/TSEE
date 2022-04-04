@@ -1,21 +1,21 @@
 #include "../tsee.h"
 
-void TSEESettingsLoadCallback(TSEE *tsee, char *section, char *value) {
+void TSEE_Settings_LoadCallback(TSEE *tsee, char *section, char *value) {
 	if (strcmp(section, "width") == 0) {
 		tsee->window->width = atoi(value);
-		TSEEWindowUpdateSize(tsee);
+		TSEE_Window_UpdateSize(tsee);
 	} else if (strcmp(section, "height") == 0) {
 		tsee->window->height = atoi(value);
-		TSEEWindowUpdateSize(tsee);
+		TSEE_Window_UpdateSize(tsee);
 	} else {
-		TSEEWarn("Unknown settings section `%s` with value `%s`\n", section, value);
+		TSEE_Warn("Unknown settings section `%s` with value `%s`\n", section, value);
 	}
 }
 
-bool TSEELoadSettings(TSEE *tsee) {
+bool TSEE_Settings_Load(TSEE *tsee) {
 	FILE *fp = fopen("TSEE-Settings.ini", "r");
 	if (!fp) {
-		TSEEError("Couldn't open settings file `TSEE-Settings.ini`\n");
+		TSEE_Error("Couldn't open settings file `TSEE-Settings.ini`\n");
 		return false;
 	}
 	char buf[512];
@@ -23,15 +23,15 @@ bool TSEELoadSettings(TSEE *tsee) {
 		char *sec, *val;
 		sec = strtok(buf, "=");
 		val = strtok(NULL, "=");
-		TSEESettingsLoadCallback(tsee, sec, val);
+		TSEE_Settings_LoadCallback(tsee, sec, val);
 	}
 	return true;
 }
 
-bool TSEESaveSettings(TSEE *tsee) {
+bool TSEE_Settings_Save(TSEE *tsee) {
 	FILE *fp = fopen("TSEE-Settings.ini", "w");
 	if (!fp) {
-		TSEEError("Couldn't open settings file `TSEE-Settings.ini`\nYour settings have been lost.");
+		TSEE_Error("Couldn't open settings file `TSEE-Settings.ini`\nYour settings have been lost.");
 		return false;
 	}
 	fprintf(fp, "width=%d\n", tsee->window->width);

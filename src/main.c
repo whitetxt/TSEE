@@ -8,71 +8,71 @@ void quitGame(void *t) {
 
 void saveMap(void *t) {
 	TSEE *tsee = (TSEE *)t;
-	TSEESaveMap(tsee, "map.tsee_map");
+	TSEE_Map_Save(tsee, "map.tsee_map");
 }
 
 void loadMap(void *t) {
 	TSEE *tsee = (TSEE *)t;
-	TSEELoadMap(tsee, "map.tsee_map");
+	TSEE_Map_Load(tsee, "map.tsee_map");
 }
 
 int main(int argc, char *argv[]) {
 	(void)argc;
 	(void)argv;
 
-	TSEE *tsee = TSEECreate(800, 600);
+	TSEE *tsee = TSEE_Create(800, 600);
 
-	if (!TSEEInitAll(tsee)) {
-		TSEECritical("Failed to initialize TSEE\n");
-		TSEEClose(tsee);
+	if (!TSEE_InitAll(tsee)) {
+		TSEE_Critical("Failed to initialize TSEE\n");
+		TSEE_Close(tsee);
 		return -1;
 	}
-	if (!TSEESetWindowTitle(tsee, "TSEE - Example Game")) {
-		TSEEWarn("Failed to set window title.\n");
+	if (!TSEE_Window_SetTitle(tsee, "TSEE - Example Game")) {
+		TSEE_Warn("Failed to set window title.\n");
 	}
 
-	int idx = TSEECreatePhysicsObject(tsee, TSEECreateTexture(tsee, "assets/test_image.png"), 1);
-	TSEECreatePlayer(tsee, TSEEArrayGet(tsee->world->physics_objects, idx));
-	TSEESetPlayerJumpForce(tsee, 60);
-	TSEESetPlayerSpeed(tsee, 1500);
-	TSEESetWorldGravity(tsee, 800);
-	idx = TSEECreateObject(tsee, TSEECreateTexture(tsee, "assets/test_image.png"));
+	int idx = TSEECreatePhysicsObject(tsee, TSEE_Texture_Create(tsee, "assets/test_image.png"), 1);
+	TSEE_Player_Create(tsee, TSEE_Array_Get(tsee->world->physics_objects, idx));
+	TSEE_Player_SetJumpForce(tsee, 60);
+	TSEE_Player_SetSpeed(tsee, 1500);
+	TSEE_World_SetGravity(tsee, 800);
+	idx = TSEE_Create_Object(tsee, TSEE_Texture_Create(tsee, "assets/test_image.png"));
 	TSEESetObjectPosition(tsee, idx, 160, 595);
-	idx = TSEECreateObject(tsee, TSEECreateTexture(tsee, "assets/test_image.png"));
+	idx = TSEE_Create_Object(tsee, TSEE_Texture_Create(tsee, "assets/test_image.png"));
 	TSEESetObjectPosition(tsee, idx, 170, 590);
-	idx = TSEECreateObject(tsee, TSEECreateTexture(tsee, "assets/test_image.png"));
+	idx = TSEE_Create_Object(tsee, TSEE_Texture_Create(tsee, "assets/test_image.png"));
 	TSEESetObjectPosition(tsee, idx, 180, 585);
-	TSEECreateParallax(tsee, TSEECreateTexture(tsee, "assets/parallax1.png"), 6);
-	TSEECreateParallax(tsee, TSEECreateTexture(tsee, "assets/parallax2.png"), 4);
-	TSEECreateParallax(tsee, TSEECreateTexture(tsee, "assets/parallax3.png"), 2);
-	TSEECreateParallax(tsee, TSEECreateTexture(tsee, "assets/parallax4.png"), 1);
-	TSEEAddToolbarButton(tsee, "_default", "Home");
-	TSEEAddToolbarChild(tsee, "Home", "_default", "Quit", quitGame);
-	TSEEAddToolbarButton(tsee, "_default", "Maps");
-	TSEEAddToolbarChild(tsee, "Maps", "_default", "Save", saveMap);
-	TSEEAddToolbarChild(tsee, "Maps", "_default", "Load", loadMap);
+	TSEE_Parallax_Create(tsee, TSEE_Texture_Create(tsee, "assets/parallax1.png"), 6);
+	TSEE_Parallax_Create(tsee, TSEE_Texture_Create(tsee, "assets/parallax2.png"), 4);
+	TSEE_Parallax_Create(tsee, TSEE_Texture_Create(tsee, "assets/parallax3.png"), 2);
+	TSEE_Parallax_Create(tsee, TSEE_Texture_Create(tsee, "assets/parallax4.png"), 1);
+	TSEE_Toolbar_AddButton(tsee, "_default", "Home");
+	TSEE_Toolbar_AddChild(tsee, "Home", "_default", "Quit", quitGame);
+	TSEE_Toolbar_AddButton(tsee, "_default", "Maps");
+	TSEE_Toolbar_AddChild(tsee, "Maps", "_default", "Save", saveMap);
+	TSEE_Toolbar_AddChild(tsee, "Maps", "_default", "Load", loadMap);
 
 	while (tsee->window->running) {
 		/*
 		For multiple physics steps per frame
-		while (!TSEEReadyToRender(tsee)) {
-			TSEEHandleEvents(tsee);
-			TSEECalculateDT(tsee);
+		while (!TSEE_Rendering_IsReady(tsee)) {
+			TSEE_Events_Handle(tsee);
+			TSEE_CalculateDT(tsee);
 			TSEEPerformPhysics(tsee);
 		}*/
 		/*
 		For single physics step per frame*/
-		TSEEHandleEvents(tsee);
-		TSEECalculateDT(tsee);
+		TSEE_Events_Handle(tsee);
+		TSEE_CalculateDT(tsee);
 		TSEEPerformPhysics(tsee);
-		TSEERenderAll(tsee);
+		TSEE_RenderAll(tsee);
 	}
 
-	TSEELog("Saving settings.\n");
-	if (!TSEESaveSettings(tsee)) {
-		TSEEError("Failed to save settings. All changes will be lost.\nSorry.");
+	TSEE_Log("Saving settings.\n");
+	if (!TSEE_Settings_Save(tsee)) {
+		TSEE_Error("Failed to save settings. All changes will be lost.\nSorry.");
 	}
-	TSEELog("Closing.\n");
-	TSEEClose(tsee);
+	TSEE_Log("Closing.\n");
+	TSEE_Close(tsee);
 	return 0; 
 }

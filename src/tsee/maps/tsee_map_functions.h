@@ -1,8 +1,8 @@
 // Internal helper function to read from a file until it hits a null char.
-char *TSEEReadFileUntilNull(FILE *fp);
+char *TSEE_ReadFile_UntilNull(FILE *fp);
 
 // Loads a map from a file.
-bool TSEELoadMap(TSEE *tsee, char *path);
+bool TSEE_Map_Load(TSEE *tsee, char *path);
 
 // Saves a map to a file.
-bool TSEESaveMap(TSEE *tsee, char *path);
+bool TSEE_Map_Save(TSEE *tsee, char *path);

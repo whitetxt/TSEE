@@ -1,20 +1,20 @@
 #include "../tsee.h"
 
-bool TSEEInitInput(TSEE *tsee) {
+bool TSEE_Input_Init(TSEE *tsee) {
 	if (tsee->init->input) {
 		return true;
 	}
 	if (!tsee->init->events) {
-		TSEEWarn("Attempted to inititalise TSEEInput without initialising TSEEEvents");
+		TSEE_Warn("Attempted to inititalise TSEEInput without initialising TSEEEvents");
 		return false;
 	}
-	tsee->events->keypress = TSEEKeyPress;
-	tsee->events->keyrelease = TSEEKeyRelease;
+	tsee->events->keypress = TSEE_Key_Press;
+	tsee->events->keyrelease = TSEE_Key_Release;
 	tsee->init->input = true;
 	return true;
 }
 
-void TSEEKeyPress(void *tsee, SDL_Keycode keycode) {
+void TSEE_Key_Press(void *tsee, SDL_Keycode keycode) {
 	TSEE *tseeReal = tsee;
 	switch (keycode) {
 		case SDLK_w:
@@ -36,10 +36,10 @@ void TSEEKeyPress(void *tsee, SDL_Keycode keycode) {
 			//tseeReal->ui->toolbar_enabled = !tseeReal->ui->toolbar_enabled;
 			break;
 	}
-	TSEELog("Movement (WASD): %d, %d, %d, %d\n", tseeReal->player->movement.up, tseeReal->player->movement.left, tseeReal->player->movement.down, tseeReal->player->movement.right);
+	TSEE_Log("Movement (WASD): %d, %d, %d, %d\n", tseeReal->player->movement.up, tseeReal->player->movement.left, tseeReal->player->movement.down, tseeReal->player->movement.right);
 }
 
-void TSEEKeyRelease(void *tsee, SDL_Keycode keycode) {
+void TSEE_Key_Release(void *tsee, SDL_Keycode keycode) {
 	TSEE *tseeReal = tsee;
 	switch (keycode) {
 		case SDLK_w:
@@ -55,5 +55,5 @@ void TSEEKeyRelease(void *tsee, SDL_Keycode keycode) {
 			tseeReal->player->movement.right = false;
 			break;
 	}
-	TSEELog("Movement (WASD): %d, %d, %d, %d\n", tseeReal->player->movement.up, tseeReal->player->movement.left, tseeReal->player->movement.down, tseeReal->player->movement.right);
+	TSEE_Log("Movement (WASD): %d, %d, %d, %d\n", tseeReal->player->movement.up, tseeReal->player->movement.left, tseeReal->player->movement.down, tseeReal->player->movement.right);
 }

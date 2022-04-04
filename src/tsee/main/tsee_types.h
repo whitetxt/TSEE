@@ -27,7 +27,7 @@ typedef struct TSEE_Debug {
 	bool active;
 } TSEE_Debug;
 
-// The main TSEE object, create using TSEECreate(width, height).
+// The main TSEE object, create using TSEE_Create(width, height).
 typedef struct TSEE {
 	TSEE_Window *window;
 	TSEE_Array *textures;

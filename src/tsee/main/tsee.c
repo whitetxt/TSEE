@@ -1,7 +1,7 @@
 #include "../tsee.h"
 
-TSEE *TSEECreate(int width, int height) {
-	TSEELog("Initialising TSEE Engine...\n");
+TSEE *TSEE_Create(int width, int height) {
+	TSEE_Log("Initialising TSEE Engine...\n");
 	TSEE *tsee = xmalloc(sizeof(*tsee));
 	tsee->fonts = NULL;
 
@@ -15,13 +15,10 @@ TSEE *TSEECreate(int width, int height) {
 
 	// Setup world + textures
 	tsee->world = xmalloc(sizeof(*tsee->world));
-	tsee->world->objects = TSEEArrayCreate();
-	tsee->world->physics_objects = TSEEArrayCreate();
-	tsee->world->text = TSEEArrayCreate();
-	tsee->world->parallax = TSEEArrayCreate();
+	tsee->world->objects = TSEE_Array_Create();
 	tsee->world->scroll_x = 0;
 	tsee->world->scroll_y = 0;
-	tsee->textures = TSEEArrayCreate();
+	tsee->textures = TSEE_Array_Create();
 
 	// Setup player
 	tsee->player = xmalloc(sizeof(*tsee->player));
@@ -57,75 +54,60 @@ TSEE *TSEECreate(int width, int height) {
 	tsee->debug->active = false;
 
 	// Load basic settings
-	TSEELoadSettings(tsee);
-	TSEELog("TSEE Engine initialized.\n");
+	TSEE_Settings_Load(tsee);
+	TSEE_Log("TSEE Engine initialized.\n");
 	return tsee;
 }
 
-bool TSEEInitAll(TSEE *tsee) {
-	TSEELog("Initialising TSEE modules...\n");
-	if (!TSEEInitRendering(tsee)) {
-		TSEECritical("Failed to initialize TSEE Rendering Module.\n");
-		TSEEClose(tsee);
+bool TSEE_InitAll(TSEE *tsee) {
+	TSEE_Log("Initialising TSEE modules...\n");
+	if (!TSEE_Rendering_Init(tsee)) {
+		TSEE_Critical("Failed to initialize TSEE Rendering Module.\n");
+		TSEE_Close(tsee);
 		return false;
 	}
-	TSEELog("Initialized TSEE Rendering.\n");
-	if (!TSEEInitText(tsee, true)) {
-		TSEECritical("Failed to initialize TSEE Text Module.\n");
-		TSEEClose(tsee);
+	TSEE_Log("Initialized TSEE Rendering.\n");
+	if (!TSEE_Text_Init(tsee, true)) {
+		TSEE_Critical("Failed to initialize TSEE Text Module.\n");
+		TSEE_Close(tsee);
 		return false;
 	}
-	TSEELog("Initialized TSEE Text.\n");
-	if (!TSEEInitEvents(tsee)) {
-		TSEECritical("Failed to initialize TSEE Events Module.\n");
-		TSEEClose(tsee);
+	TSEE_Log("Initialized TSEE Text.\n");
+	if (!TSEE_Events_Init(tsee)) {
+		TSEE_Critical("Failed to initialize TSEE Events Module.\n");
+		TSEE_Close(tsee);
 		return false;
 	}
-	TSEELog("Initialized TSEE Events.\n");
-	if (!TSEEInitInput(tsee)) {
-		TSEECritical("Failed to initialize TSEE Input Module.\n");
-		TSEEClose(tsee);
+	TSEE_Log("Initialized TSEE Events.\n");
+	if (!TSEE_Input_Init(tsee)) {
+		TSEE_Critical("Failed to initialize TSEE Input Module.\n");
+		TSEE_Close(tsee);
 		return false;
 	}
-	TSEELog("Initialized TSEE Input.\n");
-	if (!TSEEInitUI(tsee)) {
-		TSEECritical("Failed to initialize TSEE UI Module.\n");
-		TSEEClose(tsee);
+	TSEE_Log("Initialized TSEE Input.\n");
+	if (!TSEE_UI_Init(tsee)) {
+		TSEE_Critical("Failed to initialize TSEE UI Module.\n");
+		TSEE_Close(tsee);
 		return false;
 	}
-	TSEELog("Initialized TSEE UI.\n");
-	TSEELog("All TSEE modules initialized.\n");
+	TSEE_Log("Initialized TSEE UI.\n");
+	TSEE_Log("All TSEE modules initialized.\n");
 	return true;
 }
 
-bool TSEEClose(TSEE *tsee) {
+bool TSEE_Close(TSEE *tsee) {
 	tsee->window->running = false;
-	for (size_t i = 0; i < tsee->world->physics_objects->size; i++) {
-		TSEE_Physics_Object *pobj = TSEEArrayGet(tsee->world->physics_objects, i);
-		TSEEDestroyPhysicsObject(pobj, false, false);
-	}
-	TSEEDestroyArray(tsee->world->physics_objects);
 	for (size_t i = 0; i < tsee->world->objects->size; i++) {
-		TSEE_Object *obj = TSEEArrayGet(tsee->world->objects, i);
+		TSEE_Object *obj = TSEE_Array_Get(tsee->world->objects, i);
 		TSEEDestroyObject(obj, false);
 	}
-	TSEEDestroyArray(tsee->world->objects);
-	for (size_t i = 0; i < tsee->world->text->size; i++) {
-		TSEE_Text *text = TSEEArrayGet(tsee->world->text, i);
-		TSEEDestroyText(text, true);
-	}
-	TSEEDestroyArray(tsee->world->text);
-	for (size_t i = 0; i < tsee->world->parallax->size; i++) {
-		TSEE_Parallax *para = TSEEArrayGet(tsee->world->parallax, i);
-		TSEEDestroyParallax(para, false);
-	}
-	TSEEDestroyArray(tsee->world->parallax);
+	TSEE_Array_Destroy(tsee->world->objects);
 	for (size_t i = 0; i < tsee->textures->size; i++) {
-		TSEE_Texture *tex = TSEEArrayGet(tsee->textures, i);
-		TSEEDestroyTexture(tex);
+		TSEE_Texture *tex = TSEE_Array_Get(tsee->textures, i);
+		TSEE_Texture_Destroy(tex);
 	}
-	TSEEDestroyArray(tsee->textures);
-	TSEEUnloadAllFonts(tsee);
+	TSEE_Array_Destroy(tsee->textures);
+	TSEE_Font_UnloadAll(tsee);
 	
 	xfree(tsee->player);
 	xfree(tsee->world);
@@ -133,20 +115,20 @@ bool TSEEClose(TSEE *tsee) {
 	xfree(tsee->events->event);
 	xfree(tsee->events);
 	for (size_t i = 0; i < tsee->ui->toolbar->size; i++) {
-		TSEE_Toolbar_Object *obj = TSEEArrayGet(tsee->ui->toolbar, i);
-		TSEEDestroyText(obj->text, true);
+		TSEE_Toolbar_Object *obj = TSEE_Array_Get(tsee->ui->toolbar, i);
+		TSEE_Text_Destroy(obj->text, true);
 		for (size_t j = 0; j < obj->buttons->size; j++) {
-			TSEE_Toolbar_Child *child = TSEEArrayGet(obj->buttons, j);
-			TSEEDestroyText(child->text, true);
+			TSEE_Toolbar_Child *child = TSEE_Array_Get(obj->buttons, j);
+			TSEE_Text_Destroy(child->text, true);
 			xfree(child);
 		}
-		TSEEDestroyArray(obj->buttons);
+		TSEE_Array_Destroy(obj->buttons);
 		xfree(obj);
 	}
-	TSEEDestroyArray(tsee->ui->toolbar);
+	TSEE_Array_Destroy(tsee->ui->toolbar);
 	xfree(tsee->ui);
 
-	TSEEDestroyWindow(tsee->window);
+	TSEE_Window_Destroy(tsee->window);
 	xfree(tsee->window);
 	if (tsee->init->text)
 		TTF_Quit();
@@ -160,20 +142,14 @@ bool TSEEClose(TSEE *tsee) {
 	return true;
 }
 
-bool TSEECalculateDT(TSEE *tsee) {
+bool TSEE_CalculateDT(TSEE *tsee) {
 	tsee->last_time = tsee->current_time;
 	tsee->current_time = SDL_GetPerformanceCounter();
 	tsee->dt = (float) ( (tsee->current_time - tsee->last_time) / (float) SDL_GetPerformanceFrequency() );
 	return true;
 }
 
-bool TSEESetWorldGravity(TSEE *tsee, float gravity) {
+bool TSEE_World_SetGravity(TSEE *tsee, float gravity) {
 	tsee->world->gravity = gravity;
 	return true;
-}
-
-bool TSEEReadyToRender(TSEE *tsee) {
-	float timeBetweenFrames = 1.0f / tsee->window->fps;
-	float dt = (float) ( (SDL_GetPerformanceCounter() - tsee->window->last_render) / (float) SDL_GetPerformanceFrequency() );
-	return dt >= timeBetweenFrames;
 }

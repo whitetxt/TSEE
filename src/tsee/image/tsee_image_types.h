@@ -1,4 +1,4 @@
-// TSEE's window type wrapper for SDL2, created along with the TSEE object in TSEECreate(width, height).
+// TSEE's window type wrapper for SDL2, created along with the TSEE object in TSEE_Create(width, height).
 typedef struct TSEE_Window {
 	SDL_Window *window;
 	SDL_Renderer *renderer;
