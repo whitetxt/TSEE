@@ -35,9 +35,9 @@ int main(int argc, char *argv[]) {
 	TSEE_Player_SetJumpForce(tsee, 60);
 	TSEE_Player_SetSpeed(tsee, 1500);
 	TSEE_World_SetGravity(tsee, 800);
-	TSEE_Object *obj = TSEE_Object_Create(tsee, TSEE_Texture_Create(tsee, "assets/test_image.png"), TSEE_ATTRIB_NONE, 160, 595);
-	obj = TSEE_Object_Create(tsee, TSEE_Texture_Create(tsee, "assets/test_image.png"), TSEE_ATTRIB_NONE, 170, 590);
-	obj = TSEE_Object_Create(tsee, TSEE_Texture_Create(tsee, "assets/test_image.png"), TSEE_ATTRIB_NONE, 180, 585);
+	TSEE_Object_Create(tsee, TSEE_Texture_Create(tsee, "assets/test_image.png"), TSEE_ATTRIB_NONE, 160, 595);
+	TSEE_Object_Create(tsee, TSEE_Texture_Create(tsee, "assets/test_image.png"), TSEE_ATTRIB_NONE, 170, 590);
+	TSEE_Object_Create(tsee, TSEE_Texture_Create(tsee, "assets/test_image.png"), TSEE_ATTRIB_NONE, 180, 585);
 	TSEE_Parallax_Create(tsee, TSEE_Texture_Create(tsee, "assets/parallax1.png"), 6);
 	TSEE_Parallax_Create(tsee, TSEE_Texture_Create(tsee, "assets/parallax2.png"), 4);
 	TSEE_Parallax_Create(tsee, TSEE_Texture_Create(tsee, "assets/parallax3.png"), 2);
@@ -54,13 +54,13 @@ int main(int argc, char *argv[]) {
 		while (!TSEE_Rendering_IsReady(tsee)) {
 			TSEE_Events_Handle(tsee);
 			TSEE_CalculateDT(tsee);
-			TSEEPerformPhysics(tsee);
+			TSEE_Physics_PerformStep(tsee);
 		}*/
 		/*
 		For single physics step per frame*/
 		TSEE_Events_Handle(tsee);
 		TSEE_CalculateDT(tsee);
-		TSEEPerformPhysics(tsee);
+		TSEE_Physics_PerformStep(tsee);
 		TSEE_RenderAll(tsee);
 	}
 
