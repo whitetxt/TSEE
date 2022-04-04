@@ -7,7 +7,7 @@
  * @param loadDefault True to load the default font, false to not.
  * @return true on success, false on fail.
  */
-bool TSEE_Text_Init(TSEE *tsee, bool loadDefault) {
+bool TSEE_Object_Init(TSEE *tsee, bool loadDefault) {
 	if (tsee->init->text) {
 		return true;
 	}
@@ -36,16 +36,16 @@ bool TSEE_Text_Init(TSEE *tsee, bool loadDefault) {
  * @param fontName Name of the font to use.
  * @param text Text to display.
  * @param color Colour of the text.
- * @return TSEE_Text* 
+ * @return TSEE_Object* 
  */
 TSEE_Object *TSEE_Text_Create(TSEE *tsee, char *fontName, char *text, SDL_Color color) {
-	TSEE_Text *textObj = xmalloc(sizeof(*textObj));
+	TSEE_Object *textObj = xmalloc(sizeof(*textObj));
 	TTF_Font *font = TSEE_Font_Get(tsee, fontName);
 	if (!font) {
 		TSEE_Warn("Failed to create text `%s` with font `%s` (Failed to get font)\n", text, fontName);
 		return NULL;
 	}
-	textObj->text = strdup(text);
+	textObj->text.text = strdup(text);
 	textObj->texture = xmalloc(sizeof(*textObj->texture));
 	textObj->texture->path = strdup("Rendered Text");
 	SDL_Surface *surf = TTF_RenderText_Blended(font, text, color);
@@ -58,6 +58,7 @@ TSEE_Object *TSEE_Text_Create(TSEE *tsee, char *fontName, char *text, SDL_Color 
 	textObj->texture->rect.y = 0;
 	SDL_QueryTexture(textObj->texture->texture, NULL, NULL, &textObj->texture->rect.w, &textObj->texture->rect.h);
 	SDL_FreeSurface(surf);
+	TSEE_Array_Append(tsee->textures, textObj->texture);
 	return textObj;
 }
 
@@ -67,11 +68,12 @@ TSEE_Object *TSEE_Text_Create(TSEE *tsee, char *fontName, char *text, SDL_Color 
  * @param text Text object to destroy.
  * @param destroyTexture True to destroy the texture, false to not.
  */
-void TSEE_Text_Destroy(TSEE_Text *text, bool destroyTexture) {
+void TSEE_Text_Destroy(TSEE_Object *text, bool destroyTexture) {
+	if (!TSEE_Object_CheckAttribute(text, TSEE_ATTRIB_TEXT)) return;
 	if (destroyTexture) {
 		TSEE_Texture_Destroy(text->texture);
 	}
-	xfree(text->text);
+	xfree(text->text.text);
 	xfree(text);
 }
 
@@ -82,13 +84,14 @@ void TSEE_Text_Destroy(TSEE_Text *text, bool destroyTexture) {
  * @param text Text object to render.
  * @return true on success, false on fail.
  */
-bool TSEE_Text_Render(TSEE *tsee, TSEE_Text *text) {
+bool TSEE_Text_Render(TSEE *tsee, TSEE_Object *text) {
+	if (!TSEE_Object_CheckAttribute(text, TSEE_ATTRIB_TEXT)) return false;
 	if (!text->texture) {
-		TSEE_Warn("Failed to render text `%s` (No texture)\n", text->text);
+		TSEE_Warn("Failed to render text `%s` (No texture)\n", text->text.text);
 		return false;
 	}
 	if (SDL_RenderCopy(tsee->window->renderer, text->texture->texture, NULL, &text->texture->rect) != 0) {
-		TSEE_Error("Failed to render text `%s` (%s)\n", text->text, SDL_GetError());
+		TSEE_Error("Failed to render text `%s` (%s)\n", text->text.text, SDL_GetError());
 		return false;
 	}
 	return true;

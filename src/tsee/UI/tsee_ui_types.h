@@ -1,12 +1,12 @@
 // A child to a top-level toolbar button.
 typedef struct {
-	TSEE_Text *text;
+	TSEE_Object *text;
 	void (*callback) (void *tsee);
 } TSEE_Toolbar_Child;
 
 // Top-level button on the toolbar.
 typedef struct TSEE_Toolbar_Object {
-	TSEE_Text *text;
+	TSEE_Object *text;
 	TSEE_Array *buttons; // Array of TSEE_Toolbar_Child
 	bool expanded;
 } TSEE_Toolbar_Object;

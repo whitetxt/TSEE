@@ -36,7 +36,7 @@ bool TSEE_Toolbar_AddButton(TSEE *tsee, char *font, char *text) {
 		xfree(toolbarobj);
 		return false;
 	}
-	toolbarobj->text = TSEE_Text_Create(tsee, font, text, (SDL_Color){255, 255, 255, 255});
+	toolbarobj->text = TSEE_Object_Create(tsee, font, text, (SDL_Color){255, 255, 255, 255});
 	if (!toolbarobj->text) {
 		TSEE_Error("Failed to create toolbar button texture\n");
 		TSEE_Array_Destroy(toolbarobj->buttons);
@@ -77,7 +77,7 @@ bool TSEE_Toolbar_AddChild(TSEE *tsee, char *parentName, char *font, char *text,
 		TSEE_Error("Failed to find toolbar button with name `%s`\n", parentName);
 	}
 	TSEE_Toolbar_Child *child = xmalloc(sizeof(*child));
-	child->text = TSEE_Text_Create(tsee, font, text, (SDL_Color){255, 255, 255, 255});
+	child->text = TSEE_Object_Create(tsee, font, text, (SDL_Color){255, 255, 255, 255});
 	if (!child->text) {
 		TSEE_Error("Failed to create toolbar child texture\n");
 		xfree(child);
@@ -151,12 +151,12 @@ bool TSEE_UI_Render(TSEE *tsee) {
 						SDL_SetRenderDrawColor(tsee->window->renderer, 255, 255, 255, 50);
 						SDL_RenderFillRect(tsee->window->renderer, &fatCopy);
 					}
-					TSEE_Text_Render(tsee, child->text);
+					TSEE_Object_Render(tsee, child->text);
 				}
 			} else {
 				toolbarobj->expanded = false;
 			}
-			TSEE_Text_Render(tsee, toolbarobj->text);
+			TSEE_Object_Render(tsee, toolbarobj->text);
 		}
 	}
 	return true;

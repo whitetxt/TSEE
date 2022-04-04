@@ -8,7 +8,7 @@ typedef struct TSEE_Player_Movement {
 
 // TSEE's player type, which extends TSEE_Physics_Object.
 typedef struct TSEE_Player {
-	TSEE_Physics_Object *physics_object;
+	TSEE_Object *object;
 	TSEE_Player_Movement movement;
 	bool grounded;
 	float jump_force;
