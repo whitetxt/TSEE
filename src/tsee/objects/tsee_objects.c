@@ -4,11 +4,26 @@
 
 /*
 Objects:
-	Type: TSEE_ENUM_OBJTYPE
 	Texture: TSEE_Texture
 	Position: TSEE_Vector
 	Attributes: TSEE_Array<TSEE_Attribute>
 */
+
+/**
+ * @brief Creates an object from 
+ * 
+ * @param tsee TSEE Object
+ * @param texture Texture to use
+ * @param attributes TSEE_Object_Attributes OR'd together
+ * @return TSEE_Object 
+ */
+TSEE_Object TSEECreateObject(TSEE *tsee, TSEE_Texture *texture, TSEE_Object_Attributes attributes) {
+	TSEE_Object obj = {
+		.texture = texture,
+		.position = {0, 0},
+		.attributes = attributes,
+	};
+}
 
 bool TSEEVec2Add(TSEE_Vec2 *final, TSEE_Vec2 *add) {
 	final->x += add->x;

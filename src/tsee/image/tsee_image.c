@@ -9,6 +9,7 @@ TSEE_Texture *TSEECreateTexture(TSEE *tsee, char *path) {
 			SDL_QueryTexture(newTexture->texture, NULL, NULL, &newTexture->rect.w, &newTexture->rect.h);
 			newTexture->rect = (SDL_Rect){0, 0, newTexture->rect.w, newTexture->rect.h};
 			newTexture->path = strdup(path);
+			TSEEArrayAppend(tsee->textures, newTexture);
 			return newTexture;
 		}
 	}
@@ -46,10 +47,9 @@ TSEE_Texture *TSEEFindTexture(TSEE *tsee, char *path) {
 }
 
 void TSEEDestroyTexture(TSEE_Texture *tex) {
-	if (!tex) {
-		return;
-	}
-	SDL_DestroyTexture(tex->texture);
+	if (!tex) return;
+	if (tex->texture)
+		SDL_DestroyTexture(tex->texture);
 	xfree(tex->path);
 	xfree(tex);
 }
