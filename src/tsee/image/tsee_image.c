@@ -1,26 +1,26 @@
 #include "../tsee.h"
 
-TSEE_Texture *TSEECreateTexture(TSEE *tsee, char *path) {
+TSEE_Texture *TSEE_Texture_Create(TSEE *tsee, char *path) {
 	for (size_t i = 0; i < tsee->textures->size; i++) {
-		TSEE_Texture *existingTexture = (TSEE_Texture *)TSEEArrayGet(tsee->textures, i);
+		TSEE_Texture *existingTexture = (TSEE_Texture *)TSEE_Array_Get(tsee->textures, i);
 		if (strcmp(existingTexture->path, path) == 0) {
 			TSEE_Texture *newTexture = xmalloc(sizeof(*newTexture));
 			newTexture->texture = existingTexture->texture;
 			SDL_QueryTexture(newTexture->texture, NULL, NULL, &newTexture->rect.w, &newTexture->rect.h);
 			newTexture->rect = (SDL_Rect){0, 0, newTexture->rect.w, newTexture->rect.h};
 			newTexture->path = strdup(path);
-			TSEEArrayAppend(tsee->textures, newTexture);
+			TSEE_Array_Append(tsee->textures, newTexture);
 			return newTexture;
 		}
 	}
 	TSEE_Texture *texture = xmalloc(sizeof(*texture));
 	if (!texture) {
-		TSEEError("Couldn't malloc memory for texture `%s`\n", path);
+		TSEE_Error("Couldn't malloc memory for texture `%s`\n", path);
 		return NULL;
 	}
 	SDL_Texture *tex = IMG_LoadTexture(tsee->window->renderer, path);
 	if (!tex) {
-		TSEEError("Couldn't load texture from file `%s`\n", path);
+		TSEE_Error("Couldn't load texture from file `%s`\n", path);
 		xfree(texture);
 		return NULL;
 	}
@@ -29,24 +29,24 @@ TSEE_Texture *TSEECreateTexture(TSEE *tsee, char *path) {
 	texture->rect.x = 0;
 	texture->rect.y = 0;
 	texture->path = strdup(path);
-	TSEEArrayAppend(tsee->textures, texture);
+	TSEE_Array_Append(tsee->textures, texture);
 	return texture;
 }
 
-TSEE_Texture *TSEEFindTexture(TSEE *tsee, char *path) {
+TSEE_Texture *TSEE_Texture_Find(TSEE *tsee, char *path) {
 	for (size_t i = 0; i < tsee->textures->size; i++) {
-		TSEE_Texture *texture = (TSEE_Texture *)TSEEArrayGet(tsee->textures, i);
-		TSEELog("Checking texture %s against %s\n", texture->path, path);
+		TSEE_Texture *texture = (TSEE_Texture *)TSEE_Array_Get(tsee->textures, i);
+		TSEE_Log("Checking texture %s against %s\n", texture->path, path);
 		if (strcmp(texture->path, path) == 0) {
-			TSEELog("Found texture with same path %s\n", path);
+			TSEE_Log("Found texture with same path %s\n", path);
 			return texture;
 		}
 	}
-	TSEEWarn("Couldn't find loaded texture `%s`\n", path);
+	TSEE_Warn("Couldn't find loaded texture `%s`\n", path);
 	return NULL;
 }
 
-void TSEEDestroyTexture(TSEE_Texture *tex) {
+void TSEE_Texture_Destroy(TSEE_Texture *tex) {
 	if (!tex) return;
 	if (tex->texture)
 		SDL_DestroyTexture(tex->texture);

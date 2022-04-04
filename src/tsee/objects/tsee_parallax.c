@@ -1,8 +1,8 @@
 #include "../tsee.h"
 
-bool TSEECreateParallax(TSEE *tsee, TSEE_Texture *texture, int distanceFromCamera) {
+bool TSEE_Parallax_Create(TSEE *tsee, TSEE_Texture *texture, int distanceFromCamera) {
 	if (distanceFromCamera <= 0) {
-		TSEEError("Distance from camera must be greater than 0 (Recieved %d)\n", distanceFromCamera);
+		TSEE_Error("Distance from camera must be greater than 0 (Recieved %d)\n", distanceFromCamera);
 		return false;
 	}
 
@@ -17,23 +17,23 @@ bool TSEECreateParallax(TSEE *tsee, TSEE_Texture *texture, int distanceFromCamer
 	bool inserted = false;
 
 	for (size_t j = 0; j < tsee->world->parallax->size; j++) {
-		TSEE_Parallax *parallax2 = TSEEArrayGet(tsee->world->parallax, j);
+		TSEE_Parallax *parallax2 = TSEE_Array_Get(tsee->world->parallax, j);
 		if (parallax->distance > parallax2->distance) {
-			TSEEArrayInsert(tsee->world->parallax, parallax, j);
+			TSEE_Array_Insert(tsee->world->parallax, parallax, j);
 			inserted = true;
 			break;
 		}
 	}
 
 	if (!inserted) {
-		TSEEArrayAppend(tsee->world->parallax, parallax);
+		TSEE_Array_Append(tsee->world->parallax, parallax);
 	}
 	return true;
 }
 
-bool TSEECreateParallaxFromObject(TSEE *tsee, TSEE_Object *obj, int distanceFromCamera) {
+bool TSEE_Parallax_CreateFromObject(TSEE *tsee, TSEE_Object *obj, int distanceFromCamera) {
 	if (distanceFromCamera <= 0) {
-		TSEEError("Distance from camera must be greater than 0 (Recieved %d)\n", distanceFromCamera);
+		TSEE_Error("Distance from camera must be greater than 0 (Recieved %d)\n", distanceFromCamera);
 		return false;
 	}
 
@@ -48,23 +48,23 @@ bool TSEECreateParallaxFromObject(TSEE *tsee, TSEE_Object *obj, int distanceFrom
 	bool inserted = false;
 
 	for (size_t j = 0; j < tsee->world->parallax->size; j++) {
-		TSEE_Parallax *parallax2 = TSEEArrayGet(tsee->world->parallax, j);
+		TSEE_Parallax *parallax2 = TSEE_Array_Get(tsee->world->parallax, j);
 		if (parallax->distance > parallax2->distance) {
-			TSEEArrayInsert(tsee->world->parallax, parallax, j);
+			TSEE_Array_Insert(tsee->world->parallax, parallax, j);
 			inserted = true;
 			break;
 		}
 	}
 
 	if (!inserted) {
-		TSEEArrayAppend(tsee->world->parallax, parallax);
+		TSEE_Array_Append(tsee->world->parallax, parallax);
 	}
 	return true;
 }
 
-bool TSEERenderParallax(TSEE *tsee) {
+bool TSEE_Parallax_Render(TSEE *tsee) {
 	for (size_t i = 0; i < tsee->world->parallax->size; i++) {
-		TSEE_Parallax *parallax = TSEEArrayGet(tsee->world->parallax, i);
+		TSEE_Parallax *parallax = TSEE_Array_Get(tsee->world->parallax, i);
 		SDL_Rect newRect = parallax->texture->rect;
 		newRect.x = tsee->world->scroll_x * (-1 / parallax->distance);
 		while (newRect.x > tsee->window->width) {
@@ -103,9 +103,9 @@ bool TSEERenderParallax(TSEE *tsee) {
 	return true;
 }
 
-void TSEEDestroyParallax(TSEE_Parallax *para, bool destroyTexture) {
+void TSEE_Parallax_Destroy(TSEE_Parallax *para, bool destroyTexture) {
 	if (destroyTexture) {
-		TSEEDestroyTexture(para->texture);
+		TSEE_Texture_Destroy(para->texture);
 	}
 	xfree(para);
 }

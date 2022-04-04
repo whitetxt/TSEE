@@ -1,15 +1,15 @@
 // Initializes the UI system.
-// MUST be called after TSEEInitText
-bool TSEEInitUI(TSEE *tsee);
+// MUST be called after TSEE_Text_Init
+bool TSEE_UI_Init(TSEE *tsee);
 
 // Adds a button to the top-level toolbar.
-bool TSEEAddToolbarButton(TSEE *tsee, char *font, char *text);
+bool TSEE_Toolbar_AddButton(TSEE *tsee, char *font, char *text);
 
 // Adds a child button to a parent button.
-bool TSEEAddToolbarChild(TSEE *tsee, char *parentName, char *font, char *text, void (*cb) (void *tsee));
+bool TSEE_Toolbar_AddChild(TSEE *tsee, char *parentName, char *font, char *text, void (*cb) (void *tsee));
 
 // Checks if the UI was clicked
-bool TSEEUIClick(TSEE *tsee, int x, int y);
+bool TSEE_UI_Click(TSEE *tsee, int x, int y);
 
 // Renders all toolbar buttons.
-bool TSEERenderUI(TSEE *tsee);
+bool TSEE_UI_Render(TSEE *tsee);
