@@ -1,6 +1,5 @@
-// !! Logging functions !!
-
 #ifdef TSEE_DEV
+
 // Log something to the console, typically for debugging.
 #define TSEE_Log(message, ...) \
 		fprintf(stdout, "TSEE [Log] (%s:%d): " message "", __FILE__, __LINE__, ##__VA_ARGS__)
@@ -40,7 +39,7 @@
 #define xfree(ptr) \
 		_xfree(ptr, __FILE__, __LINE__);
 
-#define xmalloc(size) \
+#define xmalloc(size) \ 
 		_xmalloc(size, __FILE__, __LINE__);
 
 #define xrealloc(ptr, size) \
