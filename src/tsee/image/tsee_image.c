@@ -1,5 +1,13 @@
 #include "../tsee.h"
 
+/**
+ * @brief Creates a texture from a file path. If the texture is already loaded,
+ *        the new texture uses a reference to the other texture.
+ * 
+ * @param tsee TSEE object to load the texture into
+ * @param path Path to read the texture from.
+ * @return TSEE_Texture* 
+ */
 TSEE_Texture *TSEE_Texture_Create(TSEE *tsee, char *path) {
 	for (size_t i = 0; i < tsee->textures->size; i++) {
 		TSEE_Texture *existingTexture = (TSEE_Texture *)TSEE_Array_Get(tsee->textures, i);
@@ -33,6 +41,13 @@ TSEE_Texture *TSEE_Texture_Create(TSEE *tsee, char *path) {
 	return texture;
 }
 
+/**
+ * @brief Finds a texture if it is already loaded.
+ * 
+ * @param tsee TSEE object to look for the texture in
+ * @param path Path to the texture
+ * @return TSEE_Texture* 
+ */
 TSEE_Texture *TSEE_Texture_Find(TSEE *tsee, char *path) {
 	for (size_t i = 0; i < tsee->textures->size; i++) {
 		TSEE_Texture *texture = (TSEE_Texture *)TSEE_Array_Get(tsee->textures, i);
@@ -46,6 +61,11 @@ TSEE_Texture *TSEE_Texture_Find(TSEE *tsee, char *path) {
 	return NULL;
 }
 
+/**
+ * @brief Destroys a texture
+ * 
+ * @param tex Texture to destroy
+ */
 void TSEE_Texture_Destroy(TSEE_Texture *tex) {
 	if (!tex) return;
 	if (tex->texture)

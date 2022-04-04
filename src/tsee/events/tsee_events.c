@@ -1,5 +1,11 @@
 #include "../tsee.h"
 
+/**
+ * @brief Initialises the event subsystem.
+ * 
+ * @param tsee TSEE object to initialise.
+ * @return true on success, false on fail.
+ */
 bool TSEE_Events_Init(TSEE *tsee) {
 	if (tsee->init->events) {
 		return true;
@@ -7,6 +13,10 @@ bool TSEE_Events_Init(TSEE *tsee) {
 	// Setup events
 	tsee->events = xmalloc(sizeof(*tsee->events));
 	tsee->events->event = xmalloc(sizeof(*tsee->events->event));
+	if (!tsee->events || !tsee->events->event) {
+		TSEE_Error("Failed to malloc events\n");
+		return false;
+	}
 	tsee->events->keypress = NULL;
 	tsee->events->keyrelease = NULL;
 	tsee->events->mousemotion = NULL;
@@ -15,6 +25,12 @@ bool TSEE_Events_Init(TSEE *tsee) {
 	return true;
 }
 
+/**
+ * @brief Handler for all events
+ * 
+ * @param tsee TSEE object to handle for.
+ * @return true on success, false on fail.
+ */
 bool TSEE_Events_Handle(TSEE *tsee) {
 	Uint64 start = SDL_GetPerformanceCounter();
 	while (SDL_PollEvent(tsee->events->event)) {

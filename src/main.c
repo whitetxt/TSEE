@@ -36,11 +36,11 @@ int main(int argc, char *argv[]) {
 	TSEE_Player_SetJumpForce(tsee, 60);
 	TSEE_Player_SetSpeed(tsee, 1500);
 	TSEE_World_SetGravity(tsee, 800);
-	idx = TSEE_Create_Object(tsee, TSEE_Texture_Create(tsee, "assets/test_image.png"));
+	idx = TSEE_Object_Create(tsee, TSEE_Texture_Create(tsee, "assets/test_image.png"));
 	TSEESetObjectPosition(tsee, idx, 160, 595);
-	idx = TSEE_Create_Object(tsee, TSEE_Texture_Create(tsee, "assets/test_image.png"));
+	idx = TSEE_Object_Create(tsee, TSEE_Texture_Create(tsee, "assets/test_image.png"));
 	TSEESetObjectPosition(tsee, idx, 170, 590);
-	idx = TSEE_Create_Object(tsee, TSEE_Texture_Create(tsee, "assets/test_image.png"));
+	idx = TSEE_Object_Create(tsee, TSEE_Texture_Create(tsee, "assets/test_image.png"));
 	TSEESetObjectPosition(tsee, idx, 180, 585);
 	TSEE_Parallax_Create(tsee, TSEE_Texture_Create(tsee, "assets/parallax1.png"), 6);
 	TSEE_Parallax_Create(tsee, TSEE_Texture_Create(tsee, "assets/parallax2.png"), 4);
