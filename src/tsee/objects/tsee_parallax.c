@@ -14,27 +14,30 @@ bool TSEE_Parallax_Create(TSEE *tsee, TSEE_Texture *texture, float distanceFromC
 		return false;
 	}
 
-	TSEE_Parallax *parallax = xmalloc(sizeof(*parallax));
+	TSEE_Object *parallax = TSEE_Object_Create(tsee, texture, TSEE_ATTRIB_PARALLAX, 0, 0);
 	if (!parallax) {
 		return false;
 	}
 
 	parallax->texture = texture;
-	parallax->distance = distanceFromCamera;
+	parallax->parallax.distance = distanceFromCamera;
 	parallax->texture->rect.y = tsee->window->height - texture->rect.h;
 	bool inserted = false;
 
-	for (size_t j = 0; j < tsee->world->parallax->size; j++) {
-		TSEE_Parallax *parallax2 = TSEE_Array_Get(tsee->world->parallax, j);
-		if (parallax->distance > parallax2->distance) {
-			TSEE_Array_Insert(tsee->world->parallax, parallax, j);
+	for (size_t j = 0; j < tsee->world->objects->size; j++) {
+		TSEE_Object *obj = TSEE_Array_Get(tsee->world->objects, j);
+		if (!TSEE_Object_CheckAttribute(obj, TSEE_ATTRIB_PARALLAX)) {
+			continue;
+		}
+		if (parallax->parallax.distance > obj->parallax.distance) {
+			TSEE_Array_Insert(tsee->world->objects, parallax, j);
 			inserted = true;
 			break;
 		}
 	}
 
 	if (!inserted) {
-		TSEE_Array_Append(tsee->world->parallax, parallax);
+		TSEE_Array_Append(tsee->world->objects, parallax);
 	}
 	return true;
 }
@@ -53,74 +56,71 @@ bool TSEE_Parallax_CreateFromObject(TSEE *tsee, TSEE_Object *obj, int distanceFr
 		return false;
 	}
 
-	TSEE_Parallax *parallax = xmalloc(sizeof(*parallax));
+	TSEE_Object *parallax = TSEE_Object_Create(tsee, obj->texture, TSEE_ATTRIB_PARALLAX, 0, 0);
 	if (!parallax) {
 		return false;
 	}
 
 	parallax->texture = obj->texture;
-	parallax->distance = distanceFromCamera;
+	parallax->parallax.distance = distanceFromCamera;
 	parallax->texture->rect.y = tsee->window->height - obj->texture->rect.h;
 	bool inserted = false;
 
-	for (size_t j = 0; j < tsee->world->parallax->size; j++) {
-		TSEE_Parallax *parallax2 = TSEE_Array_Get(tsee->world->parallax, j);
-		if (parallax->distance > parallax2->distance) {
-			TSEE_Array_Insert(tsee->world->parallax, parallax, j);
+	for (size_t j = 0; j < tsee->world->objects->size; j++) {
+		TSEE_Object *obj = TSEE_Array_Get(tsee->world->objects, j);
+		if (!TSEE_Object_CheckAttribute(obj, TSEE_ATTRIB_PARALLAX)) {
+			continue;
+		}
+		if (parallax->parallax.distance > obj->parallax.distance) {
+			TSEE_Array_Insert(tsee->world->objects, parallax, j);
 			inserted = true;
 			break;
 		}
 	}
 
 	if (!inserted) {
-		TSEE_Array_Append(tsee->world->parallax, parallax);
+		TSEE_Array_Append(tsee->world->objects, parallax);
 	}
 	return true;
 }
 
 /**
- * @brief Renders all parallax objects in a TSEE object.
+ * @brief Renders a parallax object in a TSEE object.
  * 
  * @param tsee TSEE object to render.
+ * @param parallax Parallax object to render.
  * @return true on success, false on fail.
  */
-bool TSEE_Parallax_Render(TSEE *tsee) {
-	for (size_t i = 0; i < tsee->world->parallax->size; i++) {
-		TSEE_Parallax *parallax = TSEE_Array_Get(tsee->world->parallax, i);
-		SDL_Rect newRect = parallax->texture->rect;
-		newRect.x = tsee->world->scroll_x * (-1 / parallax->distance);
-		while (newRect.x > tsee->window->width) {
-			newRect.x -= tsee->window->width;
-		}
-		while (newRect.x + newRect.w < 0) {
-			newRect.x += tsee->window->width;
-		}
-		SDL_RenderCopy(	tsee->window->renderer,
-						parallax->texture->texture,
-						NULL,
-						&newRect);
-		while (newRect.x + newRect.w < tsee->window->width) {
-			newRect.x += tsee->window->width;
-			SDL_RenderCopy(	tsee->window->renderer,
-							parallax->texture->texture,
-							NULL,
-							&newRect);
-		}
-		// Render parallax again to left or right depending on scroll
-		while (newRect.x > 0) {
-			newRect.x -= newRect.w;
-			SDL_RenderCopy(	tsee->window->renderer,
-							parallax->texture->texture,
-							NULL,
-							&newRect);
-		}
-		while (newRect.x < 0) {
-			newRect.x += newRect.w;
-			SDL_RenderCopy(	tsee->window->renderer,
-							parallax->texture->texture,
-							NULL,
-							&newRect);
-		}
+bool TSEE_Parallax_Render(TSEE *tsee, TSEE_Object *parallax) {
+	SDL_Rect newRect = parallax->texture->rect;
+	newRect.x = tsee->world->scroll_x * (-1 / parallax->parallax.distance);
+	while (newRect.x > tsee->window->width) {
+		newRect.x -= tsee->window->width;
+	}
+	while (newRect.x + newRect.w < 0) {
+		newRect.x += tsee->window->width;
+	}
+	if (SDL_RenderCopy(tsee->window->renderer, parallax->texture->texture, NULL, &newRect) != 0) {
+		return false;
+	};
+	while (newRect.x + newRect.w < tsee->window->width) {
+		newRect.x += tsee->window->width;
+		if (SDL_RenderCopy(tsee->window->renderer, parallax->texture->texture, NULL, &newRect) != 0) {
+			return false;
+		};
+	}
+	// Render parallax again to left or right depending on scroll
+	while (newRect.x > 0) {
+		newRect.x -= newRect.w;
+		if (SDL_RenderCopy(tsee->window->renderer, parallax->texture->texture, NULL, &newRect) != 0) {
+			return false;
+		};
+	}
+	while (newRect.x < 0) {
+		newRect.x += newRect.w;
+		if (SDL_RenderCopy(tsee->window->renderer, parallax->texture->texture, NULL, &newRect) != 0) {
+			return false;
+		};
 	}
 	return true;
 }

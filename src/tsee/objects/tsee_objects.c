@@ -23,7 +23,7 @@ bool TSEE_Object_CheckAttribute(TSEE_Object *obj, TSEE_Object_Attributes attr) {
  */
 TSEE_Object *TSEE_Object_Create(TSEE *tsee, TSEE_Texture *texture, TSEE_Object_Attributes attributes, float x, float y) {
 	if (TSEE_Attributes_Check(attributes, TSEE_ATTRIB_UI) && TSEE_Attributes_Check(attributes, TSEE_ATTRIB_PHYS_ENABLED)) {
-		TSEE_Error("Cannot create object with static and physics attributes.\n");
+		TSEE_Error("Cannot create object with UI and physics attributes.\n");
 		return NULL;
 	}
 	TSEE_Object *obj = xmalloc(sizeof(*obj));
@@ -31,7 +31,12 @@ TSEE_Object *TSEE_Object_Create(TSEE *tsee, TSEE_Texture *texture, TSEE_Object_A
 	obj->position.x = x;
 	obj->position.y = y;
 	if (TSEE_Attributes_Check(attributes, TSEE_ATTRIB_PLAYER)) {
-		TSEE_Attributes_Set(attributes, TSEE_ATTRIB_PHYS_ENABLED);
+		if (TSEE_Attributes_Check(attributes, TSEE_ATTRIB_UI)) {
+			TSEE_Error("Cannot create object with player and UI attributes.\n");
+			free(obj);
+			return NULL;
+		}
+		TSEE_Attributes_Set(&attributes, TSEE_ATTRIB_PHYS_ENABLED);
 		tsee->player->object = obj;
 		tsee->player->movement = (TSEE_Player_Movement){0, 0, 0, 0};
 	}
@@ -48,10 +53,33 @@ TSEE_Object *TSEE_Object_Create(TSEE *tsee, TSEE_Texture *texture, TSEE_Object_A
  * @return true on success, false on fail
  */
 bool TSEE_Object_Render(TSEE *tsee, TSEE_Object *object) {
-	int ret = SDL_RenderCopy(tsee->window->renderer, object->texture->texture, NULL, &object->texture->rect);
-	if (ret != 0) {
-		TSEE_Error("Failed to render object: %s\n", SDL_GetError());
-		return false;
+	if (!TSEE_Object_CheckAttribute(object, TSEE_ATTRIB_PARALLAX)) {
+		int ret = SDL_RenderCopy(tsee->window->renderer, object->texture->texture, NULL, &object->texture->rect);
+		if (ret != 0) {
+			TSEE_Error("Failed to render object: %s\n", SDL_GetError());
+			return false;
+		}
+	} else {
+		if (!TSEE_Parallax_Render(tsee, object)) {
+			TSEE_Error("Failed to render parallax: %s\n", SDL_GetError());
+			return false;
+		}
 	}
 	return true;
+}
+
+/**
+ * @brief Destroys an object.
+ * 
+ * @param object Object to destroy
+ * @param destroyTexture Whether to destroy the texture or not
+ */
+void TSEE_Object_Destroy(TSEE_Object *object, bool destroyTexture) {
+	if (destroyTexture) {
+		TSEE_Texture_Destroy(object->texture);
+	}
+	if (TSEE_Object_CheckAttribute(object, TSEE_ATTRIB_TEXT)) {
+		free(object->text.text);
+	}
+	free(object);
 }

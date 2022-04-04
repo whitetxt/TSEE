@@ -103,10 +103,6 @@ bool TSEE_RenderAll(TSEE *tsee) {
 	}
 	SDL_SetRenderDrawColor(tsee->window->renderer, 0, 0, 0, 255);
 	SDL_RenderClear(tsee->window->renderer);
-	// Render parallax backgrounds
-	if (!TSEE_Parallax_Render(tsee)) {
-		TSEE_Warn("Failed to render all parallax backgrounds\n");
-	}
 
 	// Render all objects
 	for (size_t i = 0; i < tsee->world->objects->size; i++) {
