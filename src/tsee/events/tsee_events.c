@@ -1,6 +1,6 @@
 #include "../tsee.h"
 
-bool TSEEInitEvents(TSEE *tsee) {
+bool TSEE_Events_Init(TSEE *tsee) {
 	if (tsee->init->events) {
 		return true;
 	}
@@ -15,7 +15,7 @@ bool TSEEInitEvents(TSEE *tsee) {
 	return true;
 }
 
-bool TSEEHandleEvents(TSEE *tsee) {
+bool TSEE_Events_Handle(TSEE *tsee) {
 	Uint64 start = SDL_GetPerformanceCounter();
 	while (SDL_PollEvent(tsee->events->event)) {
 		switch (tsee->events->event->type) {
@@ -39,7 +39,7 @@ bool TSEEHandleEvents(TSEE *tsee) {
 				}
 				break;
 			case SDL_MOUSEBUTTONUP:
-				if (tsee->events->event->button.button == SDL_BUTTON_LEFT) {TSEEUIClick(tsee, tsee->events->event->button.x, tsee->events->event->button.y);} // Checks if the UI is clicked
+				if (tsee->events->event->button.button == SDL_BUTTON_LEFT) {TSEE_UI_Click(tsee, tsee->events->event->button.x, tsee->events->event->button.y);} // Checks if the UI is clicked
 				if (tsee->events->mouseclick) {
 					tsee->events->mouseclick(tsee, tsee->events->event->button.x, tsee->events->event->button.y, tsee->events->event->button.button);
 				}

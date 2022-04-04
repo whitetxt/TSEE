@@ -1,8 +1,8 @@
 #include "../tsee.h"
 
-void TSEEInitAnimation(TSEE *tsee) {
+void TSEE_Animation_Init(TSEE *tsee) {
 	return;
 	/*tsee->animations = xmalloc(sizeof(*tsee->animations));
-	tsee->animations->animations = TSEEArrayCreate();
+	tsee->animations->animations = TSEE_Array_Create();
 	tsee->init->animation = true;*/
 }

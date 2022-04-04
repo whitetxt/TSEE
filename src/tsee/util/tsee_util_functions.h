@@ -1,28 +1,28 @@
 // Creates a TSEE_Array with size 0.
-TSEE_Array *TSEEArrayCreate();
+TSEE_Array *TSEE_Array_Create();
 
 // Extends a TSEE_Array by the specified size.
-int TSEEArrayExtend(TSEE_Array *arr, int size);
+int TSEE_Array_Extend(TSEE_Array *arr, int size);
 
 // Appends data to the end of a TSEE_Array.
-bool TSEEArrayAppend(TSEE_Array *arr, void *data);
+bool TSEE_Array_Append(TSEE_Array *arr, void *data);
 
 // Insert data into TSEE_Array at the specified index.
-bool TSEEArrayInsert(TSEE_Array *arr, void *toInsert, size_t index);
+bool TSEE_Array_Insert(TSEE_Array *arr, void *toInsert, size_t index);
 
 // Deletes data from a TSEE_Array at the specified index.
 // This will move all following data to the left.
 // Update any stored indexes after using this!
-bool TSEEArrayDelete(TSEE_Array *arr, size_t index);
+bool TSEE_Array_Delete(TSEE_Array *arr, size_t index);
 
 // Gets the specified index from a TSEE_Array.
-void *TSEEArrayGet(TSEE_Array *arr, size_t index);
+void *TSEE_Array_Get(TSEE_Array *arr, size_t index);
 
 // Clears a TSEE_Array, deleting all data and setting size to 0.
-bool TSEEArrayClear(TSEE_Array *arr);
+bool TSEE_Array_Clear(TSEE_Array *arr);
 
 // Frees a TSEE_Array, does not free data.
-bool TSEEDestroyArray(TSEE_Array *arr);
+bool TSEE_Array_Destroy(TSEE_Array *arr);
 
 // SAFETY
 
@@ -43,4 +43,4 @@ void *_xrealloc(void *ptr, size_t size, char *file, int line);
 void *_xmemmove(void *dst, const void *src, size_t size, char *file, int line);
 
 // Prints a backtrace to stdout.
-void TSEEBacktrace();
+void TSEE_Backtrace();
