@@ -1,23 +1,34 @@
-// TSEE's Object type, keeps track of texture and position.
-typedef struct TSEE_Object {
-	TSEE_Texture *texture;
-	float x;
-	float y;
-} TSEE_Object;
+typedef enum TSEE_Object_Attributes {
+	TSEE_PHYSICS_ENABLED = 1,
+	TSEE_PARALLAX = 2,
+	TSEE_TEXT_OBJECT = 4,
+} TSEE_Object_Attributes;
 
-// Struct for parallax scrolling backgrounds
-typedef struct TSEE_Parallax {
-	TSEE_Texture *texture;
-	float distance;
-} TSEE_Parallax;
-
-// TSEE's Physics Object type, extends TSEE_Object and has physics related information.
-typedef struct TSEE_Physics_Object {
-	TSEE_Object *object;
+typedef struct TSEE_Physics_Data {
 	TSEE_Vec2 velocity;
 	TSEE_Vec2 acceleration;
 	float mass;
-} TSEE_Physics_Object;
+} TSEE_Physics_Data;
+
+typedef struct TSEE_Parallax_Data {
+	float distance;
+} TSEE_Parallax_Data;
+
+typedef struct TSEE_Text_Data {
+	char *text;
+} TSEE_Text_Data;
+
+// TSEE's Object type, keeps track of texture and position.
+typedef struct TSEE_Object {
+	TSEE_Texture *texture;
+	TSEE_Vec2 position;
+	TSEE_Object_Attributes attributes;
+	union {
+		TSEE_Physics_Data physics;
+		TSEE_Parallax_Data parallax;
+		TSEE_Text_Data text;
+	};
+} TSEE_Object;
 
 // TSEE fonts, stores the font, its name and size.
 typedef struct TSEE_Font {
@@ -25,9 +36,3 @@ typedef struct TSEE_Font {
 	char *name;
 	int size;
 } TSEE_Font;
-
-// TSEE's text wrapper, keeps track of what the text says.
-typedef struct TSEE_Text {
-	TSEE_Texture *texture;
-	char *text;
-} TSEE_Text;
