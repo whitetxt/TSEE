@@ -111,16 +111,8 @@ bool TSEE_RenderAll(TSEE *tsee) {
 	// Render all objects
 	for (size_t i = 0; i < tsee->world->objects->size; i++) {
 		TSEE_Object *obj = TSEE_Array_Get(tsee->world->objects, i);
-		if (!TSEERenderObject(tsee, obj)) {
+		if (!TSEE_Object_Render(tsee, obj)) {
 			TSEE_Warn("Failed to render object\n");
-		}
-	}
-
-	// Render all text
-	for (size_t i = 0; i < tsee->world->text->size; i++) {
-		TSEE_Text *text = TSEE_Array_Get(tsee->world->text, i);
-		if (!TSEE_Text_Render(tsee, text)) {
-			TSEE_Warn("Failed to render text %s\n", text->text);
 		}
 	}
 
@@ -132,7 +124,7 @@ bool TSEE_RenderAll(TSEE *tsee) {
 		char text[64];
 		int height_off = 64;
 		sprintf(text, "Event: %.3f ms", tsee->debug->event_time);
-		TSEE_Text *tex = TSEE_Text_Create(tsee, "_default", text, (SDL_Color){255, 255, 255, SDL_ALPHA_OPAQUE});
+		TSEE_Object *tex = TSEE_Text_Create(tsee, "_default", text, (SDL_Color){255, 255, 255, SDL_ALPHA_OPAQUE});
 		tex->texture->rect.x = 0;
 		tex->texture->rect.y = height_off;
 		height_off += tex->texture->rect.h;

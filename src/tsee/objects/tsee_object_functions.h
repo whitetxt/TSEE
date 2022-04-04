@@ -1,14 +1,16 @@
 // Objects
 
 bool TSEE_Object_CheckAttribute(TSEE_Object *obj, TSEE_Object_Attributes attr);
-bool TSEE_Attributes_Check(TSEE_Object_Attributes attr, TSEE_Object_Attributes attr2);
 TSEE_Object *TSEE_Object_Create(TSEE *tsee, TSEE_Texture *texture, TSEE_Object_Attributes attributes, float x, float y);
 bool TSEE_Player_Create(TSEE *tsee, TSEE_Object *pobj);
 bool TSEE_Player_SetJumpForce(TSEE *tsee, float force);
 bool TSEE_Player_SetSpeed(TSEE *tsee, float speed);
-bool TSEE_Vec2_Add(TSEE_Vec2 *final, TSEE_Vec2 *add);
-bool TSEE_Vec2_Normalise(TSEE_Vec2 *vec);
-bool TSEE_Vec2_Multiply(TSEE_Vec2 *vec, float mult);
+bool TSEE_Object_Render(TSEE *tsee, TSEE_Object *object);
+
+// Attributes
+
+bool TSEE_Attributes_Check(TSEE_Object_Attributes attr, TSEE_Object_Attributes attr2);
+void TSEE_Attributes_Set(TSEE_Object_Attributes *attr, TSEE_Object_Attributes to_set);
 
 // Parallax
 
@@ -18,7 +20,7 @@ void TSEE_Parallax_Destroy(TSEE_Object *para, bool destroyTexture);
 
 // Text
 
-bool TSEE_Text_Init(TSEE *tsee, bool loadDefault);
+bool TSEE_Object_Init(TSEE *tsee, bool loadDefault);
 bool TSEE_Font_Load(TSEE *tsee, char *path, int size, char *name);
 bool TSEE_Font_Unload(TSEE *tsee, char *name);
 bool TSEE_Font_UnloadAll(TSEE *tsee);

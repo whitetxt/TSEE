@@ -31,17 +31,13 @@ int main(int argc, char *argv[]) {
 		TSEE_Warn("Failed to set window title.\n");
 	}
 
-	int idx = TSEECreatePhysicsObject(tsee, TSEE_Texture_Create(tsee, "assets/test_image.png"), 1);
-	TSEE_Player_Create(tsee, TSEE_Array_Get(tsee->world->physics_objects, idx));
+	TSEE_Object_Create(tsee, TSEE_Texture_Create(tsee, "assets/test_image.png"), TSEE_ATTRIB_PHYS_ENABLED | TSEE_ATTRIB_PLAYER, 0, 0);
 	TSEE_Player_SetJumpForce(tsee, 60);
 	TSEE_Player_SetSpeed(tsee, 1500);
 	TSEE_World_SetGravity(tsee, 800);
-	idx = TSEE_Object_Create(tsee, TSEE_Texture_Create(tsee, "assets/test_image.png"));
-	TSEESetObjectPosition(tsee, idx, 160, 595);
-	idx = TSEE_Object_Create(tsee, TSEE_Texture_Create(tsee, "assets/test_image.png"));
-	TSEESetObjectPosition(tsee, idx, 170, 590);
-	idx = TSEE_Object_Create(tsee, TSEE_Texture_Create(tsee, "assets/test_image.png"));
-	TSEESetObjectPosition(tsee, idx, 180, 585);
+	TSEE_Object *obj = TSEE_Object_Create(tsee, TSEE_Texture_Create(tsee, "assets/test_image.png"), TSEE_ATTRIB_NONE, 160, 595);
+	obj = TSEE_Object_Create(tsee, TSEE_Texture_Create(tsee, "assets/test_image.png"), TSEE_ATTRIB_NONE, 170, 590);
+	obj = TSEE_Object_Create(tsee, TSEE_Texture_Create(tsee, "assets/test_image.png"), TSEE_ATTRIB_NONE, 180, 585);
 	TSEE_Parallax_Create(tsee, TSEE_Texture_Create(tsee, "assets/parallax1.png"), 6);
 	TSEE_Parallax_Create(tsee, TSEE_Texture_Create(tsee, "assets/parallax2.png"), 4);
 	TSEE_Parallax_Create(tsee, TSEE_Texture_Create(tsee, "assets/parallax3.png"), 2);
