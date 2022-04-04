@@ -10,7 +10,7 @@
  */
 bool TSEE_Parallax_Create(TSEE *tsee, TSEE_Texture *texture, float distanceFromCamera) {
 	if (distanceFromCamera <= 0) {
-		TSEE_Error("Distance from camera must be greater than 0 (Recieved %d)\n", distanceFromCamera);
+		TSEE_Error("Distance from camera must be greater than 0 (Recieved %f)\n", distanceFromCamera);
 		return false;
 	}
 
@@ -50,38 +50,8 @@ bool TSEE_Parallax_Create(TSEE *tsee, TSEE_Texture *texture, float distanceFromC
  * @param distanceFromCamera Distance from the camera to the object.
  * @return true on success, false on fail.
  */
-bool TSEE_Parallax_CreateFromObject(TSEE *tsee, TSEE_Object *obj, int distanceFromCamera) {
-	if (distanceFromCamera <= 0) {
-		TSEE_Error("Distance from camera must be greater than 0 (Recieved %d)\n", distanceFromCamera);
-		return false;
-	}
-
-	TSEE_Object *parallax = TSEE_Object_Create(tsee, obj->texture, TSEE_ATTRIB_PARALLAX, 0, 0);
-	if (!parallax) {
-		return false;
-	}
-
-	parallax->texture = obj->texture;
-	parallax->parallax.distance = distanceFromCamera;
-	parallax->texture->rect.y = tsee->window->height - obj->texture->rect.h;
-	bool inserted = false;
-
-	for (size_t j = 0; j < tsee->world->objects->size; j++) {
-		TSEE_Object *obj = TSEE_Array_Get(tsee->world->objects, j);
-		if (!TSEE_Object_CheckAttribute(obj, TSEE_ATTRIB_PARALLAX)) {
-			continue;
-		}
-		if (parallax->parallax.distance > obj->parallax.distance) {
-			TSEE_Array_Insert(tsee->world->objects, parallax, j);
-			inserted = true;
-			break;
-		}
-	}
-
-	if (!inserted) {
-		TSEE_Array_Append(tsee->world->objects, parallax);
-	}
-	return true;
+bool TSEE_Parallax_CreateFromObject(TSEE *tsee, TSEE_Object *obj, float distanceFromCamera) {
+	return TSEE_Parallax_Create(tsee, obj->texture, distanceFromCamera);
 }
 
 /**
