@@ -8,22 +8,11 @@
  * @return true if it is set.
  */
 bool TSEE_Object_CheckAttribute(TSEE_Object *obj, TSEE_Object_Attributes attr) {
-	return obj->attributes & attr;
+	return TSEE_Attributes_Check(obj->attributes, attr);
 }
 
 /**
- * @brief Check if an attribute is set in an attribute.
- * 
- * @param attr Attribute to check.
- * @param attr2 Attribute to check against.
- * @return true if it is set.
- */
-bool TSEE_Attributes_Check(TSEE_Object_Attributes attr, TSEE_Object_Attributes attr2) {
-	return attr & attr2;
-}
-
-/**
- * @brief Creates an object from 
+ * @brief Creates an object from a texture, with the given attributes.
  * 
  * @param tsee TSEE object
  * @param texture Texture to use for the object
@@ -33,7 +22,7 @@ bool TSEE_Attributes_Check(TSEE_Object_Attributes attr, TSEE_Object_Attributes a
  * @return TSEE_Object* or NULL
  */
 TSEE_Object *TSEE_Object_Create(TSEE *tsee, TSEE_Texture *texture, TSEE_Object_Attributes attributes, float x, float y) {
-	if (TSEE_Attributes_Check(attributes, TSEE_STATIC) && TSEE_Attributes_Check(attributes, TSEE_PHYSICS_ENABLED)) {
+	if (TSEE_Attributes_Check(attributes, TSEE_ATTRIB_UI) && TSEE_Attributes_Check(attributes, TSEE_ATTRIB_PHYS_ENABLED)) {
 		TSEE_Error("Cannot create object with static and physics attributes.\n");
 		return NULL;
 	}
@@ -41,49 +30,28 @@ TSEE_Object *TSEE_Object_Create(TSEE *tsee, TSEE_Texture *texture, TSEE_Object_A
 	obj->texture = texture;
 	obj->position.x = x;
 	obj->position.y = y;
+	if (TSEE_Attributes_Check(attributes, TSEE_ATTRIB_PLAYER)) {
+		TSEE_Attributes_Set(attributes, TSEE_ATTRIB_PHYS_ENABLED);
+		tsee->player->object = obj;
+		tsee->player->movement = (TSEE_Player_Movement){0, 0, 0, 0};
+	}
 	obj->attributes = attributes;
-	TSEE_Array_Append(tsee->world->objects, &obj);
+	TSEE_Array_Append(tsee->world->objects, obj);
 	return obj;
 }
 
 /**
- * @brief Adds two vectors
+ * @brief Renders an object
  * 
- * @param final Destination vector
- * @param add Vector to add
- * @return true on success
+ * @param tsee TSEE to render to
+ * @param object Object to render
+ * @return true on success, false on fail
  */
-bool TSEE_Vec2_Add(TSEE_Vec2 *final, TSEE_Vec2 *add) {
-	final->x += add->x;
-	final->y += add->y;
-	return true;
-}
-
-/**
- * @brief Normalises a vector.
- * 
- * @param vec Vector to normalise.
- * @return true on success, false on fail.
- */
-bool TSEE_Vec2_Normalise(TSEE_Vec2 *vec) {
-	float len = sqrt(vec->x * vec->x + vec->y * vec->y);
-	if (len == 0) {
+bool TSEE_Object_Render(TSEE *tsee, TSEE_Object *object) {
+	int ret = SDL_RenderCopy(tsee->window->renderer, object->texture->texture, NULL, &object->texture->rect);
+	if (ret != 0) {
+		TSEE_Error("Failed to render object: %s\n", SDL_GetError());
 		return false;
 	}
-	vec->x /= len;
-	vec->y /= len;
-	return true;
-}
-
-/**
- * @brief Multiplies a vector by a scalar.
- * 
- * @param vec Vector to multiply.
- * @param mult Multiplier
- * @return true on success, false on fail.
- */
-bool TSEE_Vec2_Multiply(TSEE_Vec2 *vec, float mult) {
-	vec->x *= mult;
-	vec->y *= mult;
 	return true;
 }

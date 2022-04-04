@@ -39,7 +39,7 @@
 #define xfree(ptr) \
 		_xfree(ptr, __FILE__, __LINE__);
 
-#define xmalloc(size) \ 
+#define xmalloc(size) \
 		_xmalloc(size, __FILE__, __LINE__);
 
 #define xrealloc(ptr, size) \

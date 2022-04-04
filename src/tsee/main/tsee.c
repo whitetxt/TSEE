@@ -29,7 +29,7 @@ TSEE *TSEE_Create(int width, int height) {
 
 	// Setup player
 	tsee->player = xmalloc(sizeof(*tsee->player));
-	tsee->player->physics_object = NULL;
+	tsee->player->object = NULL;
 	tsee->player->movement.up = false;
 	tsee->player->movement.down = false;
 	tsee->player->movement.left = false;
@@ -80,7 +80,7 @@ bool TSEE_InitAll(TSEE *tsee) {
 		return false;
 	}
 	TSEE_Log("Initialized TSEE Rendering.\n");
-	if (!TSEE_Text_Init(tsee, true)) {
+	if (!TSEE_Object_Init(tsee, true)) {
 		TSEE_Critical("Failed to initialize TSEE Text Module.\n");
 		TSEE_Close(tsee);
 		return false;
@@ -135,10 +135,10 @@ bool TSEE_Close(TSEE *tsee) {
 	xfree(tsee->events);
 	for (size_t i = 0; i < tsee->ui->toolbar->size; i++) {
 		TSEE_Toolbar_Object *obj = TSEE_Array_Get(tsee->ui->toolbar, i);
-		TSEE_Text_Destroy(obj->text, true);
+		TSEE_Object_Destroy(obj->text, true);
 		for (size_t j = 0; j < obj->buttons->size; j++) {
 			TSEE_Toolbar_Child *child = TSEE_Array_Get(obj->buttons, j);
-			TSEE_Text_Destroy(child->text, true);
+			TSEE_Object_Destroy(child->text, true);
 			xfree(child);
 		}
 		TSEE_Array_Destroy(obj->buttons);
