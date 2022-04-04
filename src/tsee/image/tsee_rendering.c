@@ -1,5 +1,11 @@
 #include "../tsee.h"
 
+/**
+ * @brief Initialises rendering for a TSEE object.
+ * 
+ * @param tsee TSEE object to initialise
+ * @return true on success, false on fail.
+ */
 bool TSEE_Rendering_Init(TSEE *tsee) {
 	if (tsee->init->rendering) {
 		return true;
@@ -45,16 +51,33 @@ bool TSEE_Rendering_Init(TSEE *tsee) {
 	return true;
 }
 
+/**
+ * @brief Updates the window size for a TSEE object
+ * 
+ * @param tsee TSEE object to update
+ */
 void TSEE_Window_UpdateSize(TSEE *tsee) {
 	SDL_SetWindowSize(tsee->window->window, tsee->window->width, tsee->window->height);
 }
 
+/**
+ * @brief Destroys a window and renderer for a TSEE_Window
+ * 
+ * @param window Window to destroy
+ */
 void TSEE_Window_Destroy(TSEE_Window *window) {
 	SDL_DestroyRenderer(window->renderer);
 	SDL_DestroyWindow(window->window);
 	xfree(window->title);
 }
 
+/**
+ * @brief Sets the title of a window.
+ * 
+ * @param tsee TSEE object with the window in it.
+ * @param title New title of the window.
+ * @return true on success, false on fail.
+ */
 bool TSEE_Window_SetTitle(TSEE *tsee, char *title) {
 	if (tsee->window->window == NULL) {
 		TSEE_Error("Window is not initialized\n");
@@ -66,6 +89,12 @@ bool TSEE_Window_SetTitle(TSEE *tsee, char *title) {
 	return true;
 }
 
+/**
+ * @brief Render everything inside a TSEE object.
+ * 
+ * @param tsee TSEE object to render
+ * @return true on success, false on fail.
+ */
 bool TSEE_RenderAll(TSEE *tsee) {
 	Uint64 start = SDL_GetPerformanceCounter();
 	if (SDL_GetWindowFlags(tsee->window->window) & SDL_WINDOW_MINIMIZED) {
@@ -149,6 +178,13 @@ bool TSEE_RenderAll(TSEE *tsee) {
 	return true;
 }
 
+/**
+ * @brief Checks if the TSEE is ready to render yet, according to the framerate
+ *        set in the window object.
+ * 
+ * @param tsee TSEE to check if ready
+ * @return true if ready, false if not.
+ */
 bool TSEE_Rendering_IsReady(TSEE *tsee) {
 	float timeBetweenFrames = 1.0f / tsee->window->fps;
 	float dt = (float) ( (SDL_GetPerformanceCounter() - tsee->window->last_render) / (float) SDL_GetPerformanceFrequency() );

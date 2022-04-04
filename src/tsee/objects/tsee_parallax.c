@@ -1,6 +1,14 @@
 #include "../tsee.h"
 
-bool TSEE_Parallax_Create(TSEE *tsee, TSEE_Texture *texture, int distanceFromCamera) {
+/**
+ * @brief Creates a parallax object from a texture.
+ * 
+ * @param tsee TSEE object to create the parallax for.
+ * @param texture Texture to use for the object.
+ * @param distanceFromCamera Distance from the camera to the object.
+ * @return true on success, false on fail.
+ */
+bool TSEE_Parallax_Create(TSEE *tsee, TSEE_Texture *texture, float distanceFromCamera) {
 	if (distanceFromCamera <= 0) {
 		TSEE_Error("Distance from camera must be greater than 0 (Recieved %d)\n", distanceFromCamera);
 		return false;
@@ -31,6 +39,14 @@ bool TSEE_Parallax_Create(TSEE *tsee, TSEE_Texture *texture, int distanceFromCam
 	return true;
 }
 
+/**
+ * @brief Create a parallax object from another object.
+ * 
+ * @param tsee TSEE object to create the parallax for.
+ * @param obj Object to create the parallax object from.
+ * @param distanceFromCamera Distance from the camera to the object.
+ * @return true on success, false on fail.
+ */
 bool TSEE_Parallax_CreateFromObject(TSEE *tsee, TSEE_Object *obj, int distanceFromCamera) {
 	if (distanceFromCamera <= 0) {
 		TSEE_Error("Distance from camera must be greater than 0 (Recieved %d)\n", distanceFromCamera);
@@ -62,6 +78,12 @@ bool TSEE_Parallax_CreateFromObject(TSEE *tsee, TSEE_Object *obj, int distanceFr
 	return true;
 }
 
+/**
+ * @brief Renders all parallax objects in a TSEE object.
+ * 
+ * @param tsee TSEE object to render.
+ * @return true on success, false on fail.
+ */
 bool TSEE_Parallax_Render(TSEE *tsee) {
 	for (size_t i = 0; i < tsee->world->parallax->size; i++) {
 		TSEE_Parallax *parallax = TSEE_Array_Get(tsee->world->parallax, i);
@@ -103,7 +125,13 @@ bool TSEE_Parallax_Render(TSEE *tsee) {
 	return true;
 }
 
-void TSEE_Parallax_Destroy(TSEE_Parallax *para, bool destroyTexture) {
+/**
+ * @brief Destroys a parallax object.
+ * 
+ * @param para Parallax object to destroy.
+ * @param destroyTexture Whether to destroy the texture or not.
+ */
+void TSEE_Parallax_Destroy(TSEE_Object *para, bool destroyTexture) {
 	if (destroyTexture) {
 		TSEE_Texture_Destroy(para->texture);
 	}

@@ -48,32 +48,16 @@
 #define xmemmove(dst, src, size) \
 		_xmemmove(dst, src, size, __FILE__, __LINE__);
 
-// !! tsee.c !!
+// Main Functions
 
-// Creates a new TSEE object.
 TSEE *TSEE_Create(int width, int height);
-
-// Initializes all TSEE components.
 bool TSEE_InitAll(TSEE *tsee);
-
-// Closes a TSEE object, clears all memory out and deletes it.
 bool TSEE_Close(TSEE *tsee);
-
-// Calculates the delta time for a TSEE
 bool TSEE_CalculateDT(TSEE *tsee);
-
-// Sets the world's gravity
 bool TSEE_World_SetGravity(TSEE *tsee, float gravity);
 
-// !! tsee_settings.c !!
+// Settings
 
-// Callback for TSEE's settings loading system. Do not use.
 void TSEE_Settings_LoadCallback(TSEE *tsee, char *section, char *value);
-
-// Loads TSEE's settings from a file.
-// THIS WILL NOT LOAD YOUR OWN SETTINGS!!
 bool TSEE_Settings_Load(TSEE *tsee);
-
-// Saves TSEE's settings to a file.
-// THIS WILL NOT SAVE YOUR OWN SETTINGS!!
 bool TSEE_Settings_Save(TSEE *tsee);

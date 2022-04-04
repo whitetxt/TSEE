@@ -1,5 +1,12 @@
 #include "../tsee.h"
 
+/**
+ * @brief Creates a TSEE object
+ * 
+ * @param width Window width
+ * @param height Window height
+ * @return TSEE* 
+ */
 TSEE *TSEE_Create(int width, int height) {
 	TSEE_Log("Initialising TSEE Engine...\n");
 	TSEE *tsee = xmalloc(sizeof(*tsee));
@@ -59,6 +66,12 @@ TSEE *TSEE_Create(int width, int height) {
 	return tsee;
 }
 
+/**
+ * @brief Initialises all subsystems for a TSEE.
+ * 
+ * @param tsee TSEE to initialise for.
+ * @return true on success, false on fail.
+ */
 bool TSEE_InitAll(TSEE *tsee) {
 	TSEE_Log("Initialising TSEE modules...\n");
 	if (!TSEE_Rendering_Init(tsee)) {
@@ -95,6 +108,12 @@ bool TSEE_InitAll(TSEE *tsee) {
 	return true;
 }
 
+/**
+ * @brief Closes a TSEE object, freeing all memory used.
+ * 
+ * @param tsee TSEE object to close.
+ * @return true on success, false on fail.
+ */
 bool TSEE_Close(TSEE *tsee) {
 	tsee->window->running = false;
 	for (size_t i = 0; i < tsee->world->objects->size; i++) {
@@ -142,6 +161,12 @@ bool TSEE_Close(TSEE *tsee) {
 	return true;
 }
 
+/**
+ * @brief Calculates delta-time for a TSEE object.
+ * 
+ * @param tsee TSEE object to calculate delta-time for.
+ * @return true on success, false on fail.
+ */
 bool TSEE_CalculateDT(TSEE *tsee) {
 	tsee->last_time = tsee->current_time;
 	tsee->current_time = SDL_GetPerformanceCounter();
@@ -149,6 +174,13 @@ bool TSEE_CalculateDT(TSEE *tsee) {
 	return true;
 }
 
+/**
+ * @brief Sets the gravity strength for a TSEE object
+ * 
+ * @param tsee TSEE object to set gravity for.
+ * @param gravity New gravity value.
+ * @return true on success, false on fail.
+ */
 bool TSEE_World_SetGravity(TSEE *tsee, float gravity) {
 	tsee->world->gravity = gravity;
 	return true;
