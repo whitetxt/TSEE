@@ -26,12 +26,3 @@ gdb:
 
 vg:
 	cd build && valgrind --leak-check=full --show-possibly-lost=no --show-reachable=no -s ../${filename}
-
-editor:
-	${CC} -o ${editor_fn} ${editor_files} ${CFLAGS}
-
-erun: 
-	chmod +x ${editor_fn}
-	cd build && ../${editor_fn}
-
-estart: editor erun
