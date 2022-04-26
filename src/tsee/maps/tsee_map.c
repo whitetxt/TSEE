@@ -63,9 +63,11 @@ bool TSEE_Map_Load(TSEE *tsee, char *fn) {
 	TSEE_Log("Loading into %s by %s\nVersion: %s\n%s\n", mapName, mapAuthor, mapVersion, mapDescription);
 
 	// Read the gravity (for some reason its here in the header?)
-	float gravity = 0;
-	fread(&gravity, sizeof(gravity), 1, fp);
-	TSEE_World_SetGravity(tsee, gravity);
+	float gravityX = 0;
+	fread(&gravityX, sizeof(gravityX), 1, fp);
+	float gravityY = 0;
+	fread(&gravityY, sizeof(gravityY), 1, fp);
+	TSEE_World_SetGravity(tsee, (TSEE_Vec2){gravityX, gravityY});
 
 	// Read map's textures
 	size_t numTextures = 0;
@@ -151,8 +153,10 @@ bool TSEE_Map_Save(TSEE *tsee, char *fn) {
 	fwrite(mapDescription, sizeof(*mapDescription) * strlen(mapDescription), 1, fp);
 	putc(0, fp);
 	// Write the gravity
-	float gravity = tsee->world->gravity;
-	fwrite(&gravity, sizeof(gravity), 1, fp);
+	float gravityX = tsee->world->gravity.x;
+	fwrite(&gravityX, sizeof(gravityX), 1, fp);
+	float gravityY = tsee->world->gravity.y;
+	fwrite(&gravityY, sizeof(gravityY), 1, fp);
 	// Write the number of textures
 	size_t numTextures = tsee->textures->size;
 	fwrite(&numTextures, sizeof(numTextures), 1, fp);

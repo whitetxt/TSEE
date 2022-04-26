@@ -10,7 +10,7 @@ typedef enum TSEE_Object_Attributes {
 
 typedef struct TSEE_Physics_Data {
 	TSEE_Vec2 velocity;
-	TSEE_Vec2 acceleration;
+	TSEE_Vec2 force;
 	float mass;
 } TSEE_Physics_Data;
 

@@ -22,3 +22,4 @@ void TSEE_Backtrace();
 bool TSEE_Vec2_Add(TSEE_Vec2 *final, TSEE_Vec2 *add);
 bool TSEE_Vec2_Normalise(TSEE_Vec2 *vec);
 bool TSEE_Vec2_Multiply(TSEE_Vec2 *vec, float mult);
+bool TSEE_Vec2_Divide(TSEE_Vec2 *vec, float div);

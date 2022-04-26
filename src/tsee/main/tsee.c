@@ -181,7 +181,7 @@ bool TSEE_CalculateDT(TSEE *tsee) {
  * @param gravity New gravity value.
  * @return true on success, false on fail.
  */
-bool TSEE_World_SetGravity(TSEE *tsee, float gravity) {
+bool TSEE_World_SetGravity(TSEE *tsee, TSEE_Vec2 gravity) {
 	tsee->world->gravity = gravity;
 	return true;
 }

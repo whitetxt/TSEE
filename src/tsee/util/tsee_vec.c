@@ -41,3 +41,16 @@ bool TSEE_Vec2_Multiply(TSEE_Vec2 *vec, float mult) {
 	vec->y *= mult;
 	return true;
 }
+
+/**
+ * @brief Divides a vector by a scalar.
+ * 
+ * @param vec Vector to divide
+ * @param div Divisor
+ * @return true on success, false on fail.
+ */
+bool TSEE_Vec2_Divide(TSEE_Vec2 *vec, float div) {
+	vec->x /= div;
+	vec->y /= div;
+	return true;
+}
