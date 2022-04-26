@@ -54,7 +54,7 @@ TSEE *TSEE_Create(int width, int height);
 bool TSEE_InitAll(TSEE *tsee);
 bool TSEE_Close(TSEE *tsee);
 bool TSEE_CalculateDT(TSEE *tsee);
-bool TSEE_World_SetGravity(TSEE *tsee, float gravity);
+bool TSEE_World_SetGravity(TSEE *tsee, TSEE_Vec2 gravity);
 
 // Settings
 

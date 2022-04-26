@@ -32,9 +32,9 @@ int main(int argc, char *argv[]) {
 	}
 
 	TSEE_Object_Create(tsee, TSEE_Texture_Create(tsee, "assets/test_image.png"), TSEE_ATTRIB_PHYS_ENABLED | TSEE_ATTRIB_PLAYER, 0, 0);
-	TSEE_Player_SetJumpForce(tsee, 60);
-	TSEE_Player_SetSpeed(tsee, 1500);
-	TSEE_World_SetGravity(tsee, 800);
+	TSEE_Player_SetJumpForce(tsee, 1.5);
+	TSEE_Player_SetSpeed(tsee, 300);
+	TSEE_World_SetGravity(tsee, (TSEE_Vec2){0, -9.81});
 	TSEE_Object_Create(tsee, TSEE_Texture_Create(tsee, "assets/test_image.png"), TSEE_ATTRIB_NONE, 160, 595);
 	TSEE_Object_Create(tsee, TSEE_Texture_Create(tsee, "assets/test_image.png"), TSEE_ATTRIB_NONE, 170, 590);
 	TSEE_Object_Create(tsee, TSEE_Texture_Create(tsee, "assets/test_image.png"), TSEE_ATTRIB_NONE, 180, 585);
