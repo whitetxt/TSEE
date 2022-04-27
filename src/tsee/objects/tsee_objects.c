@@ -48,7 +48,10 @@ TSEE_Object *TSEE_Object_Create(TSEE *tsee, TSEE_Texture *texture, TSEE_Object_A
 	}
 
 	obj->attributes = attributes;
-	TSEE_Array_Append(tsee->world->objects, obj);
+
+	if (TSEE_Attributes_Check(attributes, TSEE_ATTRIB_PARALLAX)) TSEE_Array_Insert(tsee->world->objects, obj, 0);
+	else TSEE_Array_Append(tsee->world->objects, obj);
+
 	return obj;
 }
 

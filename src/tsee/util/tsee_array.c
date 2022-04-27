@@ -52,7 +52,7 @@ bool TSEE_Array_Insert(TSEE_Array *arr, void *data, size_t index) {
 		return false;
 	}
 	TSEE_Array_Extend(arr, 1);
-	for (size_t i = arr->size - 1; i >= index; i--) {
+	for (size_t i = arr->size - 1; i > index; i--) {
 		arr->data[i] = arr->data[i - 1];
 	}
 	// TODO: figure out why memmove was segfaulting
@@ -73,12 +73,12 @@ bool TSEE_Array_Delete(TSEE_Array *arr, size_t index) {
 		TSEE_Warn("Attempted delete from array (size %zu) at index `%zu`\n", arr->size, index);
 		return false;
 	}
-	for (size_t i = arr->size - 1; i >= index; i--) {
+	for (size_t i = arr->size - 1; i > index; i--) {
 		arr->data[i] = arr->data[i - 1];
 	}
-	xmemmove(arr->data[index + 1], arr->data[index], sizeof(*arr->data) * (arr->size - index));
 	// TODO: figure out why memmove was segfaulting
-	//arr->data = xrealloc(arr->data, sizeof(*arr->data) * (--arr->size));
+	//xmemmove(arr->data[index + 1], arr->data[index], sizeof(*arr->data) * (arr->size - index));
+	arr->data = xrealloc(arr->data, sizeof(*arr->data) * (--arr->size));
 	if (arr->size == 0) {
 		xfree(arr->data);
 		arr->data = NULL;
