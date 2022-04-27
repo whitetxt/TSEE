@@ -20,6 +20,13 @@ int main(int argc, char *argv[]) {
 	(void)argc;
 	(void)argv;
 
+	TSEE_Array *test = TSEE_Array_Create();
+	int a = 1, b = 2, c = 3;
+	TSEE_Array_Append(test, &a);
+	TSEE_Array_Append(test, &c);
+	TSEE_Array_Insert(test, &b, 1);
+
+
 	TSEE *tsee = TSEE_Create(800, 600);
 
 	if (!TSEE_InitAll(tsee)) {

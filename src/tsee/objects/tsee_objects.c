@@ -46,6 +46,21 @@ TSEE_Object *TSEE_Object_Create(TSEE *tsee, TSEE_Texture *texture, TSEE_Object_A
 }
 
 /**
+ * @brief Gets the collision rectangle for two objects colliding
+ * 
+ * @param obj First object
+ * @param other Second object
+ * @return SDL_Rect - Check with TSEE_IsNullRect to verify if it is real.
+ */
+SDL_Rect TSEE_Object_GetCollisionRect(TSEE_Object *obj, TSEE_Object *other) {
+	SDL_Rect new_rect;
+	if (SDL_IntersectRect(&obj->texture->rect, &other->texture->rect, &new_rect)) {
+		return new_rect;
+	}
+	return (SDL_Rect){0, 0, -1, -1};
+}
+
+/**
  * @brief Renders an object
  * 
  * @param tsee TSEE to render to

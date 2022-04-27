@@ -47,12 +47,16 @@ bool TSEE_Array_Append(TSEE_Array *arr, void *data) {
  * @return true on success, false on fail.
  */
 bool TSEE_Array_Insert(TSEE_Array *arr, void *data, size_t index) {
-	if (index > arr->size) {
+	if (index >= arr->size) {
 		TSEE_Warn("Attempted insert into array (size %zu) at index `%zu`\n", arr->size, index);
 		return false;
 	}
-	TSEE_Array_Extend(arr, 1);
-	xmemmove(arr->data[index + 1], arr->data[index + 2], sizeof(*arr->data) * (arr->size - index - 1));
+	int size = TSEE_Array_Extend(arr, 1);
+	for (size_t i = size - 1; i >= index; i--) {
+		arr->data[i] = arr->data[i - 1];
+	}
+	// TODO: figure out why memmove was segfaulting
+	//xmemmove(arr->data[index], arr->data[index + 1], sizeof(*arr->data) * (arr->size - 1 - index));
 	arr->data[index] = data;
 	return true;
 }
