@@ -3,6 +3,7 @@
 bool TSEE_Object_CheckAttribute(TSEE_Object *obj, TSEE_Object_Attributes attr);
 TSEE_Object *TSEE_Object_Create(TSEE *tsee, TSEE_Texture *texture, TSEE_Object_Attributes attributes, float x, float y);
 bool TSEE_Player_Create(TSEE *tsee, TSEE_Object *pobj);
+bool TSEE_Object_SetPosition(TSEE_Object *obj, float x, float y);
 SDL_Rect TSEE_Object_GetCollisionRect(TSEE_Object *obj, TSEE_Object *other);
 bool TSEE_Object_Render(TSEE *tsee, TSEE_Object *object);
 void TSEE_Object_Destroy(TSEE_Object *object, bool destroyTexture);
