@@ -73,16 +73,6 @@ bool TSEE_Vec2_Divide(TSEE_Vec2 *vec, float div) {
 }
 
 /**
- * @brief Copies a Vec2 into a new one.
- * 
- * @param copy Vec2 to copy
- * @return TSEE_Vec2 
- */
-TSEE_Vec2 TSEE_Vec2_Copy(TSEE_Vec2 copy) {
-	return (TSEE_Vec2){copy.x, copy.y};
-}
-
-/**
  * @brief Calculate the dot product of two vectors.
  * 
  * @param first First vector
