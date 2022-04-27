@@ -64,14 +64,23 @@ bool TSEE_Map_Load(TSEE *tsee, char *fn) {
 
 	// Read the gravity (for some reason its here in the header?)
 	float gravityX = 0;
-	fread(&gravityX, sizeof(gravityX), 1, fp);
+	if (fread(&gravityX, sizeof(gravityX), 1, fp) != 1) {
+		TSEE_Error("Failed to read gravity X.\n");
+		return false;
+	}
 	float gravityY = 0;
-	fread(&gravityY, sizeof(gravityY), 1, fp);
+	if (fread(&gravityY, sizeof(gravityY), 1, fp) != 1) {
+		TSEE_Error("Failed to read gravity Y.\n");
+		return false;
+	}
 	TSEE_World_SetGravity(tsee, (TSEE_Vec2){gravityX, gravityY});
 
 	// Read map's textures
 	size_t numTextures = 0;
-	fread(&numTextures, sizeof(numTextures), 1, fp);
+	if (fread(&numTextures, sizeof(numTextures), 1, fp) != 1) {
+		TSEE_Error("Failed to read number of textures.\n");
+		return false;
+	}
 	TSEE_Log("Loading %zu textures\n", numTextures);
 	for (size_t i = 0; i < numTextures; i++) {
 		char *texturePath = NULL;
@@ -85,18 +94,33 @@ bool TSEE_Map_Load(TSEE *tsee, char *fn) {
 
 	// Read objects
 	size_t numObjects = 0;
-	fread(&numObjects, sizeof(numObjects), 1, fp);
+	if (fread(&numObjects, sizeof(numObjects), 1, fp) != 1) {
+		TSEE_Error("Failed to read number of objects.\n");
+		return false;
+	}
 	TSEE_Log("Loading %zu objects\n", numObjects);
 	for (size_t i = 0; i < numObjects; i++) {
 		size_t texIdx = 0;
-		fread(&texIdx, sizeof(texIdx), 1, fp);
+		if (fread(&texIdx, sizeof(texIdx), 1, fp) != 1) {
+			TSEE_Error("Failed to read texture index.\n");
+			return false;
+		}
 		TSEE_Texture *tex = TSEE_Array_Get(tsee->textures, texIdx);
 		TSEE_Object *object = TSEE_Object_Create(tsee, TSEE_Texture_Create(tsee, tex->path), TSEE_ATTRIB_NONE, 0, 0);
-		fread(&object->position.x, sizeof(object->position.x), 1, fp);
-		fread(&object->position.y, sizeof(object->position.y), 1, fp);
+		if (fread(&object->position.x, sizeof(object->position.x), 1, fp) != 1) {
+			TSEE_Error("Failed to read object position\n");
+			return false;
+		}
+		if (fread(&object->position.y, sizeof(object->position.y), 1, fp) != 1) {
+			TSEE_Error("Failed to read object position\n");
+			return false;
+		}
 		object->texture->rect.x = object->position.x;
 		object->texture->rect.y = object->position.y;
-		fread(&object->attributes, sizeof(object->attributes), 1, fp);
+		if (fread(&object->attributes, sizeof(object->attributes), 1, fp) != 1) {
+			TSEE_Error("Failed to read object attributes\n");
+			return false;
+		}
 		TSEE_Log("Loaded object `%s` at (%f, %f, %d, %d) with texture at (%d, %d)\n", object->texture->path, object->position.x, object->position.y, object->texture->rect.w, object->texture->rect.h, object->texture->rect.x, object->texture->rect.y);
 	}
 
@@ -111,14 +135,20 @@ bool TSEE_Map_Load(TSEE *tsee, char *fn) {
 		}
 	}
 	if (!player_found) {
-		TSEE_Error("Failed to find player object.\n");
+		TSEE_Warn("Failed to find player object.\n");
 	}
 
 	float speed = 0;
-	fread(&speed, sizeof(speed), 1, fp);
+	if (fread(&speed, sizeof(speed), 1, fp) != 1) {
+		TSEE_Error("Failed to read player speed.\n");
+		return false;
+	}
 	TSEE_Player_SetSpeed(tsee, speed);
 	float jumpForce = 0;
-	fread(&jumpForce, sizeof(jumpForce), 1, fp);
+	if (fread(&jumpForce, sizeof(jumpForce), 1, fp) != 1) {
+		TSEE_Error("Failed to read player jump force.\n");
+		return false;
+	}
 	TSEE_Player_SetJumpForce(tsee, jumpForce);
 
 	fclose(fp);

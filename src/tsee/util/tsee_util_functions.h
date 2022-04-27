@@ -14,8 +14,9 @@ bool TSEE_Array_Destroy(TSEE_Array *arr);
 void _xfree(void *ptr, char *file, int line);
 void *_xmalloc(size_t size, char *file, int line);
 void *_xrealloc(void *ptr, size_t size, char *file, int line);
-void *_xmemmove(void *dst, const void *src, size_t size, char *file, int line);
+void *_xmemmove(const void *src, void *dst, size_t size, char *file, int line);
 void TSEE_Backtrace();
+bool TSEE_IsRectNull(SDL_Rect rect);
 
 // Vector
 
@@ -23,3 +24,4 @@ bool TSEE_Vec2_Add(TSEE_Vec2 *final, TSEE_Vec2 *add);
 bool TSEE_Vec2_Normalise(TSEE_Vec2 *vec);
 bool TSEE_Vec2_Multiply(TSEE_Vec2 *vec, float mult);
 bool TSEE_Vec2_Divide(TSEE_Vec2 *vec, float div);
+TSEE_Vec2 TSEE_Vec2_Copy(TSEE_Vec2 copy);

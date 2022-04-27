@@ -76,14 +76,14 @@ void *_xrealloc(void *ptr, size_t size, char *file, int line) {
 /**
  * @brief Safe wrapper for memmove
  * 
- * @param dst Destination pointer
  * @param src Source pointer
+ * @param dst Destination pointer
  * @param size Size of memory to move
  * @param file File which called this function
  * @param line Line which called this function
  * @return void* 
  */
-void *_xmemmove(void *dst, const void *src, size_t size, char *file, int line) {
+void *_xmemmove(const void *src, void *dst, size_t size, char *file, int line) {
 	void *newPtr = memmove(dst, src, size);
 	if (!newPtr) {
 		TSEE_Error("Failed to memmove %zu bytes\nCalled from %s:%d\n", size, file, line);
@@ -91,4 +91,14 @@ void *_xmemmove(void *dst, const void *src, size_t size, char *file, int line) {
 		return NULL;
 	}
 	return newPtr;
+}
+
+/**
+ * @brief Checks if an SDL_Rect is null
+ * 
+ * @param rect The rect to check
+ * @return true if width + height are both < 0
+ */
+bool TSEE_IsRectNull(SDL_Rect rect) {
+	return rect.w < 0 && rect.h < 0;
 }
