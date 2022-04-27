@@ -53,3 +53,74 @@ void TSEE_Physics_CheckCollisions(TSEE *tsee, TSEE_Object *obj) {
 		}
 	}
 }
+
+/**
+ * @brief Resolves a collision between two objects
+ * 
+ * @param first First object
+ * @param second Second object
+ */
+void TSEE_Physics_ResolveCollision(TSEE_Object *first, TSEE_Object *second) {
+	if (TSEE_Object_CheckAttribute(first, TSEE_ATTRIB_PHYS_ENABLED) && TSEE_Object_CheckAttribute(second, TSEE_ATTRIB_PHYS_ENABLED)) {
+		// If this works Github Copilot is good
+		TSEE_Vec2 first_vel = TSEE_Vec2_Copy(first->physics.velocity);
+		TSEE_Vec2 second_vel = TSEE_Vec2_Copy(second->physics.velocity);
+
+		TSEE_Vec2 first_vel_norm = TSEE_Vec2_Copy(first_vel);
+		TSEE_Vec2_Normalise(&first_vel_norm);
+		TSEE_Vec2 second_vel_norm = TSEE_Vec2_Copy(second_vel);
+		TSEE_Vec2_Normalise(&second_vel_norm);
+
+		// Get the relative velocity
+		TSEE_Vec2 rel_vel = TSEE_Vec2_Copy(first_vel);
+		TSEE_Vec2_Subtract(&rel_vel, second_vel);
+
+		// Check if they're moving away from each other
+		if (TSEE_Vec2_Dot(rel_vel, first_vel_norm) > 0) {
+			return;
+		}
+
+		// Get the overlap
+		TSEE_Vec2 overlap = TSEE_Vec2_Copy(first->physics.velocity);
+		TSEE_Vec2_Subtract(&overlap, second->physics.velocity);
+		TSEE_Vec2_Multiply(&overlap, 0.5);
+
+		// Apply the overlap to the objects
+		TSEE_Vec2_Add(&first->physics.velocity, &overlap);
+		TSEE_Vec2_Subtract(&second->physics.velocity, overlap);
+	} else {
+		int amtRight = fabs(first->position.x + first->texture->rect.w - second->position.x);
+		int amtLeft = fabs(second->position.x + second->texture->rect.w - first->position.x);
+		int amtTop = fabs(second->position.y - first->position.y + first->texture->rect.h);
+		int amtBottom = fabs(first->position.y + first->texture->rect.h - second->position.y);
+
+		int values[4] = {amtRight, amtLeft, amtTop, amtBottom};
+		int lowest = values[0];
+		// Get lowest value, side it collided on
+		for (int x = 0; x < 4; x++) {
+			if (values[x] < lowest) {
+				lowest = values[x];
+			}
+		}
+
+		if (TSEE_Object_CheckAttribute(first, TSEE_ATTRIB_PHYS_ENABLED)) {
+			if (lowest == amtRight)
+				TSEE_Object_SetPosition(first, second->position.x - first->texture->rect.w, first->position.y);
+			else if (lowest == amtLeft)
+				TSEE_Object_SetPosition(first, second->position.x + second->texture->rect.w, first->position.y);
+			else if (lowest == amtTop)
+				TSEE_Object_SetPosition(first, first->position.x, second->position.y + second->texture->rect.h);
+			else if (lowest == amtBottom)
+				TSEE_Object_SetPosition(first, first->position.x, second->position.y - first->texture->rect.h);
+		} else {
+			if (lowest == amtRight)
+				TSEE_Object_SetPosition(second, first->position.x - second->texture->rect.w, second->position.y);
+			else if (lowest == amtLeft)
+				TSEE_Object_SetPosition(second, first->position.x + first->texture->rect.w, second->position.y);
+			else if (lowest == amtTop)
+				TSEE_Object_SetPosition(second, second->position.x, first->position.y + first->texture->rect.h);
+			else if (lowest == amtBottom)
+				TSEE_Object_SetPosition(second, second->position.x, first->position.y - second->texture->rect.h);
+		}
+	}
+}

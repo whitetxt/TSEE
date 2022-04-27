@@ -73,16 +73,22 @@ bool TSEE_Toolbar_AddChild(TSEE *tsee, char *parentName, char *font, char *text,
 			break;
 		}
 	}
+
 	if (!parent) {
 		TSEE_Error("Failed to find toolbar button with name `%s`\n", parentName);
+		return false;
 	}
+
 	TSEE_Toolbar_Child *child = xmalloc(sizeof(*child));
+	if (strcmp(font, "") == 0) font = "_default";
+
 	child->text = TSEE_Text_Create(tsee, font, text, (SDL_Color){255, 255, 255, 255});
 	if (!child->text) {
 		TSEE_Error("Failed to create toolbar child texture\n");
 		xfree(child);
 		return false;
 	}
+
 	child->text->texture->rect = (SDL_Rect){parent->text->texture->rect.x + parent->text->texture->rect.w / 2 - child->text->texture->rect.w / 2, 
 											(parent->buttons->size + 1) * 32 + child->text->texture->rect.h / 2,
 											child->text->texture->rect.w,

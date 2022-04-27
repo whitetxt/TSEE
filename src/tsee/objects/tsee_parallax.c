@@ -22,22 +22,17 @@ bool TSEE_Parallax_Create(TSEE *tsee, TSEE_Texture *texture, float distanceFromC
 	parallax->texture = texture;
 	parallax->parallax.distance = distanceFromCamera;
 	parallax->texture->rect.y = tsee->window->height - texture->rect.h;
-	bool inserted = false;
 
-	for (size_t j = 0; j < tsee->world->objects->size; j++) {
-		TSEE_Object *obj = TSEE_Array_Get(tsee->world->objects, j);
-		if (!TSEE_Object_CheckAttribute(obj, TSEE_ATTRIB_PARALLAX)) {
-			continue;
-		}
+	for (size_t i = 0; i < tsee->world->objects->size; i++) {
+		TSEE_Object *obj = TSEE_Array_Get(tsee->world->objects, i);
+		if (!TSEE_Object_CheckAttribute(obj, TSEE_ATTRIB_PARALLAX)) continue;
+
 		if (parallax->parallax.distance > obj->parallax.distance) {
-			TSEE_Array_Insert(tsee->world->objects, parallax, j);
-			inserted = true;
+			TSEE_Log("Inserting parallax at index %ld\nDistance %f vs %f", i, parallax->parallax.distance, obj->parallax.distance);
+			TSEE_Array_Delete(tsee->world->objects, i);
+			TSEE_Array_Insert(tsee->world->objects, parallax, i);
 			break;
 		}
-	}
-
-	if (!inserted) {
-		TSEE_Array_Append(tsee->world->objects, parallax);
 	}
 	return true;
 }
