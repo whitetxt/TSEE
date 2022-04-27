@@ -45,8 +45,8 @@
 #define xrealloc(ptr, size) \
 		_xrealloc(ptr, size, __FILE__, __LINE__);
 
-#define xmemmove(dst, src, size) \
-		_xmemmove(dst, src, size, __FILE__, __LINE__);
+#define xmemmove(src, dst, size) \
+		_xmemmove(src, dst, size, __FILE__, __LINE__);
 
 // Main Functions
 
