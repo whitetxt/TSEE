@@ -28,21 +28,52 @@ TSEE_Object *TSEE_Object_Create(TSEE *tsee, TSEE_Texture *texture, TSEE_Object_A
 	}
 	TSEE_Object *obj = xmalloc(sizeof(*obj));
 	obj->texture = texture;
-	obj->position.x = x;
-	obj->position.y = y;
+	TSEE_Object_SetPosition(obj, x, y);
+
 	if (TSEE_Attributes_Check(attributes, TSEE_ATTRIB_PLAYER)) {
 		if (TSEE_Attributes_Check(attributes, TSEE_ATTRIB_UI)) {
 			TSEE_Error("Cannot create object with player and UI attributes.\n");
-			free(obj);
+			xfree(obj);
 			return NULL;
 		}
 		TSEE_Attributes_Set(&attributes, TSEE_ATTRIB_PHYS_ENABLED);
 		tsee->player->object = obj;
 		tsee->player->movement = (TSEE_Player_Movement){0, 0, 0, 0};
 	}
+
+	if (TSEE_Attributes_Check(attributes, TSEE_ATTRIB_PHYS_ENABLED)) {
+		obj->physics.mass = 1;
+		obj->physics.velocity = (TSEE_Vec2){0, 0};
+		obj->physics.force = (TSEE_Vec2){0, 0};
+	}
+
 	obj->attributes = attributes;
 	TSEE_Array_Append(tsee->world->objects, obj);
 	return obj;
+}
+
+/**
+ * @brief Set the position of an object
+ * 
+ * @param obj Object to set
+ * @param x New X position
+ * @param y New Y position
+ * @return true on success, false on failure
+ */
+bool TSEE_Object_SetPosition(TSEE_Object *obj, float x, float y) {
+	if (!obj) {
+		TSEE_Error("Attempted to set position on NULL pointer.\n");
+		return false;
+	}
+	obj->position.x = x;
+	obj->position.y = y;
+	if (!obj->texture) {
+		TSEE_Error("Cannot set position of object with no texture.\n");
+		return false;
+	}
+	obj->texture->rect.x = x;
+	obj->texture->rect.y = y;
+	return true;
 }
 
 /**
@@ -94,7 +125,7 @@ void TSEE_Object_Destroy(TSEE_Object *object, bool destroyTexture) {
 		TSEE_Texture_Destroy(object->texture);
 	}
 	if (TSEE_Object_CheckAttribute(object, TSEE_ATTRIB_TEXT)) {
-		free(object->text.text);
+		xfree(object->text.text);
 	}
-	free(object);
+	xfree(object);
 }
