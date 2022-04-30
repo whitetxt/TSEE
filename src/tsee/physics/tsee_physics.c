@@ -26,8 +26,8 @@ void TSEE_Physics_UpdateObject(TSEE *tsee, TSEE_Object *obj) {
 	TSEE_Vec2_Add(&obj->physics.force, &grav);
 	TSEE_Vec2_Divide(&obj->physics.force, obj->physics.mass * tsee->dt);
 
-	TSEE_Vec2 new_vel = obj->physics.velocity);
-	TSEE_Vec2_Multiply(&new_vel, tsee->dt;
+	TSEE_Vec2 new_vel = obj->physics.velocity;
+	TSEE_Vec2_Multiply(&new_vel, tsee->dt);
 	TSEE_Vec2_Add(&obj->position, &new_vel);
 
 	obj->physics.force.x = 0;
