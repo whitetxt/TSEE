@@ -50,8 +50,6 @@ int main(int argc, char *argv[]) {
 		TSEE_Log("Parallax with distance: %f\n", obj->parallax.distance);
 	}
 
-	printf("break\n");
-
 	TSEE_Toolbar_AddButton(tsee, "_default", "Home");
 	TSEE_Toolbar_AddChild(tsee, "Home", "_default", "Quit", quitGame);
 	TSEE_Toolbar_AddButton(tsee, "_default", "Maps");
