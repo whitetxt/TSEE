@@ -1,5 +1,11 @@
 # TODO LIST
 
-* Fix parallax rendering ontop.
+* [x] Fix parallax rendering ontop.
 
-* Make physics work
+* [ ] Make physics work
+
+* [ ] Optimize parallax rendering
+
+* [ ] Optimize creation of parallax objects
+
+* [ ] Figure out why memmove was segfaulting
