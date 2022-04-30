@@ -42,6 +42,16 @@ int main(int argc, char *argv[]) {
 	TSEE_Parallax_Create(tsee, TSEE_Texture_Create(tsee, "assets/parallax2.png"), 4);
 	TSEE_Parallax_Create(tsee, TSEE_Texture_Create(tsee, "assets/parallax3.png"), 2);
 	TSEE_Parallax_Create(tsee, TSEE_Texture_Create(tsee, "assets/parallax4.png"), 1);
+
+	for (size_t i = 0; i < tsee->world->objects->size; i++) {
+		TSEE_Object *obj = tsee->world->objects->data[i];
+		if (!TSEE_Object_CheckAttribute(obj, TSEE_ATTRIB_PARALLAX)) continue;
+
+		TSEE_Log("Parallax with distance: %f\n", obj->parallax.distance);
+	}
+
+	printf("break\n");
+
 	TSEE_Toolbar_AddButton(tsee, "_default", "Home");
 	TSEE_Toolbar_AddChild(tsee, "Home", "_default", "Quit", quitGame);
 	TSEE_Toolbar_AddButton(tsee, "_default", "Maps");

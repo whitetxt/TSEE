@@ -21,13 +21,13 @@ void TSEE_Physics_PerformStep(TSEE *tsee) {
  * @param obj Object to update
  */
 void TSEE_Physics_UpdateObject(TSEE *tsee, TSEE_Object *obj) {
-	TSEE_Vec2 grav = TSEE_Vec2_Copy(tsee->world->gravity);
+	TSEE_Vec2 grav = tsee->world->gravity;
 	TSEE_Vec2_Multiply(&grav, obj->physics.mass);
 	TSEE_Vec2_Add(&obj->physics.force, &grav);
 	TSEE_Vec2_Divide(&obj->physics.force, obj->physics.mass * tsee->dt);
 
-	TSEE_Vec2 new_vel = TSEE_Vec2_Copy(obj->physics.velocity);
-	TSEE_Vec2_Multiply(&new_vel, tsee->dt);
+	TSEE_Vec2 new_vel = obj->physics.velocity);
+	TSEE_Vec2_Multiply(&new_vel, tsee->dt;
 	TSEE_Vec2_Add(&obj->position, &new_vel);
 
 	obj->physics.force.x = 0;
@@ -46,6 +46,8 @@ void TSEE_Physics_UpdateObject(TSEE *tsee, TSEE_Object *obj) {
 void TSEE_Physics_CheckCollisions(TSEE *tsee, TSEE_Object *obj) {
 	for (size_t i = 0; i < tsee->world->objects->size; i++) {
 		TSEE_Object *other = tsee->world->objects->data[i];
+		if (TSEE_Object_CheckAttribute(other, TSEE_ATTRIB_PARALLAX)) continue;
+
 		if (other != obj) {
 			if (!TSEE_IsRectNull( TSEE_Object_GetCollisionRect(obj, other) )) {
 				TSEE_Physics_ResolveCollision(obj, other);
@@ -63,16 +65,16 @@ void TSEE_Physics_CheckCollisions(TSEE *tsee, TSEE_Object *obj) {
 void TSEE_Physics_ResolveCollision(TSEE_Object *first, TSEE_Object *second) {
 	if (TSEE_Object_CheckAttribute(first, TSEE_ATTRIB_PHYS_ENABLED) && TSEE_Object_CheckAttribute(second, TSEE_ATTRIB_PHYS_ENABLED)) {
 		// If this works Github Copilot is good
-		TSEE_Vec2 first_vel = TSEE_Vec2_Copy(first->physics.velocity);
-		TSEE_Vec2 second_vel = TSEE_Vec2_Copy(second->physics.velocity);
+		TSEE_Vec2 first_vel = first->physics.velocity;
+		TSEE_Vec2 second_vel = second->physics.velocity;
 
-		TSEE_Vec2 first_vel_norm = TSEE_Vec2_Copy(first_vel);
+		TSEE_Vec2 first_vel_norm = first_vel;
 		TSEE_Vec2_Normalise(&first_vel_norm);
-		TSEE_Vec2 second_vel_norm = TSEE_Vec2_Copy(second_vel);
+		TSEE_Vec2 second_vel_norm = second_vel;
 		TSEE_Vec2_Normalise(&second_vel_norm);
 
 		// Get the relative velocity
-		TSEE_Vec2 rel_vel = TSEE_Vec2_Copy(first_vel);
+		TSEE_Vec2 rel_vel = first_vel;
 		TSEE_Vec2_Subtract(&rel_vel, second_vel);
 
 		// Check if they're moving away from each other
@@ -81,7 +83,7 @@ void TSEE_Physics_ResolveCollision(TSEE_Object *first, TSEE_Object *second) {
 		}
 
 		// Get the overlap
-		TSEE_Vec2 overlap = TSEE_Vec2_Copy(first->physics.velocity);
+		TSEE_Vec2 overlap = first->physics.velocity;
 		TSEE_Vec2_Subtract(&overlap, second->physics.velocity);
 		TSEE_Vec2_Multiply(&overlap, 0.5);
 
