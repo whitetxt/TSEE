@@ -94,6 +94,10 @@ SDL_Rect TSEE_Object_GetCollisionRect(TSEE_Object *obj, TSEE_Object *other) {
 	return (SDL_Rect){0, 0, -1, -1};
 }
 
+SDL_Rect TSEE_Object_GetRect(TSEE_Object *obj) {
+	return (SDL_Rect){obj->position.x * 20, obj->position.y * 20, obj->texture->rect.w, obj->texture->rect.h};
+}
+
 /**
  * @brief Renders an object
  * 
@@ -103,6 +107,7 @@ SDL_Rect TSEE_Object_GetCollisionRect(TSEE_Object *obj, TSEE_Object *other) {
  */
 bool TSEE_Object_Render(TSEE *tsee, TSEE_Object *object) {
 	if (!TSEE_Object_CheckAttribute(object, TSEE_ATTRIB_PARALLAX)) {
+		SDL_Rect rect = TSEE_Object_GetRect(object);
 		int ret = SDL_RenderCopy(tsee->window->renderer, object->texture->texture, NULL, &object->texture->rect);
 		if (ret != 0) {
 			TSEE_Error("Failed to render object: %s\n", SDL_GetError());

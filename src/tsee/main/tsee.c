@@ -116,11 +116,15 @@ bool TSEE_InitAll(TSEE *tsee) {
  */
 bool TSEE_Close(TSEE *tsee) {
 	tsee->window->running = false;
-	for (size_t i = 0; i < tsee->world->objects->size; i++) {
-		TSEE_Object *obj = TSEE_Array_Get(tsee->world->objects, i);
-		TSEE_Object_Destroy(obj, false);
+	if (tsee->world->objects) {
+		if (tsee->world->objects->data) {
+			for (size_t i = 0; i < tsee->world->objects->size; i++) {
+				TSEE_Object *obj = TSEE_Array_Get(tsee->world->objects, i);
+				TSEE_Object_Destroy(obj, false);
+			}
+		}
+		TSEE_Array_Destroy(tsee->world->objects);
 	}
-	TSEE_Array_Destroy(tsee->world->objects);
 	for (size_t i = 0; i < tsee->textures->size; i++) {
 		TSEE_Texture *tex = TSEE_Array_Get(tsee->textures, i);
 		TSEE_Texture_Destroy(tex);
@@ -128,29 +132,42 @@ bool TSEE_Close(TSEE *tsee) {
 	TSEE_Array_Destroy(tsee->textures);
 	TSEE_Font_UnloadAll(tsee);
 	
-	xfree(tsee->player);
-	xfree(tsee->world);
+	if (tsee->player)
+		xfree(tsee->player);
+	if (tsee->world)
+		xfree(tsee->world);
 	
-	xfree(tsee->events->event);
-	xfree(tsee->events);
-	for (size_t i = 0; i < tsee->ui->toolbar->size; i++) {
-		TSEE_Toolbar_Object *obj = TSEE_Array_Get(tsee->ui->toolbar, i);
-		TSEE_Text_Destroy(obj->text, true);
-		for (size_t j = 0; j < obj->buttons->size; j++) {
-			TSEE_Toolbar_Child *child = TSEE_Array_Get(obj->buttons, j);
-			TSEE_Text_Destroy(child->text, true);
-			xfree(child);
-		}
-		TSEE_Array_Destroy(obj->buttons);
-		xfree(obj);
+	if (tsee->init->events) {
+		xfree(tsee->events->event);
+		xfree(tsee->events);
 	}
-	TSEE_Array_Destroy(tsee->ui->toolbar);
-	xfree(tsee->ui);
+
+	if (tsee->init->ui) {
+		if (tsee->ui->toolbar) {
+			if (tsee->ui->toolbar->data) {
+				for (size_t i = 0; i < tsee->ui->toolbar->size; i++) {
+					TSEE_Toolbar_Object *obj = TSEE_Array_Get(tsee->ui->toolbar, i);
+					TSEE_Text_Destroy(obj->text, true);
+					for (size_t j = 0; j < obj->buttons->size; j++) {
+						TSEE_Toolbar_Child *child = TSEE_Array_Get(obj->buttons, j);
+						TSEE_Text_Destroy(child->text, true);
+						xfree(child);
+					}
+					TSEE_Array_Destroy(obj->buttons);
+					xfree(obj);
+				}
+			}
+			TSEE_Array_Destroy(tsee->ui->toolbar);
+		}
+		xfree(tsee->ui);
+	}
 
 	TSEE_Window_Destroy(tsee->window);
 	xfree(tsee->window);
-	if (tsee->init->text)
+
+	if (tsee->init->text) {
 		TTF_Quit();
+	}
 	if (tsee->init->rendering) {
 		IMG_Quit();
 		SDL_Quit();

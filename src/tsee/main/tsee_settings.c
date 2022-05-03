@@ -28,7 +28,8 @@ void TSEE_Settings_LoadCallback(TSEE *tsee, char *section, char *value) {
 bool TSEE_Settings_Load(TSEE *tsee) {
 	FILE *fp = fopen("TSEE-Settings.ini", "r");
 	if (!fp) {
-		TSEE_Error("Couldn't open settings file `TSEE-Settings.ini`\n");
+		TSEE_Warn("Couldn't open settings file `TSEE-Settings.ini`\nCreating basic settings file...\n");
+		TSEE_Settings_Save(tsee);
 		return false;
 	}
 	char buf[512];
