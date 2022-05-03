@@ -3,8 +3,10 @@
 bool TSEE_Object_CheckAttribute(TSEE_Object *obj, TSEE_Object_Attributes attr);
 TSEE_Object *TSEE_Object_Create(TSEE *tsee, TSEE_Texture *texture, TSEE_Object_Attributes attributes, float x, float y);
 bool TSEE_Player_Create(TSEE *tsee, TSEE_Object *pobj);
-bool TSEE_Object_SetPosition(TSEE_Object *obj, float x, float y);
+bool TSEE_Object_SetPosition(TSEE *tsee, TSEE_Object *obj, float x, float y);
+bool TSEE_Object_SetPositionVec2(TSEE *tsee, TSEE_Object *obj, TSEE_Vec2 vec);
 SDL_Rect TSEE_Object_GetCollisionRect(TSEE_Object *obj, TSEE_Object *other);
+SDL_Rect TSEE_Object_GetRect(TSEE_Object *obj);
 bool TSEE_Object_Render(TSEE *tsee, TSEE_Object *object);
 void TSEE_Object_Destroy(TSEE *tsee, TSEE_Object *object, bool destroyTexture);
 
@@ -15,8 +17,8 @@ void TSEE_Attributes_Set(TSEE_Object_Attributes *attr, TSEE_Object_Attributes to
 
 // Parallax
 
-bool TSEE_Parallax_Create(TSEE *tsee, TSEE_Texture *texture, float distanceFromCamera);
-bool TSEE_Parallax_CreateFromObject(TSEE *tsee, TSEE_Object *obj, float distanceFromCamera);
+TSEE_Object *TSEE_Parallax_Create(TSEE *tsee, TSEE_Texture *texture, float distanceFromCamera);
+TSEE_Object *TSEE_Parallax_CreateFromObject(TSEE *tsee, TSEE_Object *obj, float distanceFromCamera);
 bool TSEE_Parallax_Render(TSEE *tsee, TSEE_Object *parallax);
 void TSEE_Parallax_Destroy(TSEE *tsee, TSEE_Object *para, bool destroyTexture);
 

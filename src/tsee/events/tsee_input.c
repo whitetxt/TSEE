@@ -45,7 +45,7 @@ void TSEE_Key_Press(void *tsee, SDL_Keycode keycode) {
 			tseeReal->debug->active = !tseeReal->debug->active;
 			break;
 		case SDLK_ESCAPE:
-			//tseeReal->ui->toolbar_enabled = !tseeReal->ui->toolbar_enabled;
+			tseeReal->ui->toolbar_enabled = !tseeReal->ui->toolbar_enabled;
 			break;
 	}
 }

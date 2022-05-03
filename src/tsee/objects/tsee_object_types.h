@@ -1,6 +1,6 @@
 typedef enum TSEE_Object_Attributes {
 	TSEE_ATTRIB_NONE = 0,
-	TSEE_ATTRIB_PHYS_ENABLED = 1,
+	TSEE_ATTRIB_PHYS = 1,
 	TSEE_ATTRIB_PARALLAX = 2,
 	TSEE_ATTRIB_TEXT = 4,
 	TSEE_ATTRIB_UI = 8,
@@ -12,6 +12,8 @@ typedef struct TSEE_Physics_Data {
 	TSEE_Vec2 velocity;
 	TSEE_Vec2 force;
 	float mass;
+	float inv_mass;
+	float restitution;
 } TSEE_Physics_Data;
 
 typedef struct TSEE_Parallax_Data {
@@ -26,6 +28,7 @@ typedef struct TSEE_Text_Data {
 typedef struct TSEE_Object {
 	TSEE_Texture *texture;
 	TSEE_Vec2 position;
+	TSEE_Vec2 render_position;
 	TSEE_Object_Attributes attributes;
 	union {
 		TSEE_Physics_Data physics;

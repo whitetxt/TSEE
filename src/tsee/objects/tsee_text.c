@@ -56,7 +56,7 @@ TSEE_Object *TSEE_Text_Create(TSEE *tsee, char *fontName, char *text, SDL_Color 
 	textObj->texture->texture = SDL_CreateTextureFromSurface(tsee->window->renderer, surf);
 	textObj->texture->rect.x = 0;
 	textObj->texture->rect.y = 0;
-	textObj->attributes = TSEE_ATTRIB_TEXT;
+	textObj->attributes = TSEE_ATTRIB_TEXT | TSEE_ATTRIB_UI;
 	SDL_QueryTexture(textObj->texture->texture, NULL, NULL, &textObj->texture->rect.w, &textObj->texture->rect.h);
 	SDL_FreeSurface(surf);
 	TSEE_Array_Append(tsee->textures, textObj->texture);

@@ -52,8 +52,10 @@ bool TSEE_Array_Insert(TSEE_Array *arr, void *data, size_t index) {
 		return false;
 	}
 	if (index >= arr->size) {
-		TSEE_Warn("Attempted insert into array (size %zu) at index `%zu`\n", arr->size, index);
-		return false;
+		if (index != 0) {
+			TSEE_Warn("Attempted insert into array (size %zu) at index `%zu`\n", arr->size, index);
+			return false;
+		}
 	}
 	TSEE_Array_Extend(arr, 1);
 	for (size_t i = arr->size - 1; i > index; i--) {
@@ -95,7 +97,7 @@ bool TSEE_Array_Delete(TSEE_Array *arr, size_t index) {
  * 
  * @param arr Array to get the item from
  * @param index Index of the item
- * @return void* 
+ * @return void* or NULL if its not found.
  */
 void *TSEE_Array_Get(TSEE_Array *arr, size_t index) {
 	if (index >= arr->size) {

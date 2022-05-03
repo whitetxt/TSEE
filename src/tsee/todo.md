@@ -2,12 +2,16 @@
 
 * [x] Fix parallax rendering ontop.
 
-* [ ] Make physics work
+* [x] Optimize parallax rendering
 
-* [ ] Optimize parallax rendering
+* [x] Fix TSEE_Close
 
-* [ ] Optimize creation of parallax objects
+* [x] Fix a bunch of errors
+
+* [x] Make physics work
+
+* [ ] Add world scrolling
+
+* [ ] Fix slightly buggy collision
 
 * [ ] Figure out why memmove was segfaulting
-
-* [ ] Fix TSEE_Close

@@ -5,6 +5,7 @@ typedef struct TSEE_Window {
 	int width;
 	int height;
 	int fps;
+	bool vsync;
 	bool running;
 	char *title;
 	SDL_Point mouse;
