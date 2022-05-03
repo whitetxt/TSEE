@@ -66,10 +66,17 @@ TSEE_Texture *TSEE_Texture_Find(TSEE *tsee, char *path) {
  * 
  * @param tex Texture to destroy
  */
-void TSEE_Texture_Destroy(TSEE_Texture *tex) {
+void TSEE_Texture_Destroy(TSEE *tsee, TSEE_Texture *tex) {
 	if (!tex) return;
 	if (tex->texture)
 		SDL_DestroyTexture(tex->texture);
-	xfree(tex->path);
+	if (tex->path)
+		xfree(tex->path);
+	for (size_t i = 0; i < tsee->textures->size; i++) {
+		if (tex == TSEE_Array_Get(tsee->textures, i)) {
+			TSEE_Array_Delete(tsee->textures, i);
+			break;
+		}
+	}
 	xfree(tex);
 }

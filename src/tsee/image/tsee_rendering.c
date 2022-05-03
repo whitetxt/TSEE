@@ -127,7 +127,7 @@ bool TSEE_RenderAll(TSEE *tsee) {
 		SDL_SetRenderDrawColor(tsee->window->renderer, 100, 100, 100, 255);
 		SDL_RenderFillRect(tsee->window->renderer, &tex->texture->rect);
 		TSEE_Text_Render(tsee, tex);
-		TSEE_Text_Destroy(tex, true);
+		TSEE_Text_Destroy(tsee, tex, true);
 		sprintf(text, "Physics: %.3f ms", tsee->debug->physics_time);
 		tex = TSEE_Text_Create(tsee, "_default", text, (SDL_Color){255, 255, 255, SDL_ALPHA_OPAQUE});
 		tex->texture->rect.x = 0;
@@ -136,7 +136,7 @@ bool TSEE_RenderAll(TSEE *tsee) {
 		SDL_SetRenderDrawColor(tsee->window->renderer, 100, 100, 100, 255);
 		SDL_RenderFillRect(tsee->window->renderer, &tex->texture->rect);
 		TSEE_Text_Render(tsee, tex);
-		TSEE_Text_Destroy(tex, true);
+		TSEE_Text_Destroy(tsee, tex, true);
 		sprintf(text, "Render: %.3f ms", tsee->debug->render_time);
 		tex = TSEE_Text_Create(tsee, "_default", text, (SDL_Color){255, 255, 255, SDL_ALPHA_OPAQUE});
 		tex->texture->rect.x = 0;
@@ -145,7 +145,7 @@ bool TSEE_RenderAll(TSEE *tsee) {
 		SDL_SetRenderDrawColor(tsee->window->renderer, 100, 100, 100, 255);
 		SDL_RenderFillRect(tsee->window->renderer, &tex->texture->rect);
 		TSEE_Text_Render(tsee, tex);
-		TSEE_Text_Destroy(tex, true);
+		TSEE_Text_Destroy(tsee, tex, true);
 		sprintf(text, "Frame: %.3f ms", tsee->debug->frame_time);
 		tex = TSEE_Text_Create(tsee, "_default", text, (SDL_Color){255, 255, 255, SDL_ALPHA_OPAQUE});
 		tex->texture->rect.x = 0;
@@ -153,7 +153,7 @@ bool TSEE_RenderAll(TSEE *tsee) {
 		SDL_SetRenderDrawColor(tsee->window->renderer, 100, 100, 100, 255);
 		SDL_RenderFillRect(tsee->window->renderer, &tex->texture->rect);
 		TSEE_Text_Render(tsee, tex);
-		TSEE_Text_Destroy(tex, true);
+		TSEE_Text_Destroy(tsee, tex, true);
 	}
 
 	SDL_RenderPresent(tsee->window->renderer);

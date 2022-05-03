@@ -108,7 +108,7 @@ SDL_Rect TSEE_Object_GetRect(TSEE_Object *obj) {
 bool TSEE_Object_Render(TSEE *tsee, TSEE_Object *object) {
 	if (!TSEE_Object_CheckAttribute(object, TSEE_ATTRIB_PARALLAX)) {
 		SDL_Rect rect = TSEE_Object_GetRect(object);
-		int ret = SDL_RenderCopy(tsee->window->renderer, object->texture->texture, NULL, &object->texture->rect);
+		int ret = SDL_RenderCopy(tsee->window->renderer, object->texture->texture, NULL, &rect);
 		if (ret != 0) {
 			TSEE_Error("Failed to render object: %s\n", SDL_GetError());
 			return false;
@@ -128,9 +128,9 @@ bool TSEE_Object_Render(TSEE *tsee, TSEE_Object *object) {
  * @param object Object to destroy
  * @param destroyTexture Whether to destroy the texture or not
  */
-void TSEE_Object_Destroy(TSEE_Object *object, bool destroyTexture) {
+void TSEE_Object_Destroy(TSEE *tsee, TSEE_Object *object, bool destroyTexture) {
 	if (destroyTexture) {
-		TSEE_Texture_Destroy(object->texture);
+		TSEE_Texture_Destroy(tsee, object->texture);
 	}
 	if (TSEE_Object_CheckAttribute(object, TSEE_ATTRIB_TEXT)) {
 		xfree(object->text.text);

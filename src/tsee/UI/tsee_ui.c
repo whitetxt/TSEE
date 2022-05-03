@@ -15,8 +15,8 @@ bool TSEE_UI_Init(TSEE *tsee) {
 		TSEE_Warn("Failed to set blend mode. Toolbar will appear solid\n%s", SDL_GetError());
 	}
 	tsee->ui->toolbar = TSEE_Array_Create();
-	//tsee->ui->toolbar_enabled = false;
-	tsee->init->text = true;
+	tsee->ui->toolbar_enabled = false;
+	tsee->init->ui = true;
 	return true;
 }
 

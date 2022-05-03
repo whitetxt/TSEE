@@ -120,14 +120,14 @@ bool TSEE_Close(TSEE *tsee) {
 		if (tsee->world->objects->data) {
 			for (size_t i = 0; i < tsee->world->objects->size; i++) {
 				TSEE_Object *obj = TSEE_Array_Get(tsee->world->objects, i);
-				TSEE_Object_Destroy(obj, false);
+				TSEE_Object_Destroy(tsee, obj, false);
 			}
 		}
 		TSEE_Array_Destroy(tsee->world->objects);
 	}
-	for (size_t i = 0; i < tsee->textures->size; i++) {
-		TSEE_Texture *tex = TSEE_Array_Get(tsee->textures, i);
-		TSEE_Texture_Destroy(tex);
+	while (tsee->textures->size > 0) {
+		TSEE_Texture *tex = TSEE_Array_Get(tsee->textures, 0);
+		TSEE_Texture_Destroy(tsee, tex);
 	}
 	TSEE_Array_Destroy(tsee->textures);
 	TSEE_Font_UnloadAll(tsee);
@@ -147,10 +147,10 @@ bool TSEE_Close(TSEE *tsee) {
 			if (tsee->ui->toolbar->data) {
 				for (size_t i = 0; i < tsee->ui->toolbar->size; i++) {
 					TSEE_Toolbar_Object *obj = TSEE_Array_Get(tsee->ui->toolbar, i);
-					TSEE_Text_Destroy(obj->text, true);
+					TSEE_Text_Destroy(tsee, obj->text, true);
 					for (size_t j = 0; j < obj->buttons->size; j++) {
 						TSEE_Toolbar_Child *child = TSEE_Array_Get(obj->buttons, j);
-						TSEE_Text_Destroy(child->text, true);
+						TSEE_Text_Destroy(tsee, child->text, true);
 						xfree(child);
 					}
 					TSEE_Array_Destroy(obj->buttons);
