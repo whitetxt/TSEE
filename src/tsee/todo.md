@@ -9,3 +9,5 @@
 * [ ] Optimize creation of parallax objects
 
 * [ ] Figure out why memmove was segfaulting
+
+* [ ] Fix TSEE_Close

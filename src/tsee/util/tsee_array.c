@@ -102,6 +102,7 @@ void *TSEE_Array_Get(TSEE_Array *arr, size_t index) {
 		TSEE_Warn("Attempted get from array (size %zu) at index `%zu`\n", arr->size, index);
 		return NULL;
 	}
+	if (!arr->data[index]) TSEE_Warn("Data value in array at index `%zu` is NULL\n", index);
 	return arr->data[index];
 }
 
