@@ -6,9 +6,6 @@ CFLAGS = -g -Wall -Wextra -pedantic -lz -lm -rdynamic `pkg-config --cflags --lib
 files = ${wildcard src/*.c src/tsee/*/*.c}
 objFiles = ${files:.c=.o}
 
-check_folder:
-	mkdir -p build
-
 all: check_folder
 	${CC} -o ${filename} ${files} ${CFLAGS}
 
@@ -29,3 +26,6 @@ gdb: check_folder
 
 vg: check_folder
 	cd build && valgrind --leak-check=full --show-possibly-lost=no --show-reachable=no -s ../${filename}
+
+check_folder:
+	mkdir -p build
