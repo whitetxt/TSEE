@@ -65,7 +65,7 @@ void _xfree(void *ptr, char *file, int line) {
  */
 void *_xrealloc(void *ptr, size_t size, char *file, int line) {
 	void *newPtr = realloc(ptr, size);
-	if (!newPtr) {
+	if (!newPtr && size != 0) {
 		TSEE_Error("Failed to realloc %zu bytes\nCalled from %s:%d\n", size, file, line);
 		TSEE_Backtrace();
 		return NULL;

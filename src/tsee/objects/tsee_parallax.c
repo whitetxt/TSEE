@@ -96,9 +96,9 @@ bool TSEE_Parallax_Render(TSEE *tsee, TSEE_Object *parallax) {
  * @param para Parallax object to destroy.
  * @param destroyTexture Whether to destroy the texture or not.
  */
-void TSEE_Parallax_Destroy(TSEE_Object *para, bool destroyTexture) {
+void TSEE_Parallax_Destroy(TSEE *tsee, TSEE_Object *para, bool destroyTexture) {
 	if (destroyTexture) {
-		TSEE_Texture_Destroy(para->texture);
+		TSEE_Texture_Destroy(tsee, para->texture);
 	}
 	xfree(para);
 }
