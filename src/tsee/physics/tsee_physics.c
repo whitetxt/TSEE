@@ -6,12 +6,15 @@
  * @param tsee TSEE to perform the step for
  */
 void TSEE_Physics_PerformStep(TSEE *tsee) {
+	Uint64 start = SDL_GetPerformanceCounter();
 	for (size_t i = 0; i < tsee->world->objects->size; i++) {
 		TSEE_Object *object = tsee->world->objects->data[i];
 		if (TSEE_Object_CheckAttribute(object, TSEE_ATTRIB_PHYS_ENABLED)) {
 			TSEE_Physics_UpdateObject(tsee, object);
 		}
 	}
+	Uint64 end = SDL_GetPerformanceCounter();
+	tsee->debug->physics_time += (end - start) * 1000/ (double) SDL_GetPerformanceFrequency();
 }
 
 /**
@@ -22,12 +25,17 @@ void TSEE_Physics_PerformStep(TSEE *tsee) {
  */
 void TSEE_Physics_UpdateObject(TSEE *tsee, TSEE_Object *obj) {
 	TSEE_Vec2 grav = tsee->world->gravity;
+	float dt = tsee->dt * 1000;
+	TSEE_Log("DT: %f\n", dt);
 	TSEE_Vec2_Multiply(&grav, obj->physics.mass);
 	TSEE_Vec2_Add(&obj->physics.force, &grav);
-	TSEE_Vec2_Divide(&obj->physics.force, obj->physics.mass * tsee->dt);
+	TSEE_Vec2_Divide(&obj->physics.force, obj->physics.mass * dt);
+	TSEE_Vec2_Add(&obj->physics.velocity, &obj->physics.force);
+	TSEE_Log("Force after div: %f, %f\n", obj->physics.force.x, obj->physics.force.y);
 
 	TSEE_Vec2 new_vel = obj->physics.velocity;
-	TSEE_Vec2_Multiply(&new_vel, tsee->dt);
+	TSEE_Vec2_Multiply(&new_vel, dt);
+	TSEE_Log("NewVel: %f, %f\n", new_vel.x, new_vel.y);
 	TSEE_Vec2_Add(&obj->position, &new_vel);
 
 	obj->physics.force.x = 0;
