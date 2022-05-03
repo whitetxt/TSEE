@@ -65,23 +65,13 @@ bool TSEE_Parallax_Render(TSEE *tsee, TSEE_Object *parallax) {
 	while (newRect.x + newRect.w < 0) {
 		newRect.x += tsee->window->width;
 	}
+	while (newRect.x > 0) {
+		newRect.x -= newRect.w;
+	}
 	if (SDL_RenderCopy(tsee->window->renderer, parallax->texture->texture, NULL, &newRect) != 0) {
 		return false;
 	};
 	while (newRect.x + newRect.w < tsee->window->width) {
-		newRect.x += tsee->window->width;
-		if (SDL_RenderCopy(tsee->window->renderer, parallax->texture->texture, NULL, &newRect) != 0) {
-			return false;
-		};
-	}
-	// Render parallax again to left or right depending on scroll
-	while (newRect.x > 0) {
-		newRect.x -= newRect.w;
-		if (SDL_RenderCopy(tsee->window->renderer, parallax->texture->texture, NULL, &newRect) != 0) {
-			return false;
-		};
-	}
-	while (newRect.x < 0) {
 		newRect.x += newRect.w;
 		if (SDL_RenderCopy(tsee->window->renderer, parallax->texture->texture, NULL, &newRect) != 0) {
 			return false;
