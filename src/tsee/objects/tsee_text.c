@@ -47,7 +47,7 @@ TSEE_Object *TSEE_Text_Create(TSEE *tsee, char *fontName, char *text, SDL_Color 
 	}
 	textObj->text.text = strdup(text);
 	textObj->texture = xmalloc(sizeof(*textObj->texture));
-	textObj->texture->path = strdup("Rendered Text");
+	textObj->texture->path = NULL;
 	SDL_Surface *surf = TTF_RenderText_Blended(font, text, color);
 	if (!surf) {
 		TSEE_Warn("Failed to create text `%s` with font `%s` (Failed to create surface)\n", text, fontName);
@@ -56,6 +56,7 @@ TSEE_Object *TSEE_Text_Create(TSEE *tsee, char *fontName, char *text, SDL_Color 
 	textObj->texture->texture = SDL_CreateTextureFromSurface(tsee->window->renderer, surf);
 	textObj->texture->rect.x = 0;
 	textObj->texture->rect.y = 0;
+	textObj->attributes = TSEE_ATTRIB_TEXT;
 	SDL_QueryTexture(textObj->texture->texture, NULL, NULL, &textObj->texture->rect.w, &textObj->texture->rect.h);
 	SDL_FreeSurface(surf);
 	TSEE_Array_Append(tsee->textures, textObj->texture);
@@ -68,10 +69,10 @@ TSEE_Object *TSEE_Text_Create(TSEE *tsee, char *fontName, char *text, SDL_Color 
  * @param text Text object to destroy.
  * @param destroyTexture True to destroy the texture, false to not.
  */
-void TSEE_Text_Destroy(TSEE_Object *text, bool destroyTexture) {
+void TSEE_Text_Destroy(TSEE *tsee, TSEE_Object *text, bool destroyTexture) {
 	if (!TSEE_Object_CheckAttribute(text, TSEE_ATTRIB_TEXT)) return;
 	if (destroyTexture) {
-		TSEE_Texture_Destroy(text->texture);
+		TSEE_Texture_Destroy(tsee, text->texture);
 	}
 	xfree(text->text.text);
 	xfree(text);

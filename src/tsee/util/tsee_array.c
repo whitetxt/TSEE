@@ -83,7 +83,7 @@ bool TSEE_Array_Delete(TSEE_Array *arr, size_t index) {
 	// TODO: figure out why memmove was segfaulting
 	//xmemmove(arr->data[index + 1], arr->data[index], sizeof(*arr->data) * (arr->size - index));
 	arr->data = xrealloc(arr->data, sizeof(*arr->data) * (--arr->size));
-	if (arr->size == 0) {
+	if (arr->size == 0 && arr->data) {
 		xfree(arr->data);
 		arr->data = NULL;
 	}

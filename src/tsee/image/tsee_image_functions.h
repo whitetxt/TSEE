@@ -11,7 +11,7 @@ bool TSEE_Rendering_IsReady(TSEE *tsee);
 
 TSEE_Texture *TSEE_Texture_Create(TSEE *tsee, char *path);
 TSEE_Texture *TSEE_Texture_Find(TSEE *tsee, char *path);
-void TSEE_Texture_Destroy(TSEE_Texture *tex);
+void TSEE_Texture_Destroy(TSEE *tsee, TSEE_Texture *tex);
 
 // Animation
 
