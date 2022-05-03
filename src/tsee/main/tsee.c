@@ -147,10 +147,10 @@ bool TSEE_Close(TSEE *tsee) {
 			if (tsee->ui->toolbar->data) {
 				for (size_t i = 0; i < tsee->ui->toolbar->size; i++) {
 					TSEE_Toolbar_Object *obj = TSEE_Array_Get(tsee->ui->toolbar, i);
-					TSEE_Text_Destroy(tsee, obj->text, true);
+					TSEE_Text_Destroy(tsee, obj->text, false);
 					for (size_t j = 0; j < obj->buttons->size; j++) {
 						TSEE_Toolbar_Child *child = TSEE_Array_Get(obj->buttons, j);
-						TSEE_Text_Destroy(tsee, child->text, true);
+						TSEE_Text_Destroy(tsee, child->text, false);
 						xfree(child);
 					}
 					TSEE_Array_Destroy(obj->buttons);
