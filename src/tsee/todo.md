@@ -10,4 +10,6 @@
 
 * [ ] Figure out why memmove was segfaulting
 
-* [ ] Fix TSEE_Close
+* [x] Fix TSEE_Close
+
+* [x] Fix a bunch of errors
