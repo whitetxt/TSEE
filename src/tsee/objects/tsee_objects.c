@@ -86,9 +86,11 @@ bool TSEE_Object_SetPosition(TSEE_Object *obj, float x, float y) {
  * @param other Second object
  * @return SDL_Rect - Check with TSEE_IsNullRect to verify if it is real.
  */
-SDL_Rect TSEE_Object_GetCollisionRect(TSEE_Object *obj, TSEE_Object *other) {
+SDL_Rect TSEE_Object_GetCollisionRect(TSEE *tsee, TSEE_Object *obj, TSEE_Object *other) {
 	SDL_Rect new_rect;
-	if (SDL_IntersectRect(&obj->texture->rect, &other->texture->rect, &new_rect)) {
+	SDL_Rect obj_rect = TSEE_Object_GetRect(tsee, obj);
+	SDL_Rect other_rect = TSEE_Object_GetRect(tsee, other);
+	if (SDL_IntersectRect(&obj_rect, &other_rect, &new_rect) == SDL_TRUE) {
 		return new_rect;
 	}
 	return (SDL_Rect){0, 0, -1, -1};

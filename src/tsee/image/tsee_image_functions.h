@@ -4,6 +4,7 @@ bool TSEE_Rendering_Init(TSEE *tsee);
 void TSEE_Window_UpdateSize(TSEE *tsee);
 void TSEE_Window_Destroy(TSEE_Window *window);
 bool TSEE_Window_SetTitle(TSEE *tsee, char *title);
+void TSEE_Window_UpdateVsync(TSEE *tsee);
 bool TSEE_RenderAll(TSEE *tsee);
 bool TSEE_Rendering_IsReady(TSEE *tsee);
 

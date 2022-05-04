@@ -7,13 +7,13 @@
  * @param add Vector to add
  * @return true on success
  */
-bool TSEE_Vec2_Add(TSEE_Vec2 *final, TSEE_Vec2 *add) {
-	if (!final || !add) {
+bool TSEE_Vec2_Add(TSEE_Vec2 *final, TSEE_Vec2 add) {
+	if (!final) {
 		TSEE_Error("Attempted to add NULL vectors.\n");
 		return false;
 	}
-	final->x += add->x;
-	final->y += add->y;
+	final->x += add.x;
+	final->y += add.y;
 	return true;
 }
 

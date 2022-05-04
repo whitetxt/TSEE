@@ -31,20 +31,20 @@ int main(int argc, char *argv[]) {
 		TSEE_Warn("Failed to set window title.\n");
 	}
 
-	TSEE_Object_Create(tsee, TSEE_Texture_Create(tsee, "assets/test_image.png"), TSEE_ATTRIB_PHYS_ENABLED | TSEE_ATTRIB_PLAYER, 0, 0);
+	TSEE_Object_Create(tsee, TSEE_Texture_Create(tsee, "assets/test_image.png"), TSEE_ATTRIB_PHYS_ENABLED | TSEE_ATTRIB_PLAYER, 200, 300);
 	TSEE_Player_SetJumpForce(tsee, 1.5);
-	TSEE_Player_SetSpeed(tsee, 300);
+	TSEE_Player_SetSpeed(tsee, 10);
 	TSEE_World_SetGravity(tsee, (TSEE_Vec2){0, -9.81});
-	TSEE_Object_Create(tsee, TSEE_Texture_Create(tsee, "assets/test_image.png"), TSEE_ATTRIB_NONE, 160, 0);
-	TSEE_Object_Create(tsee, TSEE_Texture_Create(tsee, "assets/test_image.png"), TSEE_ATTRIB_NONE, 170, 10);
-	TSEE_Object_Create(tsee, TSEE_Texture_Create(tsee, "assets/test_image.png"), TSEE_ATTRIB_NONE, 180, 20);
+	TSEE_Object_Create(tsee, TSEE_Texture_Create(tsee, "assets/test_image.png"), TSEE_ATTRIB_NONE, 160, 5);
+	TSEE_Object_Create(tsee, TSEE_Texture_Create(tsee, "assets/test_image.png"), TSEE_ATTRIB_NONE, 170, 15);
+	TSEE_Object_Create(tsee, TSEE_Texture_Create(tsee, "assets/test_image.png"), TSEE_ATTRIB_NONE, 180, 25);
 	TSEE_Parallax_Create(tsee, TSEE_Texture_Create(tsee, "assets/parallax1.png"), 6);
 	TSEE_Parallax_Create(tsee, TSEE_Texture_Create(tsee, "assets/parallax2.png"), 4);
 	TSEE_Parallax_Create(tsee, TSEE_Texture_Create(tsee, "assets/parallax3.png"), 2);
 	TSEE_Parallax_Create(tsee, TSEE_Texture_Create(tsee, "assets/parallax4.png"), 1);
 
 	for (int x = 0; x < tsee->window->width; x += 32) {
-		TSEE_Object_Create(tsee, TSEE_Texture_Create(tsee, "assets/test_image.png"), TSEE_ATTRIB_NONE, x, 0);
+		TSEE_Object_Create(tsee, TSEE_Texture_Create(tsee, "assets/test_image.png"), TSEE_ATTRIB_NONE, x, 5);
 	}
 
 	for (size_t i = 0; i < tsee->world->objects->size; i++) {
@@ -60,18 +60,13 @@ int main(int argc, char *argv[]) {
 	TSEE_Toolbar_AddChild(tsee, "Maps", "_default", "Save", saveMap);
 	TSEE_Toolbar_AddChild(tsee, "Maps", "_default", "Load", loadMap);
 
-	while (tsee->window->running) {
-		/*
-		For multiple physics steps per frame
-		while (!TSEE_Rendering_IsReady(tsee)) {
-			TSEE_Events_Handle(tsee);
-			TSEE_CalculateDT(tsee);
-			TSEE_Physics_PerformStep(tsee);
-		}*/
-		/*
-		For single physics step per frame*/
+	// After setup for the map, correct dt
+	tsee->current_time = SDL_GetPerformanceCounter();
+
+	while (tsee->window->running) {		
 		TSEE_Events_Handle(tsee);
 		TSEE_CalculateDT(tsee);
+		TSEE_Player_HandleInput(tsee);
 		TSEE_Physics_PerformStep(tsee);
 		TSEE_RenderAll(tsee);
 	}

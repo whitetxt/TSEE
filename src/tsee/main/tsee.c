@@ -34,6 +34,10 @@ TSEE *TSEE_Create(int width, int height) {
 	tsee->player->movement.down = false;
 	tsee->player->movement.left = false;
 	tsee->player->movement.right = false;
+	tsee->player->grounded = false;
+	tsee->player->held_up = 0;
+	tsee->player->jump_force = 1;
+	tsee->player->speed = 1;
 
 	// Setup DT calculations
 	tsee->dt = 0;
