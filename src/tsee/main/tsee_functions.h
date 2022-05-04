@@ -61,3 +61,4 @@ bool TSEE_World_SetGravity(TSEE *tsee, TSEE_Vec2 gravity);
 void TSEE_Settings_LoadCallback(TSEE *tsee, char *section, char *value);
 bool TSEE_Settings_Load(TSEE *tsee);
 bool TSEE_Settings_Save(TSEE *tsee);
+bool TSEE_Settings_ConvertToBool(char *value, bool *result);

@@ -14,6 +14,15 @@ void TSEE_Settings_LoadCallback(TSEE *tsee, char *section, char *value) {
 	} else if (strcmp(section, "height") == 0) {
 		tsee->window->height = atoi(value);
 		TSEE_Window_UpdateSize(tsee);
+	} else if (strcmp(section, "vsync") == 0) {
+		bool result = false;
+		bool success = TSEE_Settings_ConvertToBool(value, &result);
+		if (!success) {
+			TSEE_Warn("Invalid boolean value: `%s` (Found in setting `%s`)\n", value, section);
+		} else {
+			tsee->window->vsync = result;
+			TSEE_Window_UpdateVsync(tsee);
+		}
 	} else {
 		TSEE_Warn("Unknown settings section `%s` with value `%s`\n", section, value);
 	}
@@ -58,4 +67,22 @@ bool TSEE_Settings_Save(TSEE *tsee) {
 	fprintf(fp, "height=%d\n", tsee->window->height);
 	fclose(fp);
 	return true;
+}
+
+/**
+ * @brief Converts a string value to a boolean
+ * 
+ * @param value Value to convert.
+ * @param result Boolean to store the result in.
+ * @return true if it succeeds, false if the value is invalid.
+ */
+bool TSEE_Settings_ConvertToBool(char *value, bool *result) {
+	if (strcmp(value, "true") == 0) {
+		*result = true;
+		return true;
+	} else if (strcmp(value, "false") == 0) {
+		*result = false;
+		return true;
+	}
+	return false;
 }
