@@ -8,6 +8,10 @@
 
 * [x] Fix a bunch of errors
 
-* [ ] Make physics work
+* [x] Make physics work
+
+* [ ] Add world scrolling
+
+* [ ] Fix slightly buggy collision
 
 * [ ] Figure out why memmove was segfaulting

@@ -1,6 +1,18 @@
 #include "../tsee.h"
 
 /**
+ * @brief Sets an object's mass, also calculating its inverse mass.
+ * 
+ * @param obj Object to change
+ * @param mass New mass
+ */
+void TSEE_Physics_SetObjectMass(TSEE_Object *obj, float mass) {
+	if (!TSEE_Object_CheckAttribute(obj, TSEE_ATTRIB_PHYS_ENABLED)) return; // Ignore objects which are not physics objects.
+	obj->physics.mass = mass;
+	obj->physics.inv_mass = 1 / mass;
+}
+
+/**
  * @brief Perform a physics step
  * 
  * @param tsee TSEE to perform the step for
@@ -14,7 +26,7 @@ void TSEE_Physics_PerformStep(TSEE *tsee) {
 		}
 	}
 	Uint64 end = SDL_GetPerformanceCounter();
-	tsee->debug->physics_time += (end - start) * 1000/ (double) SDL_GetPerformanceFrequency();
+	tsee->debug->physics_time += (end - start) * 1000 / (double) SDL_GetPerformanceFrequency();
 }
 
 /**

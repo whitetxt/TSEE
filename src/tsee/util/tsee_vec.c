@@ -99,3 +99,14 @@ bool TSEE_Vec2_Subtract(TSEE_Vec2 *first, TSEE_Vec2 minus) {
 	first->y -= minus.y;
 	return true;
 }
+
+/**
+ * @brief Calculates the dot product of two vectors.
+ * 
+ * @param first First vector
+ * @param second Second vector
+ * @return float
+*/
+float TSEE_Vec2_Dot(TSEE_Vec2 first, TSEE_Vec2 second) {
+	return first.x * second.x + first.y * second.y;
+}
