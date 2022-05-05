@@ -43,6 +43,7 @@ TSEE_Object *TSEE_Object_Create(TSEE *tsee, TSEE_Texture *texture, TSEE_Object_A
 
 	if (TSEE_Attributes_Check(attributes, TSEE_ATTRIB_PHYS_ENABLED)) {
 		obj->physics.mass = 1;
+		obj->physics.inv_mass = 1;
 		obj->physics.velocity = (TSEE_Vec2){0, 0};
 		obj->physics.force = (TSEE_Vec2){0, 0};
 	}

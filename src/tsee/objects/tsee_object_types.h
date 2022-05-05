@@ -12,6 +12,8 @@ typedef struct TSEE_Physics_Data {
 	TSEE_Vec2 velocity;
 	TSEE_Vec2 force;
 	float mass;
+	float inv_mass;
+	float restitution;
 } TSEE_Physics_Data;
 
 typedef struct TSEE_Parallax_Data {
