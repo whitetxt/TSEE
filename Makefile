@@ -12,7 +12,7 @@ all: check_folder
 clean: check_folder
 	-rm -rf ${filename}
 	-rm -rf ${objFiles}
-
+	
 new: check_folder clean all
 
 run: check_folder

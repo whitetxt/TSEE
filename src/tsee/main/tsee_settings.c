@@ -8,6 +8,10 @@
  * @param value Value for the setting
  */
 void TSEE_Settings_LoadCallback(TSEE *tsee, char *section, char *value) {
+	while (value[strlen(value) - 1] == '\n' || value[strlen(value) - 1] == ' ') { // Remove trailing newlines and spaces
+		value[strlen(value) - 1] = '\0';
+	}
+	if (section[0] == '#') return; // Ignore comments
 	if (strcmp(section, "width") == 0) {
 		tsee->window->width = atoi(value);
 		TSEE_Window_UpdateSize(tsee);
