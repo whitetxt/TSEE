@@ -32,19 +32,20 @@ int main(int argc, char *argv[]) {
 	}
 
 	TSEE_Object_Create(tsee, TSEE_Texture_Create(tsee, "assets/test_image.png"), TSEE_ATTRIB_PHYS_ENABLED | TSEE_ATTRIB_PLAYER, 200, 300);
-	TSEE_Player_SetJumpForce(tsee, 1.5);
-	TSEE_Player_SetSpeed(tsee, 10);
+	TSEE_Player_SetJumpForce(tsee, 0.1);
+	TSEE_Player_SetSpeed(tsee, 9);
 	TSEE_World_SetGravity(tsee, (TSEE_Vec2){0, -9.81});
-	TSEE_Object_Create(tsee, TSEE_Texture_Create(tsee, "assets/test_image.png"), TSEE_ATTRIB_NONE, 160, 5);
-	TSEE_Object_Create(tsee, TSEE_Texture_Create(tsee, "assets/test_image.png"), TSEE_ATTRIB_NONE, 170, 15);
-	TSEE_Object_Create(tsee, TSEE_Texture_Create(tsee, "assets/test_image.png"), TSEE_ATTRIB_NONE, 180, 25);
+	TSEE_Object_Create(tsee, TSEE_Texture_Create(tsee, "assets/test_image.png"), TSEE_ATTRIB_NONE, 160, 30);
+	TSEE_Object_Create(tsee, TSEE_Texture_Create(tsee, "assets/test_image.png"), TSEE_ATTRIB_NONE, 170, 35);
+	TSEE_Object_Create(tsee, TSEE_Texture_Create(tsee, "assets/test_image.png"), TSEE_ATTRIB_NONE, 180, 40);
+	TSEE_Object_Create(tsee, TSEE_Texture_Create(tsee, "assets/test_image.png"), TSEE_ATTRIB_NONE, 190, 45);
 	TSEE_Parallax_Create(tsee, TSEE_Texture_Create(tsee, "assets/parallax1.png"), 6);
 	TSEE_Parallax_Create(tsee, TSEE_Texture_Create(tsee, "assets/parallax2.png"), 4);
 	TSEE_Parallax_Create(tsee, TSEE_Texture_Create(tsee, "assets/parallax3.png"), 2);
 	TSEE_Parallax_Create(tsee, TSEE_Texture_Create(tsee, "assets/parallax4.png"), 1);
 
 	for (int x = 0; x < tsee->window->width; x += 32) {
-		TSEE_Object_Create(tsee, TSEE_Texture_Create(tsee, "assets/test_image.png"), TSEE_ATTRIB_NONE, x, 5);
+		TSEE_Object_Create(tsee, TSEE_Texture_Create(tsee, "assets/test_image.png"), TSEE_ATTRIB_NONE, x, 25);
 	}
 
 	for (size_t i = 0; i < tsee->world->objects->size; i++) {

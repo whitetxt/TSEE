@@ -30,8 +30,12 @@ void TSEE_Player_HandleInput(TSEE *tsee) {
 		TSEE_Vec2 grav = tsee->world->gravity;
 		TSEE_Vec2_Multiply(&grav, player->jump_force);
 		TSEE_Vec2_Multiply(&grav, -1);
-		TSEE_Vec2_Add(&player->object->physics.force, grav);
-		TSEE_Log("Held Up: %f\n", player->held_up);
+		if (grav.x != 0) {
+			player->object->physics.velocity.x = grav.x;
+		}
+		if (grav.y != 0) {
+			player->object->physics.velocity.y = grav.y;
+		}
 		if (player->held_up > 0.1f) {
 			player->grounded = false;
 		}

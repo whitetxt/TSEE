@@ -115,10 +115,18 @@ void TSEE_Physics_ResolveCollision(TSEE *tsee, TSEE_Object *first, TSEE_Object *
 
 		if (TSEE_Object_CheckAttribute(first, TSEE_ATTRIB_PHYS_ENABLED)) {
 			if (lowest == amtRight) {
-				TSEE_Object_SetPosition(first, second->position.x - first->texture->rect.w, first->position.y);
+				if (amtTop <= 5) {
+					TSEE_Object_SetPosition(first, first->position.x, second->position.y + first->texture->rect.h);
+				} else {
+					TSEE_Object_SetPosition(first, second->position.x - first->texture->rect.w, first->position.y);
+				}
 				first->physics.velocity.x = 0;
 			} else if (lowest == amtLeft) {
-				TSEE_Object_SetPosition(first, second->position.x + second->texture->rect.w, first->position.y);
+				if (amtTop <= 5) {
+					TSEE_Object_SetPosition(first, first->position.x, second->position.y + first->texture->rect.h);
+				} else {
+					TSEE_Object_SetPosition(first, second->position.x + second->texture->rect.w, first->position.y);
+				}
 				first->physics.velocity.x = 0;
 			} else if (lowest == amtTop) {
 				TSEE_Object_SetPosition(first, first->position.x, second->position.y + first->texture->rect.h);
@@ -132,10 +140,18 @@ void TSEE_Physics_ResolveCollision(TSEE *tsee, TSEE_Object *first, TSEE_Object *
 			}
 		} else {
 			if (lowest == amtRight) {
-				TSEE_Object_SetPosition(second, first->position.x - second->texture->rect.w, second->position.y);
+				if (amtTop < 5) {
+					TSEE_Object_SetPosition(second, second->position.x, first->position.y + second->texture->rect.h);
+				} else {
+					TSEE_Object_SetPosition(second, first->position.x - second->texture->rect.w, second->position.y);
+				}
 				second->physics.velocity.x = 0;
 			} else if (lowest == amtLeft) {
-				TSEE_Object_SetPosition(second, first->position.x + first->texture->rect.w, second->position.y);
+				if (amtTop < 5) {
+					TSEE_Object_SetPosition(second, second->position.x, first->position.y + second->texture->rect.h);
+				} else {
+					TSEE_Object_SetPosition(second, first->position.x + first->texture->rect.w, second->position.y);
+				}
 				second->physics.velocity.x = 0;
 			} else if (lowest == amtTop) {
 				TSEE_Object_SetPosition(second, second->position.x, first->position.y + second->texture->rect.h);
