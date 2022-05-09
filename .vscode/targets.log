@@ -6,7 +6,8 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Mon May  9 14:55:39 2022
+# Make data base, printed on Mon May  9 16:09:41 2022
+ 
 
 # Variables
 
@@ -83,7 +84,7 @@ QT_AUTO_SCREEN_SCALE_FACTOR = 0
 # makefile (from 'Makefile', line 6)
 files = ${wildcard src/*.c src/tsee/*/*.c}
 # environment
-SESSION_MANAGER = local/plasma:@/tmp/.ICE-unix/1833,unix/plasma:/tmp/.ICE-unix/1833
+SESSION_MANAGER = local/plasma:@/tmp/.ICE-unix/1991,unix/plasma:/tmp/.ICE-unix/1991
 # environment
 XDG_RUNTIME_DIR = /run/user/1000
 # environment
@@ -107,7 +108,7 @@ LS_COLORS = rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:
 # environment
 XDG_SESSION_DESKTOP = KDE
 # environment
-SSH_AUTH_SOCK = /tmp/ssh-73nWxGMX81Eu/agent.1730
+SSH_AUTH_SOCK = /tmp/ssh-kBnqu0wCTCde/agent.1890
 # automatic
 %F = $(notdir $%)
 # environment
@@ -125,7 +126,7 @@ KDE_SESSION_VERSION = 5
 # environment
 XDG_SEAT = seat0
 # environment
-SSH_AGENT_PID = 1783
+SSH_AGENT_PID = 1943
 # environment
 ORIGINAL_XDG_CURRENT_DESKTOP = KDE
 # environment
@@ -171,7 +172,7 @@ SHLVL = 1
 # makefile (from 'Makefile', line 3)
 CC = gcc
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-ad1001f9-a6c8-4423-9f73-bd39cb96d600.sock
+VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-d62ff90f-ac7e-4d9d-971f-b4a87ccd805f.sock
 # environment
 XDG_SESSION_ID = 3
 # environment
@@ -237,7 +238,7 @@ LANG = C
 # environment
 TERM = xterm-256color
 # environment
-VSCODE_PID = 2580
+VSCODE_PID = 2760
 # environment
 KDE_SESSION_UID = 1000
 # variable set hash-table stats:
@@ -263,6 +264,7 @@ check_folder:
 #  Implicit rule search has not been done.
 #  Implicit/static pattern stem: ''
 #  File does not exist.
+ 
 #  File has been updated.
 #  Needs to be updated (-q is set).
 # automatic
@@ -282,7 +284,6 @@ check_folder:
 # automatic
 # ? := 
 # variable set hash-table stats:
- 
 # Load=8/32=25%, Rehash=0, Collisions=1/11=9%
 #  recipe to execute (from 'Makefile', line 31):
 	mkdir -p build
@@ -363,6 +364,7 @@ vg: check_folder
 # VPATH Search Paths
 
 # No 'vpath' search paths.
+ 
 
 # No general ('VPATH' variable) search path.
 
@@ -372,6 +374,6 @@ vg: check_folder
 # strcache performance: lookups = 46 / hit rate = 54%
 # hash-table stats:
 # Load=21/8192=0%, Rehash=0, Collisions=1/46=2%
-# Finished Make data base on Mon May  9 14:55:39 2022
+# Finished Make data base on Mon May  9 16:09:41 2022
 
  

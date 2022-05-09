@@ -228,27 +228,27 @@ void TSEE_World_ScrollToObject(TSEE *tsee, TSEE_Object *obj) {
 		float diff = half_width - mid_x;
 		tsee->world->scroll_x -= diff;
 		obj->texture->rect.x = half_width - pos.w / 2;
-	} else if (mid_x > half_width) {
+	} else if (mid_x > half_width && tsee->world->scroll_x != tsee->world->max_scroll_x) {
 		float diff = mid_x - half_width;
 		tsee->world->scroll_x += diff;
 		obj->texture->rect.x = half_width - pos.w / 2;
 	}
 
-	if (mid_y < half_height) {
-		float diff = half_height - mid_y;
+	if (mid_y > half_height * 0.75f) {
+		float diff = mid_y - half_height * 0.75f;
 		tsee->world->scroll_y -= diff;
-		obj->texture->rect.y = half_height - pos.h / 2;
-	} else if (mid_y > half_height && tsee->world->scroll_y != 0) {
-		float diff = mid_y - half_height;
+		obj->texture->rect.y = half_height * 0.75f - pos.h / 2;
+	} else if (mid_y < half_height * 0.25f && tsee->world->scroll_y <= 0) {
+		float diff = half_height * 0.25f - mid_y;
 		tsee->world->scroll_y += diff;
-		obj->texture->rect.y = half_height - pos.h / 2;
+		obj->texture->rect.y = half_height * 0.25f - pos.h / 2;
 	}
 
 	if (tsee->world->scroll_x < 0) {
 		tsee->world->scroll_x = 0;
-	} /*else if (tsee->world->scroll_x > tsee->world->max_scroll_x) {
+	} else if (tsee->world->scroll_x > tsee->world->max_scroll_x) {
 		tsee->world->scroll_x = tsee->world->max_scroll_x;
-	}*/
+	}
 
 	if (tsee->world->scroll_y < 0) {
 		tsee->world->scroll_y = 0;
@@ -257,7 +257,9 @@ void TSEE_World_ScrollToObject(TSEE *tsee, TSEE_Object *obj) {
 	for (size_t i = 0; i < tsee->world->objects->size; i++) {
 		TSEE_Object *object = TSEE_Array_Get(tsee->world->objects, i);
 		if (TSEE_Object_CheckAttribute(object, TSEE_ATTRIB_UI) || TSEE_Object_CheckAttribute(object, TSEE_ATTRIB_PLAYER)) continue;
-		object->texture->rect.x = obj->position.x - tsee->world->scroll_x;
-		object->texture->rect.y = obj->position.y - tsee->world->scroll_y;
+		if (!TSEE_Object_CheckAttribute(object, TSEE_ATTRIB_PARALLAX)) {
+			object->texture->rect.x = object->position.x - tsee->world->scroll_x;
+		}
+		object->texture->rect.y = object->position.y * -1 + tsee->window->height - tsee->world->scroll_y;
 	}
 }
