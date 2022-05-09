@@ -76,8 +76,8 @@ bool TSEE_Object_SetPosition(TSEE *tsee, TSEE_Object *obj, float x, float y) {
 	obj->position.x = x;
 	obj->position.y = y;
 
-	obj->texture->rect.x = x;
-	obj->texture->rect.y = y * -1 + tsee->window->height;
+	obj->texture->rect.x = x - tsee->world->scroll_x;
+	obj->texture->rect.y = y * -1 + tsee->window->height - tsee->world->scroll_y;
 	return true;
 }
 
