@@ -18,10 +18,16 @@ typedef struct TSEE_Init {
 	bool ui;
 } TSEE_Init;
 
+typedef struct TSEE_Debug_RenderTimes {
+	double object_time;
+	double parallax_time;
+} TSEE_Debug_RenderTimes;
+
 typedef struct TSEE_Debug {
 	double event_time;
 	double physics_time;
 	double render_time;
+	TSEE_Debug_RenderTimes render_times;
 	double frame_time;
 	double framerate;
 	bool active;

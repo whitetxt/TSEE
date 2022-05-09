@@ -57,6 +57,14 @@ bool TSEE_Parallax_CreateFromObject(TSEE *tsee, TSEE_Object *obj, float distance
  * @return true on success, false on fail.
  */
 bool TSEE_Parallax_Render(TSEE *tsee, TSEE_Object *parallax) {
+	Uint64 start = 0;
+	if (tsee->debug->active) {
+		start = SDL_GetPerformanceCounter();
+	}
+	if (!TSEE_Object_CheckAttribute(parallax, TSEE_ATTRIB_PARALLAX)) {
+		TSEE_Error("Attempted to parallax render a non parallax object.\n");
+		return false;
+	}
 	SDL_Rect newRect = parallax->texture->rect;
 	newRect.x = tsee->world->scroll_x * (-1 / parallax->parallax.distance);
 	while (newRect.x > tsee->window->width) {
@@ -76,6 +84,10 @@ bool TSEE_Parallax_Render(TSEE *tsee, TSEE_Object *parallax) {
 		if (SDL_RenderCopy(tsee->window->renderer, parallax->texture->texture, NULL, &newRect) != 0) {
 			return false;
 		};
+	}
+	if (tsee->debug->active) {
+		Uint64 end = SDL_GetPerformanceCounter();
+		tsee->debug->render_times.parallax_time += (end - start) * 1000 / (double) SDL_GetPerformanceFrequency();
 	}
 	return true;
 }
