@@ -14,6 +14,11 @@ void saveMap(void *t) {
 void loadMap(void *t) {
 	TSEE *tsee = (TSEE *)t;
 	TSEE_Map_Load(tsee, "map.tsee_map");
+	TSEE_Toolbar_AddButton(tsee, "_default", "Home");
+	TSEE_Toolbar_AddChild(tsee, "Home", "_default", "Quit", quitGame);
+	TSEE_Toolbar_AddButton(tsee, "_default", "Maps");
+	TSEE_Toolbar_AddChild(tsee, "Maps", "_default", "Save", saveMap);
+	TSEE_Toolbar_AddChild(tsee, "Maps", "_default", "Load", loadMap);
 }
 
 int main(int argc, char *argv[]) {
@@ -32,27 +37,20 @@ int main(int argc, char *argv[]) {
 	}
 
 	TSEE_Object_Create(tsee, TSEE_Texture_Create(tsee, "assets/test_image.png"), TSEE_ATTRIB_PHYS | TSEE_ATTRIB_PLAYER, 200, 300);
-	TSEE_Player_SetJumpForce(tsee, 0.05);
+	TSEE_Player_SetJumpForce(tsee, 25);
 	TSEE_Player_SetSpeed(tsee, 10);
 	TSEE_World_SetGravity(tsee, (TSEE_Vec2){0, -9.81});
-	TSEE_Object_Create(tsee, TSEE_Texture_Create(tsee, "assets/test_image.png"), TSEE_ATTRIB_NONE, 160, 30);
-	TSEE_Object_Create(tsee, TSEE_Texture_Create(tsee, "assets/test_image.png"), TSEE_ATTRIB_NONE, 170, 35);
-	TSEE_Object_Create(tsee, TSEE_Texture_Create(tsee, "assets/test_image.png"), TSEE_ATTRIB_NONE, 180, 40);
-	TSEE_Object_Create(tsee, TSEE_Texture_Create(tsee, "assets/test_image.png"), TSEE_ATTRIB_NONE, 190, 45);
+	TSEE_Object_Create(tsee, TSEE_Texture_Create(tsee, "assets/test_image.png"), TSEE_ATTRIB_STATIC, 160, 30);
+	TSEE_Object_Create(tsee, TSEE_Texture_Create(tsee, "assets/test_image.png"), TSEE_ATTRIB_STATIC, 170, 35);
+	TSEE_Object_Create(tsee, TSEE_Texture_Create(tsee, "assets/test_image.png"), TSEE_ATTRIB_STATIC, 180, 40);
+	TSEE_Object_Create(tsee, TSEE_Texture_Create(tsee, "assets/test_image.png"), TSEE_ATTRIB_STATIC, 190, 45);
 	TSEE_Parallax_Create(tsee, TSEE_Texture_Create(tsee, "assets/parallax1.png"), 6);
 	TSEE_Parallax_Create(tsee, TSEE_Texture_Create(tsee, "assets/parallax2.png"), 4);
 	TSEE_Parallax_Create(tsee, TSEE_Texture_Create(tsee, "assets/parallax3.png"), 2);
 	TSEE_Parallax_Create(tsee, TSEE_Texture_Create(tsee, "assets/parallax4.png"), 1);
 
 	for (int x = 0; x < tsee->window->width; x += 88) {
-		TSEE_Object_Create(tsee, TSEE_Texture_Create(tsee, "assets/test_image.png"), TSEE_ATTRIB_NONE, x, 25);
-	}
-
-	for (size_t i = 0; i < tsee->world->objects->size; i++) {
-		TSEE_Object *obj = tsee->world->objects->data[i];
-		if (!TSEE_Object_CheckAttribute(obj, TSEE_ATTRIB_PARALLAX)) continue;
-
-		TSEE_Log("Parallax with distance: %f\n", obj->parallax.distance);
+		TSEE_Object_Create(tsee, TSEE_Texture_Create(tsee, "assets/test_image.png"), TSEE_ATTRIB_STATIC, x, 25);
 	}
 
 	TSEE_Toolbar_AddButton(tsee, "_default", "Home");

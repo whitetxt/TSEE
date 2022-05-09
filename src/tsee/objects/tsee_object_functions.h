@@ -17,8 +17,8 @@ void TSEE_Attributes_Set(TSEE_Object_Attributes *attr, TSEE_Object_Attributes to
 
 // Parallax
 
-bool TSEE_Parallax_Create(TSEE *tsee, TSEE_Texture *texture, float distanceFromCamera);
-bool TSEE_Parallax_CreateFromObject(TSEE *tsee, TSEE_Object *obj, float distanceFromCamera);
+TSEE_Object *TSEE_Parallax_Create(TSEE *tsee, TSEE_Texture *texture, float distanceFromCamera);
+TSEE_Object *TSEE_Parallax_CreateFromObject(TSEE *tsee, TSEE_Object *obj, float distanceFromCamera);
 bool TSEE_Parallax_Render(TSEE *tsee, TSEE_Object *parallax);
 void TSEE_Parallax_Destroy(TSEE *tsee, TSEE_Object *para, bool destroyTexture);
 
