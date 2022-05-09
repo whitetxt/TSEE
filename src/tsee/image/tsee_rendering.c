@@ -203,5 +203,5 @@ bool TSEE_RenderAll(TSEE *tsee) {
 bool TSEE_Rendering_IsReady(TSEE *tsee) {
 	float timeBetweenFrames = 1.0f / tsee->window->fps;
 	float dt = (float) ( (SDL_GetPerformanceCounter() - tsee->window->last_render) / (float) SDL_GetPerformanceFrequency() );
-	return dt - timeBetweenFrames > -0.01f;
+	return dt - timeBetweenFrames > -0.1f;
 }
