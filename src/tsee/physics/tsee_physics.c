@@ -7,7 +7,7 @@
  * @param mass New mass
  */
 void TSEE_Physics_SetObjectMass(TSEE_Object *obj, float mass) {
-	if (!TSEE_Object_CheckAttribute(obj, TSEE_ATTRIB_PHYS_ENABLED)) return; // Ignore objects which are not physics objects.
+	if (!TSEE_Object_CheckAttribute(obj, TSEE_ATTRIB_PHYS)) return; // Ignore objects which are not physics objects.
 	obj->physics.mass = mass;
 	obj->physics.inv_mass = 1 / mass;
 }
@@ -21,7 +21,7 @@ void TSEE_Physics_PerformStep(TSEE *tsee) {
 	Uint64 start = SDL_GetPerformanceCounter();
 	for (size_t i = 0; i < tsee->world->objects->size; i++) {
 		TSEE_Object *object = tsee->world->objects->data[i];
-		if (TSEE_Object_CheckAttribute(object, TSEE_ATTRIB_PHYS_ENABLED)) {
+		if (TSEE_Object_CheckAttribute(object, TSEE_ATTRIB_PHYS)) {
 			TSEE_Physics_UpdateObject(tsee, object);
 		}
 	}
@@ -36,19 +36,32 @@ void TSEE_Physics_PerformStep(TSEE *tsee) {
  * @param obj Object to update
  */
 void TSEE_Physics_UpdateObject(TSEE *tsee, TSEE_Object *obj) {
+	// Apply gravity
+	// F = ma
 	TSEE_Vec2 grav = tsee->world->gravity;
 	float dt = tsee->dt;
+
+	// a * m
 	TSEE_Vec2_Multiply(&grav, obj->physics.mass);
+
+	// F += am
 	TSEE_Vec2_Add(&obj->physics.force, grav);
-	TSEE_Vec2_Divide(&obj->physics.force, obj->physics.mass);
-	TSEE_Vec2_Multiply(&obj->physics.force, dt);
-	TSEE_Vec2_Add(&obj->physics.velocity, obj->physics.force);
 
-	TSEE_Vec2 new_vel = obj->physics.velocity;
-	//TSEE_Vec2_Multiply(&new_vel, dt);
-	TSEE_Vec2_Add(&obj->position, new_vel);
+	// F = ma
+	// a = F / m
+	// a = F * (1 / m)
+	TSEE_Vec2 accel = (TSEE_Vec2){obj->physics.force.x * obj->physics.inv_mass, obj->physics.force.y * obj->physics.inv_mass};
+	TSEE_Vec2_Multiply(&accel, dt);
+	// Euler Explicit
+	TSEE_Vec2_Add(&obj->physics.velocity, accel);
 
-	TSEE_Vec2_Multiply(&obj->physics.velocity, 0.99f);
+	TSEE_Vec2 vel = obj->physics.velocity;
+	//TSEE_Vec2_Multiply(&vel, dt);
+
+	TSEE_Vec2 pos = obj->position;
+	TSEE_Vec2_Add(&pos, vel);
+
+	TSEE_Object_SetPositionVec2(tsee, obj, pos);
 
 	obj->physics.force.x = 0;
 	obj->physics.force.y = 0;
@@ -67,11 +80,10 @@ void TSEE_Physics_CheckCollisions(TSEE *tsee, TSEE_Object *obj) {
 	for (size_t i = 0; i < tsee->world->objects->size; i++) {
 		TSEE_Object *other = tsee->world->objects->data[i];
 		if (TSEE_Object_CheckAttribute(other, TSEE_ATTRIB_PARALLAX)) continue;
+		if (other == obj) continue;
 
-		if (other != obj) {
-			if (!TSEE_IsRectNull( TSEE_Object_GetCollisionRect(tsee, obj, other) )) {
-				TSEE_Physics_ResolveCollision(tsee, obj, other);
-			}
+		if (!TSEE_IsRectNull( TSEE_Object_GetCollisionRect(obj, other) )) {
+			TSEE_Physics_ResolveCollision(tsee, obj, other);
 		}
 	}
 }
@@ -83,7 +95,7 @@ void TSEE_Physics_CheckCollisions(TSEE *tsee, TSEE_Object *obj) {
  * @param second Second object
  */
 void TSEE_Physics_ResolveCollision(TSEE *tsee, TSEE_Object *first, TSEE_Object *second) {
-	if (TSEE_Object_CheckAttribute(first, TSEE_ATTRIB_PHYS_ENABLED) && TSEE_Object_CheckAttribute(second, TSEE_ATTRIB_PHYS_ENABLED)) {
+	if (TSEE_Object_CheckAttribute(first, TSEE_ATTRIB_PHYS) && TSEE_Object_CheckAttribute(second, TSEE_ATTRIB_PHYS)) {
 		// If this works Github Copilot is good
 		TSEE_Vec2 first_vel = first->physics.velocity;
 		TSEE_Vec2 second_vel = second->physics.velocity;
@@ -125,55 +137,63 @@ void TSEE_Physics_ResolveCollision(TSEE *tsee, TSEE_Object *first, TSEE_Object *
 			}
 		}
 
-		if (TSEE_Object_CheckAttribute(first, TSEE_ATTRIB_PHYS_ENABLED)) {
+		if (TSEE_Object_CheckAttribute(first, TSEE_ATTRIB_PHYS)) {
 			if (lowest == amtRight) {
 				if (amtTop <= 5) {
-					TSEE_Object_SetPosition(first, first->position.x, second->position.y + first->texture->rect.h);
+					TSEE_Object_SetPosition(tsee, first, first->position.x, second->position.y + first->texture->rect.h);
 				} else {
-					TSEE_Object_SetPosition(first, second->position.x - first->texture->rect.w, first->position.y);
+					TSEE_Object_SetPosition(tsee, first, second->position.x - first->texture->rect.w, first->position.y);
+					first->physics.velocity.x = 0;
 				}
-				first->physics.velocity.x = 0;
 			} else if (lowest == amtLeft) {
 				if (amtTop <= 5) {
-					TSEE_Object_SetPosition(first, first->position.x, second->position.y + first->texture->rect.h);
+					TSEE_Object_SetPosition(tsee, first, first->position.x, second->position.y + first->texture->rect.h);
 				} else {
-					TSEE_Object_SetPosition(first, second->position.x + second->texture->rect.w, first->position.y);
+					TSEE_Object_SetPosition(tsee, first, second->position.x + second->texture->rect.w, first->position.y);
+					first->physics.velocity.x = 0;
 				}
-				first->physics.velocity.x = 0;
 			} else if (lowest == amtTop) {
-				TSEE_Object_SetPosition(first, first->position.x, second->position.y + first->texture->rect.h);
+				TSEE_Object_SetPosition(tsee, first, first->position.x, second->position.y + first->texture->rect.h);
 				if (first == tsee->player->object) {
 					tsee->player->grounded = true;
 				}
-				first->physics.velocity.y = 0;
+				if (first->physics.velocity.y < 0) {
+					first->physics.velocity.y = 0;
+				}
 			} else if (lowest == amtBottom) {
-				TSEE_Object_SetPosition(first, first->position.x, second->position.y - second->texture->rect.h);
-				first->physics.velocity.y = 0;
+				TSEE_Object_SetPosition(tsee, first, first->position.x, second->position.y - second->texture->rect.h);
+				if (first->physics.velocity.y > 0) {
+					first->physics.velocity.y = 0;
+				}
 			}
 		} else {
 			if (lowest == amtRight) {
 				if (amtTop < 5) {
-					TSEE_Object_SetPosition(second, second->position.x, first->position.y + second->texture->rect.h);
+					TSEE_Object_SetPosition(tsee, second, second->position.x, first->position.y + second->texture->rect.h);
 				} else {
-					TSEE_Object_SetPosition(second, first->position.x - second->texture->rect.w, second->position.y);
+					TSEE_Object_SetPosition(tsee, second, first->position.x - second->texture->rect.w, second->position.y);
+					second->physics.velocity.x = 0;
 				}
-				second->physics.velocity.x = 0;
 			} else if (lowest == amtLeft) {
 				if (amtTop < 5) {
-					TSEE_Object_SetPosition(second, second->position.x, first->position.y + second->texture->rect.h);
+					TSEE_Object_SetPosition(tsee, second, second->position.x, first->position.y + second->texture->rect.h);
 				} else {
-					TSEE_Object_SetPosition(second, first->position.x + first->texture->rect.w, second->position.y);
+					TSEE_Object_SetPosition(tsee, second, first->position.x + first->texture->rect.w, second->position.y);
+					second->physics.velocity.x = 0;
 				}
-				second->physics.velocity.x = 0;
 			} else if (lowest == amtTop) {
-				TSEE_Object_SetPosition(second, second->position.x, first->position.y + second->texture->rect.h);
+				TSEE_Object_SetPosition(tsee, second, second->position.x, first->position.y + second->texture->rect.h);
 				if (second == tsee->player->object) {
 					tsee->player->grounded = true;
 				}
-				second->physics.velocity.y = 0;
+				if (second->physics.velocity.y < 0) {
+					second->physics.velocity.y = 0;
+				}
 			} else if (lowest == amtBottom) {
-				TSEE_Object_SetPosition(second, second->position.x, first->position.y - first->texture->rect.h);
-				second->physics.velocity.y = 0;
+				TSEE_Object_SetPosition(tsee, second, second->position.x, first->position.y - first->texture->rect.h);
+				if (second->physics.velocity.y > 0) {
+					second->physics.velocity.y = 0;
+				}
 			}
 		}
 	}

@@ -20,6 +20,11 @@ void TSEE_Player_SetJumpForce(TSEE *tsee, float jump_force) {
 	tsee->player->jump_force = jump_force;
 }
 
+/**
+ * @brief Handles the player's input, and applies necessary forces.
+ * 
+ * @param tsee TSEE which holds the player.
+ */
 void TSEE_Player_HandleInput(TSEE *tsee) {
 	TSEE_Player *player = tsee->player;
 	if (!player->object) return;
@@ -31,10 +36,10 @@ void TSEE_Player_HandleInput(TSEE *tsee) {
 		TSEE_Vec2_Multiply(&grav, player->jump_force);
 		TSEE_Vec2_Multiply(&grav, -1);
 		if (grav.x != 0) {
-			player->object->physics.velocity.x = grav.x;
+			player->object->physics.force.x += grav.x;
 		}
 		if (grav.y != 0) {
-			player->object->physics.velocity.y = grav.y;
+			player->object->physics.force.y += grav.y;
 		}
 		if (player->held_up > 0.1f) {
 			player->grounded = false;
