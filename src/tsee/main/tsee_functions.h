@@ -55,6 +55,7 @@ bool TSEE_InitAll(TSEE *tsee);
 bool TSEE_Close(TSEE *tsee);
 bool TSEE_CalculateDT(TSEE *tsee);
 bool TSEE_World_SetGravity(TSEE *tsee, TSEE_Vec2 gravity);
+void TSEE_World_ScrollToObject(TSEE *tsee, TSEE_Object *obj);
 
 // Settings
 

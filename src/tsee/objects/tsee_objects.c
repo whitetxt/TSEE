@@ -50,7 +50,7 @@ TSEE_Object *TSEE_Object_Create(TSEE *tsee, TSEE_Texture *texture, TSEE_Object_A
 
 	obj->attributes = attributes;
 
-	if (TSEE_Attributes_Check(attributes, TSEE_ATTRIB_PARALLAX)) TSEE_Array_Insert(tsee->world->objects, obj, 0);
+	if (TSEE_Attributes_Check(attributes, TSEE_ATTRIB_PARALLAX) && tsee->world->objects->size > 0) TSEE_Array_Insert(tsee->world->objects, obj, 0);
 	else TSEE_Array_Append(tsee->world->objects, obj);
 
 	return obj;
@@ -78,14 +78,6 @@ bool TSEE_Object_SetPosition(TSEE *tsee, TSEE_Object *obj, float x, float y) {
 
 	obj->texture->rect.x = x;
 	obj->texture->rect.y = y * -1 + tsee->window->height;
-	/*
-	Obsolete code due to new way to get rect for an object.
-	if (!obj->texture) {
-		TSEE_Error("Cannot set position of object with no texture.\n");
-		return false;
-	}
-	obj->texture->rect.x = x;
-	obj->texture->rect.y = y;*/
 	return true;
 }
 
@@ -98,20 +90,7 @@ bool TSEE_Object_SetPosition(TSEE *tsee, TSEE_Object *obj, float x, float y) {
  * @return true on success, false on failure
  */
 bool TSEE_Object_SetPositionVec2(TSEE *tsee, TSEE_Object *obj, TSEE_Vec2 vec) {
-	if (!obj) {
-		TSEE_Error("Attempted to set position on NULL pointer.\n");
-		return false;
-	}
-	if (!obj->texture) {
-		TSEE_Error("Attempted to set position on object with no texture.\n");
-		return false;
-	}
-	obj->position.x = vec.x;
-	obj->position.y = vec.y;
-
-	obj->texture->rect.x = vec.x;
-	obj->texture->rect.y = vec.y * -1 + tsee->window->height;
-	return true;
+	return TSEE_Object_SetPosition(tsee, obj, vec.x, vec.y);
 }
 
 /**
@@ -134,6 +113,7 @@ SDL_Rect TSEE_Object_GetCollisionRect(TSEE_Object *obj, TSEE_Object *other) {
 SDL_Rect TSEE_Object_GetRect(TSEE_Object *obj) {
 	// return (SDL_Rect){obj->position.x, obj->position.y * -1 + tsee->window->height, obj->texture->rect.w, obj->texture->rect.h};
 	// No longer needs to calculate it, make sure everything goes through TSEE_Object_SetPosition to make sure it works.
+	// return (SDL_Rect){obj->position.x, obj->position.y, obj->texture->rect.w, obj->texture->rect.h};
 	return obj->texture->rect;
 }
 
@@ -153,16 +133,15 @@ bool TSEE_Object_Render(TSEE *tsee, TSEE_Object *object) {
 		SDL_Rect rect = TSEE_Object_GetRect(object);
 		int ret = SDL_RenderCopy(tsee->window->renderer, object->texture->texture, NULL, &rect);
 		if (ret != 0) {
-			TSEE_Error("Failed to render object: %s\n", SDL_GetError());
+			TSEE_Error("Failed to render object (%s)\n", SDL_GetError());
 			return false;
 		}
 		if (tsee->debug->active) {
-			Uint64 end = SDL_GetPerformanceCounter();
-			tsee->debug->render_times.object_time += (end - start) * 1000 / (double) SDL_GetPerformanceFrequency();
+			tsee->debug->render_times.object_time += (SDL_GetPerformanceCounter() - start) * 1000 / (double) SDL_GetPerformanceFrequency();
 		}
 	} else {
 		if (!TSEE_Parallax_Render(tsee, object)) {
-			TSEE_Error("Failed to render parallax: %s\n", SDL_GetError());
+			TSEE_Error("Failed to render parallax object (%s)\n", SDL_GetError());
 			return false;
 		}
 	}

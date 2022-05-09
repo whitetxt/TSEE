@@ -1,4 +1,4 @@
-make --dry-run --keep-going --print-directory
+make --dry-run --always-make --keep-going --print-directory
 make: Entering directory '/home/evie/Documents/TSEE'
 mkdir -p build
 gcc -o build/TSEE src/main.c src/tsee/player/tsee_player.c src/tsee/ext/tinyfiledialogs.c src/tsee/events/tsee_events.c src/tsee/events/tsee_input.c src/tsee/objects/tsee_parallax.c src/tsee/objects/tsee_objects.c src/tsee/objects/tsee_text.c src/tsee/objects/tsee_attributes.c src/tsee/objects/tsee_font.c src/tsee/maps/tsee_map.c src/tsee/UI/tsee_ui.c src/tsee/main/tsee.c src/tsee/main/tsee_settings.c src/tsee/util/tsee_array.c src/tsee/util/tsee_safety.c src/tsee/util/tsee_vec.c src/tsee/image/tsee_image.c src/tsee/image/tsee_rendering.c src/tsee/image/tsee_animation.c src/tsee/physics/tsee_physics.c -g -Wall -Wextra -pedantic -lz -lm -rdynamic `pkg-config --cflags --libs sdl2 SDL2_image SDL2_ttf`

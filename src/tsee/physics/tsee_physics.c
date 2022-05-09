@@ -25,6 +25,10 @@ void TSEE_Physics_PerformStep(TSEE *tsee) {
 			TSEE_Physics_UpdateObject(tsee, object);
 		}
 	}
+	if (tsee->player->object) {
+		TSEE_World_ScrollToObject(tsee, tsee->player->object);
+		TSEE_Log("Scroll: %f, %f\n", tsee->world->scroll_x, tsee->world->scroll_y);
+	}
 	Uint64 end = SDL_GetPerformanceCounter();
 	tsee->debug->physics_time += (end - start) * 1000 / (double) SDL_GetPerformanceFrequency();
 }
@@ -65,6 +69,7 @@ void TSEE_Physics_UpdateObject(TSEE *tsee, TSEE_Object *obj) {
 
 	obj->physics.force.x = 0;
 	obj->physics.force.y = 0;
+	TSEE_Vec2_Multiply(&obj->physics.velocity, 0.99);
 
 	// Check collisions now that we have moved
 	TSEE_Physics_CheckCollisions(tsee, obj);

@@ -29,7 +29,7 @@ bool TSEE_Rendering_Init(TSEE *tsee) {
 
 	TSEE_Log("Width: %d, Height: %d\n", tsee->window->width, tsee->window->height);
 
-	tsee->window->renderer = SDL_CreateRenderer(tsee->window->window, -1, SDL_RENDERER_ACCELERATED);
+	tsee->window->renderer = SDL_CreateRenderer(tsee->window->window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 	if (tsee->window->renderer == NULL) {
 		TSEE_Error("Renderer could not be created! SDL_Error: %s\n", SDL_GetError());
 		SDL_DestroyWindow(tsee->window->window);
@@ -60,10 +60,6 @@ bool TSEE_Rendering_Init(TSEE *tsee) {
  */
 void TSEE_Window_UpdateSize(TSEE *tsee) {
 	SDL_SetWindowSize(tsee->window->window, tsee->window->width, tsee->window->height);
-}
-
-void TSEE_Window_UpdateVsync(TSEE *tsee) {
-	return;
 }
 
 /**

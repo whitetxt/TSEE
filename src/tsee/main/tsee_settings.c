@@ -25,7 +25,8 @@ void TSEE_Settings_LoadCallback(TSEE *tsee, char *section, char *value) {
 			TSEE_Warn("Invalid boolean value: `%s` (Found in setting `%s`)\n", value, section);
 		} else {
 			tsee->window->vsync = result;
-			TSEE_Window_UpdateVsync(tsee);
+			TSEE_Warn("Unable to change VSync settings (Old SDL version is incompatable)\n");
+			//TSEE_Window_UpdateVsync(tsee);
 		}
 	} else {
 		TSEE_Warn("Unknown settings section `%s` with value `%s`\n", section, value);

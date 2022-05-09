@@ -84,7 +84,18 @@ bool TSEE_Map_Load(TSEE *tsee, char *fn) {
 	}
 
 	// Clear arrays to be overwritten
-	TSEE_Array_Clear(tsee->world->objects);
+	if (tsee->world->objects) {
+		if (tsee->world->objects->data) {
+			for (size_t i = 0; i < tsee->world->objects->size; i++) {
+				TSEE_Object *obj = TSEE_Array_Get(tsee->world->objects, i);
+				TSEE_Object_Destroy(tsee, obj, false);
+			}
+		}
+	}
+	while (tsee->textures->size > 0) {
+		TSEE_Texture *tex = TSEE_Array_Get(tsee->textures, 0);
+		TSEE_Texture_Destroy(tsee, tex);
+	}
 
 	// Reset the player
 	tsee->player->grounded = true;
@@ -127,14 +138,15 @@ bool TSEE_Map_Load(TSEE *tsee, char *fn) {
 		return false;
 	}
 	TSEE_Log("Loading %zu textures\n", numTextures);
+	char **texturePaths = NULL;
+	size_t numTexPaths = 0;
+	char *texturePath = NULL;
 	for (size_t i = 0; i < numTextures; i++) {
-		char *texturePath = NULL;
+		texturePath = NULL;
 		if (!(texturePath = TSEE_ReadFile_UntilNull(fp))) return false;
-		TSEE_Texture *texture = TSEE_Texture_Create(tsee, texturePath);
-		if (!texture) {
-			TSEE_Error("Failed to load texture `%s` (%s)\n", texturePath, SDL_GetError());
-			return false;
-		}
+		texturePaths = xrealloc(texturePaths, sizeof(*texturePaths) * (++numTexPaths));
+		texturePaths[numTexPaths - 1] = strdup(texturePath);
+		free(texturePath);
 	}
 
 	// Read objects
@@ -150,7 +162,8 @@ bool TSEE_Map_Load(TSEE *tsee, char *fn) {
 			TSEE_Error("Failed to read texture index.\n");
 			return false;
 		}
-		TSEE_Texture *tex = TSEE_Array_Get(tsee->textures, texIdx);
+		TSEE_Log("Read object %ld with texture %ld\n", i, texIdx);
+		char *path = texturePaths[texIdx];
 		float x = 0;
 		float y = 0;
 		TSEE_Object_Attributes attr;
@@ -168,9 +181,9 @@ bool TSEE_Map_Load(TSEE *tsee, char *fn) {
 		TSEE_Object *object;
 
 		if (TSEE_Attributes_Check(attr, TSEE_ATTRIB_PARALLAX)) {
-			object = TSEE_Parallax_Create(tsee, tex, 0);
+			object = TSEE_Parallax_Create(tsee, TSEE_Texture_Create(tsee, path), 1000);
 		} else {
-			object = TSEE_Object_Create(tsee, TSEE_Texture_Create(tsee, tex->path), attr, x, y);
+			object = TSEE_Object_Create(tsee, TSEE_Texture_Create(tsee, path), attr, x, y);
 		}
 
 		if (TSEE_Attributes_Check(attr, TSEE_ATTRIB_PHYS)) {
@@ -246,37 +259,52 @@ bool TSEE_Map_Save(TSEE *tsee, char *fn) {
 	TSEE_WriteFile(&gravityY, sizeof(gravityY), 1, fp);
 	// Write the number of textures
 
-	// As not all textures are loaded from files, we must figure out how many are.
+	// As not all textures are loaded from files, we must figure out how many unique ones there are.
 	size_t numTextures = 0;
+	char **texturesSeen = NULL;
 	for (size_t i = 0; i < tsee->textures->size; i++) {
 		TSEE_Texture *texture = TSEE_Array_Get(tsee->textures, i);
-		if (texture->path) numTextures++;
+		if (!texture->path) continue;
+		if (!texturesSeen) {
+			texturesSeen = xmalloc(sizeof(*texturesSeen) * ++numTextures);
+			texturesSeen[0] = strdup(texture->path);
+		}
+		bool found = false;
+		for (size_t j = 0; j < numTextures; j++) {
+			if (strcmp(texturesSeen[j], texture->path) == 0) {
+				found = true;
+				break;
+			}
+		}
+		if (found) continue;
+		texturesSeen = xrealloc(texturesSeen, sizeof(*texturesSeen) * (++numTextures));
+		texturesSeen[numTextures - 1] = strdup(texture->path);
 	}
+	TSEE_Log("Found %ld unique textures.\n", numTextures);
 	TSEE_WriteFile(&numTextures, sizeof(numTextures), 1, fp);
 
 	// Then we write the paths for the textures.
-	for (size_t i = 0; i < tsee->textures->size; i++) {
-		TSEE_Texture *texture = TSEE_Array_Get(tsee->textures, i);
-		if (!texture->path) continue; // Skip dynamically generated textures
-
-		TSEE_WriteFile_String(fp, texture->path);
+	for (size_t i = 0; i < numTextures; i++) {
+		TSEE_WriteFile_String(fp, texturesSeen[i]);
 	}
+
 	// Write the objects with texture indexes.
+	TSEE_Log("Writing %ld objects.\n", tsee->world->objects->size);
 	TSEE_WriteFile(&tsee->world->objects->size, sizeof(tsee->world->objects->size), 1, fp);
 	for (size_t i = 0; i < tsee->world->objects->size; i++) {
 		bool written = false;
 		TSEE_Object *object = TSEE_Array_Get(tsee->world->objects, i);
-		for (size_t j = 0; j < tsee->textures->size; j++) {
-			TSEE_Texture *texture = TSEE_Array_Get(tsee->textures, j);
-			if (strcmp(texture->path, object->texture->path) == 0) {
-				size_t textureIdx = j;
-				TSEE_WriteFile(&textureIdx, sizeof(textureIdx), 1, fp);
+		for (size_t j = 0; j < numTextures; j++) {
+			if (strcmp(object->texture->path, texturesSeen[j]) == 0) {
+				TSEE_Log("Written object %ld with texture %ld.\n", i, j);
+				TSEE_WriteFile(&j, sizeof(j), 1, fp);
 				written = true;
 				break;
 			}
 		}
 		if (!written) {
 			TSEE_Error("Couldn't write texture idx for texture!!\n");
+			return false;
 		}
 		TSEE_WriteFile(&object->position.x, sizeof(object->position.x), 1, fp);
 		TSEE_WriteFile(&object->position.y, sizeof(object->position.y), 1, fp);

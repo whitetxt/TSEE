@@ -6,7 +6,7 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Mon May  9 10:51:41 2022
+# Make data base, printed on Mon May  9 14:55:39 2022
 
 # Variables
 
@@ -26,10 +26,12 @@ XDG_SESSION_TYPE = x11
 VSCODE_LOG_NATIVE = false
 # automatic
 ?D = $(patsubst %/,%,$(dir $?))
+# environment
+GTK_RC_FILES = /etc/gtk/gtkrc:/home/evie/.gtkrc:/home/evie/.config/gtkrc
 # automatic
 @D = $(patsubst %/,%,$(dir $@))
 # environment
-XAUTHORITY = /home/evie/.Xauthority
+XAUTHORITY = /tmp/xauth-1000-_0
 # automatic
 @F = $(notdir $@)
 # default
@@ -41,11 +43,11 @@ SHELL = /bin/sh
 # environment
 VSCODE_NLS_CONFIG = {"locale":"en-gb","availableLanguages":{},"_languagePackSupport":true}
 # environment
-_ = /usr/share/code/code
+_ = /usr/bin/code
 # makefile (from 'Makefile', line 1)
 filename = build/TSEE
 # environment
-QT_AUTO_SCREEN_SCALE_FACTOR = 0
+KONSOLE_VERSION = 191203
 # makefile (from 'Makefile', line 4)
 CFLAGS = -g -Wall -Wextra -pedantic -lz -lm -rdynamic `pkg-config --cflags --libs sdl2 SDL2_image SDL2_ttf`
 # environment
@@ -63,9 +65,9 @@ DBUS_SESSION_BUS_ADDRESS = unix:path=/run/user/1000/bus
 # environment
 VSCODE_VERBOSE_LOGGING = true
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-8dc2ac21-57b3-463e-ac72-5749a8e7963f.sock
+LESSOPEN = | /usr/bin/lesspipe %s
 # environment
-VSCODE_CWD = /home/evie
+VSCODE_CWD = /home/evie/Documents/TSEE
 # environment
 PAM_KWALLET5_LOGIN = /run/user/1000/kwallet5.socket
 # environment
@@ -73,17 +75,19 @@ XDG_SESSION_PATH = /org/freedesktop/DisplayManager/Session1
 # default
 MAKE_HOST := x86_64-pc-linux-gnu
 # environment
-PATH = /home/evie/bin:/opt/devkitpro/tools/bin:/home/evie/bin:/opt/devkitpro/tools/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/home/evie/bin:/home/evie/.local/bin:/home/evie/bin:/home/evie/.local/bin
+PATH = /home/evie/bin:/opt/devkitpro/tools/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/home/evie/bin:/home/evie/.local/bin:/home/evie/bin:/home/evie/.local/bin
 # environment
 GPG_AGENT_INFO = /run/user/1000/gnupg/S.gpg-agent:0:1
 # environment
-XCURSOR_THEME = Fluent-dark-cursors
+QT_AUTO_SCREEN_SCALE_FACTOR = 0
 # makefile (from 'Makefile', line 6)
 files = ${wildcard src/*.c src/tsee/*/*.c}
 # environment
-SESSION_MANAGER = local/plasma:@/tmp/.ICE-unix/2039,unix/plasma:/tmp/.ICE-unix/2039
+SESSION_MANAGER = local/plasma:@/tmp/.ICE-unix/1833,unix/plasma:/tmp/.ICE-unix/1833
 # environment
 XDG_RUNTIME_DIR = /run/user/1000
+# environment
+WINDOWID = 52428807
 # default
 .INCLUDE_DIRS = /usr/include /usr/local/include /usr/include
 # makefile (from 'Makefile', line 7)
@@ -92,16 +96,24 @@ objFiles = ${files:.c=.o}
 VSCODE_LOG_STACK = false
 # environment
 ELECTRON_RUN_AS_NODE = 1
+# environment
+GTK2_RC_FILES = /etc/gtk-2.0/gtkrc:/home/evie/.gtkrc-2.0:/home/evie/.config/gtkrc-2.0
+# environment
+PROFILEHOME = 
 # default
 .FEATURES := target-specific order-only second-expansion else-if shortest-stem undefine oneshell archives jobserver output-sync check-symlink load
 # environment
+LS_COLORS = rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:
+# environment
 XDG_SESSION_DESKTOP = KDE
 # environment
-SSH_AUTH_SOCK = /tmp/ssh-Hipu11aUm6Uv/agent.1921
+SSH_AUTH_SOCK = /tmp/ssh-73nWxGMX81Eu/agent.1730
 # automatic
 %F = $(notdir $%)
 # environment
 DISPLAY = :0
+# environment
+XCURSOR_THEME = Fluent-dark-cursors
 # environment
 VSCODE_PIPE_LOGGING = true
 # environment
@@ -113,13 +125,17 @@ KDE_SESSION_VERSION = 5
 # environment
 XDG_SEAT = seat0
 # environment
-SSH_AGENT_PID = 1974
+SSH_AGENT_PID = 1783
 # environment
 ORIGINAL_XDG_CURRENT_DESKTOP = KDE
 # environment
 VSCODE_AMD_ENTRYPOINT = vs/workbench/api/node/extensionHostProcess
 # environment
 HOME = /home/evie
+# environment
+LESSCLOSE = /usr/bin/lesspipe %s %s
+# environment
+VSCODE_CLI = 1
 # environment
 VSCODE_CODE_CACHE_PATH = /home/evie/.config/Code/CachedData/57fd6d0195bb9b9d1b49f6da5db789060795de47
 # environment
@@ -128,6 +144,8 @@ LOGNAME = evie
 APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = 1
 # environment
 KDE_FULL_SESSION = true
+# environment
+ELECTRON_NO_ATTACH_CONSOLE = 1
 # environment
 VSCODE_HANDLES_UNCAUGHT_ERRORS = true
 # automatic
@@ -138,6 +156,10 @@ XDG_VTNR = 1
 DEVKITPRO = /opt/devkitpro
 # environment
 MAKELEVEL := 0
+# environment
+COLORTERM = truecolor
+# environment
+KONSOLE_DBUS_SESSION = /Sessions/1
 # default
 MAKE = $(MAKE_COMMAND)
 # default
@@ -145,9 +167,11 @@ MAKECMDGOALS := all
 # environment
 DEVKITARM = /opt/devkitpro/devkitARM
 # environment
-SHLVL = 0
+SHLVL = 1
 # makefile (from 'Makefile', line 3)
 CC = gcc
+# environment
+VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-ad1001f9-a6c8-4423-9f73-bd39cb96d600.sock
 # environment
 XDG_SESSION_ID = 3
 # environment
@@ -176,6 +200,8 @@ MAKEFLAGS = pqrR
 MFLAGS = -pqrR
 # automatic
 *D = $(patsubst %/,%,$(dir $*))
+# environment
+SHELL_SESSION_ID = 63464f9e0f094580b424da3314e398ac
 # automatic
 +D = $(patsubst %/,%,$(dir $+))
 # environment
@@ -184,6 +210,8 @@ GDK_BACKEND = x11
 +F = $(notdir $+)
 # environment
 QT_ACCESSIBILITY = 1
+# environment
+COLORFGBG = 15;0
 # environment
 DEFAULTS_PATH = /usr/share/gconf/plasma.default.path
 # default
@@ -199,17 +227,21 @@ SUFFIXES :=
 # environment
 CHROME_DESKTOP = code-url-handler.desktop
 # environment
+KONSOLE_DBUS_SERVICE = :1.33
+# environment
 DEVKITPPC = /opt/devkitpro/devkitPPC
 # default
 .RECIPEPREFIX := 
 # environment
 LANG = C
 # environment
-VSCODE_PID = 2416
+TERM = xterm-256color
+# environment
+VSCODE_PID = 2580
 # environment
 KDE_SESSION_UID = 1000
 # variable set hash-table stats:
-# Load=99/1024=10%, Rehash=0, Collisions=11/127=9%
+# Load=115/1024=11%, Rehash=0, Collisions=17/143=12%
 
 # Pattern-specific Variable Values
 
@@ -250,6 +282,7 @@ check_folder:
 # automatic
 # ? := 
 # variable set hash-table stats:
+ 
 # Load=8/32=25%, Rehash=0, Collisions=1/11=9%
 #  recipe to execute (from 'Makefile', line 31):
 	mkdir -p build
@@ -280,7 +313,6 @@ new: check_folder clean all
 # Not a target:
 .SUFFIXES:
 #  Implicit rule search has not been done.
- 
 #  Modification time never checked.
 #  File has not been updated.
 
@@ -340,6 +372,6 @@ vg: check_folder
 # strcache performance: lookups = 46 / hit rate = 54%
 # hash-table stats:
 # Load=21/8192=0%, Rehash=0, Collisions=1/46=2%
-# Finished Make data base on Mon May  9 10:51:41 2022
+# Finished Make data base on Mon May  9 14:55:39 2022
 
  
