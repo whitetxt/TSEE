@@ -11,6 +11,10 @@
  */
 bool TSEE_Font_Load(TSEE *tsee, char *path, int size, char *name) {
 	TSEE_Font *font = xmalloc(sizeof(*font));
+	if (!font) {
+		TSEE_Error("Failed to malloc for font.\n");
+		return false;
+	}
 	font->font = TTF_OpenFont(path, size);
 	if (font->font == NULL) {
 		TSEE_Warn("Failed to load font `%s` (%s)\n", path, TTF_GetError());

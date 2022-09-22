@@ -30,6 +30,10 @@ bool TSEE_UI_Init(TSEE *tsee) {
  */
 bool TSEE_Toolbar_AddButton(TSEE *tsee, char *font, char *text) {
 	TSEE_Toolbar_Object *toolbarobj = xmalloc(sizeof(*toolbarobj));
+	if (!toolbarobj) {
+		TSEE_Error("Failed to malloc for the toolbar.\n");
+		return false;
+	}
 	toolbarobj->buttons = TSEE_Array_Create();
 	if (!toolbarobj->buttons) {
 		TSEE_Error("Failed to create toolbar button array.\n");
@@ -80,6 +84,10 @@ bool TSEE_Toolbar_AddChild(TSEE *tsee, char *parentName, char *font, char *text,
 	}
 
 	TSEE_Toolbar_Child *child = xmalloc(sizeof(*child));
+	if (!child) {
+		TSEE_Error("Failed to malloc for toolbar child.\n");
+		return false;
+	}
 	if (strcmp(font, "") == 0) font = "_default";
 
 	child->text = TSEE_Text_Create(tsee, font, text, (SDL_Color){255, 255, 255, 255});

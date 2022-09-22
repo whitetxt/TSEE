@@ -7,6 +7,10 @@
  */
 TSEE_Array *TSEE_Array_Create() {
 	TSEE_Array *array = xmalloc(sizeof(*array));
+	if (!array) {
+		TSEE_Error("Failed to malloc for array.\n");
+		return NULL;
+	}
 	array->data = NULL;
 	array->size = 0;
 	return array;
