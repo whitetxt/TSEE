@@ -23,6 +23,7 @@
 #include "ext/tinyfiledialogs.h"
 
 // Include TSEE types
+#include "resources/tsee_resources_types.h"
 #include "util/tsee_util_types.h"
 #include "image/tsee_image_types.h"
 #include "objects/tsee_object_types.h"
@@ -35,6 +36,7 @@
 #include "main/tsee_types.h"
 
 // Include TSEE functions
+#include "resources/tsee_resources_functions.h"
 #include "util/tsee_util_functions.h"
 #include "objects/tsee_object_functions.h"
 #include "image/tsee_image_functions.h"
