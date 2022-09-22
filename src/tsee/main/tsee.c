@@ -10,10 +10,18 @@
 TSEE *TSEE_Create(int width, int height) {
 	TSEE_Log("Initialising TSEE Engine...\n");
 	TSEE *tsee = xmalloc(sizeof(*tsee));
-	tsee->fonts = NULL;
+	if (!tsee) {
+		TSEE_Error("Failed to malloc for TSEE.\n");
+		return NULL;
+	}
+	tsee->resources = NULL;
 
 	// Setup window + renderer
 	tsee->window = xmalloc(sizeof(*tsee->window));
+	if (!tsee->window) {
+		TSEE_Error("Failed to malloc for window.\n");
+		return NULL;
+	}
 	tsee->window->width = width;
 	tsee->window->height = height;
 	tsee->window->running = true;
@@ -22,13 +30,20 @@ TSEE *TSEE_Create(int width, int height) {
 
 	// Setup world + textures
 	tsee->world = xmalloc(sizeof(*tsee->world));
+	if (!tsee->world) {
+		TSEE_Error("Failed to malloc for world.\n");
+		return NULL;
+	}
 	tsee->world->objects = TSEE_Array_Create();
 	tsee->world->scroll_x = 0;
 	tsee->world->scroll_y = 0;
-	tsee->textures = TSEE_Array_Create();
 
 	// Setup player
 	tsee->player = xmalloc(sizeof(*tsee->player));
+	if (!tsee->player) {
+		TSEE_Error("Failed to malloc for player.\n");
+		return NULL;
+	}
 	tsee->player->object = NULL;
 	tsee->player->movement.up = false;
 	tsee->player->movement.down = false;
@@ -46,9 +61,17 @@ TSEE *TSEE_Create(int width, int height) {
 	
 	// Setup UI
 	tsee->ui = xmalloc(sizeof(*tsee->ui));
+	if (!tsee->ui) {
+		TSEE_Error("Failed to malloc for UI.\n");
+		return NULL;
+	}
 
 	// Setup init stuff
 	tsee->init = xmalloc(sizeof(*tsee->init));
+	if (!tsee->init) {
+		TSEE_Error("Failed to malloc for tsee->init");
+		return NULL;
+	}
 	tsee->init->text = false;
 	tsee->init->ui = false;
 	tsee->init->rendering = false;
@@ -57,6 +80,10 @@ TSEE *TSEE_Create(int width, int height) {
 
 	// Setup Debugging Counters
 	tsee->debug = xmalloc(sizeof(*tsee->debug));
+	if (!tsee->debug) {
+		TSEE_Error("Failed to malloc for tsee->debug.\n");
+		return NULL;
+	}
 	tsee->debug->event_time = 0;
 	tsee->debug->physics_time = 0;
 	tsee->debug->render_time = 0;
@@ -108,6 +135,11 @@ bool TSEE_InitAll(TSEE *tsee) {
 		return false;
 	}
 	TSEE_Log("Initialized TSEE UI.\n");
+	if (!TSEE_Resource_Init(tsee)) {
+		TSEE_Critical("Failed to initialize TSEE Resource Module.\n");
+		TSEE_Close(tsee);
+		return false;
+	}
 	TSEE_Log("All TSEE modules initialized.\n");
 	return true;
 }
@@ -129,12 +161,13 @@ bool TSEE_Close(TSEE *tsee) {
 		}
 		TSEE_Array_Destroy(tsee->world->objects);
 	}
-	while (tsee->textures->size > 0) {
+	/*while (tsee->textures->size > 0) {
 		TSEE_Texture *tex = TSEE_Array_Get(tsee->textures, 0);
 		TSEE_Texture_Destroy(tsee, tex);
 	}
 	TSEE_Array_Destroy(tsee->textures);
-	TSEE_Font_UnloadAll(tsee);
+	TSEE_Font_UnloadAll(tsee);*/
+	TSEE_Resource_Unload(tsee);
 	
 	if (tsee->player)
 		xfree(tsee->player);

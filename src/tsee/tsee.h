@@ -23,8 +23,8 @@
 #include "ext/tinyfiledialogs.h"
 
 // Include TSEE types
-#include "resources/tsee_resources_types.h"
 #include "util/tsee_util_types.h"
+#include "resources/tsee_resources_types.h"
 #include "image/tsee_image_types.h"
 #include "objects/tsee_object_types.h"
 #include "UI/tsee_ui_types.h"

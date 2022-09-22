@@ -12,10 +12,3 @@ typedef struct TSEE_Window {
 	SDL_DisplayMode mode;
 	Uint64 last_render;
 } TSEE_Window;
-
-// TSEE's texture wrapper, keeps track of important information for the texture.
-typedef struct TSEE_Texture {
-	SDL_Texture *texture;
-	SDL_Rect rect;
-	char *path;
-} TSEE_Texture;
