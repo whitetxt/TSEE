@@ -36,8 +36,10 @@ typedef struct TSEE_Debug {
 // The main TSEE object, create using TSEE_Create(width, height).
 typedef struct TSEE {
 	TSEE_Window *window;
-	TSEE_Array *textures;
-	TSEE_Array *fonts;
+	// Moved to using a resource manager.
+	//TSEE_Array *textures;
+	//TSEE_Array *fonts;
+	TSEE_ResManager *resources;
 	TSEE_World *world;
 	TSEE_Events *events;
 	TSEE_Player *player;
