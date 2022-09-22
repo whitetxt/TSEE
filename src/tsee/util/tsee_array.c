@@ -45,6 +45,8 @@ bool TSEE_Array_Append(TSEE_Array *arr, void *data) {
 /**
  * @brief Inserts an item into an array at the given index.
  * 
+ * @todo Find out why memmove was segfaulting, for extra performance.
+ * 
  * @param arr The array to insert into
  * @param data The data to insert into the array
  * @param index The index to insert the data at
@@ -65,7 +67,6 @@ bool TSEE_Array_Insert(TSEE_Array *arr, void *data, size_t index) {
 	for (size_t i = arr->size - 1; i > index; i--) {
 		arr->data[i] = arr->data[i - 1];
 	}
-	// TODO: figure out why memmove was segfaulting
 	//xmemmove(arr->data[index], arr->data[index + 1], sizeof(*arr->data) * (arr->size - 1 - index));
 	arr->data[index] = data;
 	return true;
@@ -73,6 +74,8 @@ bool TSEE_Array_Insert(TSEE_Array *arr, void *data, size_t index) {
 
 /**
  * @brief Deletes an item at the given index from an array.
+ * 
+ * @todo Find out why memmove was segfaulting, for extra performance.
  * 
  * @param arr Array to delete from
  * @param index Index of the item to delete.
@@ -86,7 +89,6 @@ bool TSEE_Array_Delete(TSEE_Array *arr, size_t index) {
 	for (size_t i = index; i < arr->size - 1; i++) {
 		arr->data[i] = arr->data[i + 1];
 	}
-	// TODO: figure out why memmove was segfaulting
 	//xmemmove(arr->data[index + 1], arr->data[index], sizeof(*arr->data) * (arr->size - index));
 	arr->data = xrealloc(arr->data, sizeof(*arr->data) * (--arr->size));
 	if (arr->size == 0 && arr->data) {
@@ -94,6 +96,22 @@ bool TSEE_Array_Delete(TSEE_Array *arr, size_t index) {
 		arr->data = NULL;
 	}
 	return true;
+}
+
+/**
+ * @brief Deletes an item from an array.
+ * 
+ * @param arr Array to delete from
+ * @param data Data to delete.
+ * @return true on success, false on failure.
+ */
+bool TSEE_Array_DeleteItem(TSEE_Array *arr, void *data) {
+	int idx = TSEE_Array_GetIndex(arr, data);
+	if (idx == -1) {
+		TSEE_Warn("Attempted to delete non-existant item from array.\n");
+		return false;
+	}
+	return TSEE_Array_Delete(arr, idx);
 }
 
 /**
@@ -110,6 +128,22 @@ void *TSEE_Array_Get(TSEE_Array *arr, size_t index) {
 	}
 	if (!arr->data[index]) TSEE_Warn("Data value in array at index `%zu` is NULL\n", index);
 	return arr->data[index];
+}
+
+/**
+ * @brief Returns the index for a given item.
+ * 
+ * @param arr Array to search
+ * @param data Data to compare against
+ * @return Index on success, -1 on failure.
+ */
+int TSEE_Array_GetIndex(TSEE_Array *arr, void *data) {
+	for (size_t i = 0; i < arr->size; i++) {
+		if (arr->data[i] == data) {
+			return i;
+		}
+	}
+	return -1;
 }
 
 /**
