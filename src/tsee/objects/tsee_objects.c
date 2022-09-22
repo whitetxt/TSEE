@@ -27,6 +27,10 @@ TSEE_Object *TSEE_Object_Create(TSEE *tsee, TSEE_Texture *texture, TSEE_Object_A
 		return NULL;
 	}
 	TSEE_Object *obj = xmalloc(sizeof(*obj));
+	if (!obj) {
+		TSEE_Error("Failed to malloc for object.\n");
+		return NULL;
+	}
 	obj->texture = texture;
 	TSEE_Object_SetPosition(tsee, obj, x, y);
 

@@ -40,6 +40,10 @@ bool TSEE_Object_Init(TSEE *tsee, bool loadDefault) {
  */
 TSEE_Object *TSEE_Text_Create(TSEE *tsee, char *fontName, char *text, SDL_Color color) {
 	TSEE_Object *textObj = xmalloc(sizeof(*textObj));
+	if (!textObj) {
+		TSEE_Error("Failed to malloc for text object.\n");
+		return NULL;
+	}
 	TTF_Font *font = TSEE_Font_Get(tsee, fontName);
 	if (!font) {
 		TSEE_Warn("Failed to create text `%s` with font `%s` (Failed to get font)\n", text, fontName);
@@ -47,6 +51,10 @@ TSEE_Object *TSEE_Text_Create(TSEE *tsee, char *fontName, char *text, SDL_Color 
 	}
 	textObj->text.text = strdup(text);
 	textObj->texture = xmalloc(sizeof(*textObj->texture));
+	if (!textObj->texture) {
+		TSEE_Error("Failed to malloc for text object's texture.\n");
+		return NULL;
+	}
 	textObj->texture->path = NULL;
 	SDL_Surface *surf = TTF_RenderText_Blended(font, text, color);
 	if (!surf) {

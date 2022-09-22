@@ -9,17 +9,18 @@
  * @return TSEE_Texture* 
  */
 TSEE_Texture *TSEE_Texture_Create(TSEE *tsee, char *path) {
-	for (size_t i = 0; i < tsee->textures->size; i++) {
-		TSEE_Texture *existingTexture = (TSEE_Texture *)TSEE_Array_Get(tsee->textures, i);
-		if (strcmp(existingTexture->path, path) == 0) {
-			TSEE_Texture *newTexture = xmalloc(sizeof(*newTexture));
-			newTexture->texture = existingTexture->texture;
-			SDL_QueryTexture(newTexture->texture, NULL, NULL, &newTexture->rect.w, &newTexture->rect.h);
-			newTexture->rect = (SDL_Rect){0, 0, newTexture->rect.w, newTexture->rect.h};
-			newTexture->path = strdup(path);
-			TSEE_Array_Append(tsee->textures, newTexture);
-			return newTexture;
+	TSEE_Image *img = NULL;
+	if (img = TSEE_Resource_Image_Find(tsee, path)) {
+		TSEE_Texture *newTexture = xmalloc(sizeof(*newTexture));
+		if (!newTexture) {
+			TSEE_Error("Couldn't malloc memory for texture `%s`\n", path);
+			return NULL;
 		}
+		newTexture->image = img;
+		SDL_QueryTexture(img->texture, NULL, NULL, &newTexture->rect.w, &newTexture->rect.h);
+		newTexture->rect = (SDL_Rect){0, 0, newTexture->rect.w, newTexture->rect.h};
+		TSEE_Resource_Texture_Store(tsee, newTexture);
+		return newTexture;
 	}
 	TSEE_Texture *texture = xmalloc(sizeof(*texture));
 	if (!texture) {
@@ -32,12 +33,21 @@ TSEE_Texture *TSEE_Texture_Create(TSEE *tsee, char *path) {
 		xfree(texture);
 		return NULL;
 	}
-	texture->texture = tex;
+	TSEE_Image *img = xmalloc(sizeof(*img));
+	if (!img) {
+		TSEE_Error("Couldn't malloc for image `%s`\n", path);
+		xfree(tex);
+		xfree(texture);
+		return NULL;
+	}
+	img->texture = tex;
+	img->path = strdup(path);
+	TSEE_Resource_Image_Store(tsee, img);
+
 	SDL_QueryTexture(tex, NULL, NULL, &texture->rect.w, &texture->rect.h);
-	texture->rect.x = 0;
-	texture->rect.y = 0;
-	texture->path = strdup(path);
-	TSEE_Array_Append(tsee->textures, texture);
+	texture->image = img;
+	texture->rect = (SDL_Rect){0, 0, texture->rect.w, texture->rect.h};
+	TSEE_Resource_Texture_Store(tsee, texture);
 	return texture;
 }
 

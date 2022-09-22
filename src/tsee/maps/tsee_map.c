@@ -267,6 +267,10 @@ bool TSEE_Map_Save(TSEE *tsee, char *fn) {
 		if (!texture->path) continue;
 		if (!texturesSeen) {
 			texturesSeen = xmalloc(sizeof(*texturesSeen) * ++numTextures);
+			if (!texturesSeen) {
+				TSEE_Error("Failed to malloc for new texture.\n");
+				return false;
+			}
 			texturesSeen[0] = strdup(texture->path);
 		}
 		bool found = false;
