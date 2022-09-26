@@ -27,3 +27,5 @@ From platformers to top-down shooters, anything 2D you can think of, it could be
 All documentation is provided in the form of doxygen comments at the start of functions.
 
 Functions are named in the form "TSEE_\<Scope>_\<Function>" (e.g TSEE_Object_Create or TSEE_Object_Destroy)
+
+The full documentation can be generated using the tsee.dxg config with doxygen.
