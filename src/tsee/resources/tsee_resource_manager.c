@@ -8,6 +8,7 @@ bool TSEE_Resource_Init(TSEE *tsee) {
 	}
 	tsee->resources->textures = TSEE_Array_Create();
 	tsee->resources->fonts = TSEE_Array_Create();
+	tsee->init->resources = true;
 	return true;
 }
 
@@ -41,6 +42,7 @@ bool TSEE_Resource_Unload(TSEE *tsee) {
  * @return TSEE_Texture* on success, NULL on failure.
  */
 TSEE_Texture *TSEE_Resource_Texture_Get(TSEE *tsee, char *path) {
+	if (!tsee->resources) return NULL;
 	for (size_t i = 0; i < tsee->resources->textures->size; i++) {
 		TSEE_Texture *tex = TSEE_Array_Get(tsee->resources->textures, i);
 		if (strcmp(path, tex->path) == 0) {
@@ -57,6 +59,7 @@ TSEE_Texture *TSEE_Resource_Texture_Get(TSEE *tsee, char *path) {
  * @return success status
  */
 bool TSEE_Resource_Texture_Store(TSEE *tsee, TSEE_Texture *tex) {
+	if (!tsee->resources) return false;
 	return TSEE_Array_Append(tsee->resources->textures, tex);
 }
 
@@ -68,6 +71,7 @@ bool TSEE_Resource_Texture_Store(TSEE *tsee, TSEE_Texture *tex) {
  * @return success status
  */
 bool TSEE_Resource_Texture_Delete(TSEE *tsee, TSEE_Texture *tex) {
+	if (!tsee->resources) return false;
 	return TSEE_Array_DeleteItem(tsee->resources->textures, tex);
 }
 
@@ -78,6 +82,7 @@ bool TSEE_Resource_Texture_Delete(TSEE *tsee, TSEE_Texture *tex) {
  * @return success status
  */
 bool TSEE_Resource_Texture_DeletePath(TSEE *tsee, char *path) {
+	if (!tsee->resources) return false;
 	TSEE_Texture *tex = TSEE_Resource_Texture_Get(tsee, path);
 	if (!tex) {
 		TSEE_Warn("Attempted to delete non-existant resource `%s`\n", path);
@@ -99,6 +104,7 @@ bool TSEE_Resource_Texture_DeletePath(TSEE *tsee, char *path) {
  * @return TSEE_Font* on success, NULL on fail.
  */
 TSEE_Font *TSEE_Resource_Font_Get(TSEE *tsee, char *name) {
+	if (!tsee->resources) return NULL;
 	for (size_t i = 0; i < tsee->resources->fonts->size; i++) {
 		TSEE_Font *foundFont = TSEE_Array_Get(tsee->resources->fonts, i);
 		if (strcmp(name, foundFont->name) == 0) {
@@ -116,6 +122,7 @@ TSEE_Font *TSEE_Resource_Font_Get(TSEE *tsee, char *name) {
  * @return if the operation succeeded.
  */
 bool TSEE_Resource_Font_Store(TSEE *tsee, TSEE_Font *font) {
+	if (!tsee->resources) return false;
 	if (TSEE_Resource_Font_Get(tsee, font->name) == font) {
 		TSEE_Warn("Storing duplicate font: `%s`\n", font->name);
 	}
@@ -129,5 +136,6 @@ bool TSEE_Resource_Font_Store(TSEE *tsee, TSEE_Font *font) {
  * @return if the operation succeeded.
  */
 bool TSEE_Resource_Font_Delete(TSEE *tsee, TSEE_Font *font) {
+	if (!tsee->resources) return false;
 	return TSEE_Array_DeleteItem(tsee->resources->fonts, font);
 }

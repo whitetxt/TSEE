@@ -16,6 +16,7 @@ typedef struct TSEE_Init {
 	bool events;
 	bool input;
 	bool ui;
+	bool resources;
 } TSEE_Init;
 
 typedef struct TSEE_Debug_RenderTimes {

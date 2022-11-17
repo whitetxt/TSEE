@@ -24,7 +24,7 @@ void TSEE_Parallax_Destroy(TSEE *tsee, TSEE_Object *para, bool destroyTexture);
 
 // Text
 
-bool TSEE_Object_Init(TSEE *tsee, bool loadDefault);
+bool TSEE_Text_Init(TSEE *tsee, bool loadDefault);
 bool TSEE_Font_Load(TSEE *tsee, char *path, int size, char *name);
 bool TSEE_Font_Unload(TSEE *tsee, TSEE_Font *font);
 bool TSEE_Font_UnloadName(TSEE *tsee, char *name);

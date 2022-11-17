@@ -6,17 +6,18 @@
  * @param loadDefault True to load the default font, false to not.
  * @return success status
  */
-bool TSEE_Object_Init(TSEE *tsee, bool loadDefault) {
-  if (tsee->init->text)
-    return true;
+bool TSEE_Text_Init(TSEE *tsee, bool loadDefault) {
+  if (tsee->init->text) return true;
 
   if (TTF_Init() == -1) {
     TSEE_Error("Failed to init SDL_TTF (%s)\n", TTF_GetError());
     return false;
   }
   if (loadDefault) {
-    tsee->init->text =
-        TSEE_Font_Load(tsee, "fonts/default.ttf", 16, "_default");
+    tsee->init->text = TSEE_Font_Load(tsee, "fonts/default.ttf", 16, "_default");
+    if (!tsee->init->text)
+      TSEE_Error("Failed to load default font.\n");
+
     return tsee->init->text;
   }
   tsee->init->text = true;

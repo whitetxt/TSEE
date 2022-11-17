@@ -106,37 +106,43 @@ TSEE *TSEE_Create(int width, int height) {
 bool TSEE_InitAll(TSEE *tsee) {
 	TSEE_Log("Initialising TSEE modules...\n");
 	if (!TSEE_Rendering_Init(tsee)) {
-		TSEE_Critical("Failed to initialize TSEE Rendering Module.\n");
+		TSEE_Critical("Failed to initialize the TSEE Rendering Module.\n");
 		TSEE_Close(tsee);
 		return false;
 	}
 	TSEE_Log("Initialized TSEE Rendering.\n");
-	if (!TSEE_Object_Init(tsee, true)) {
-		TSEE_Critical("Failed to initialize TSEE Text Module.\n");
+	if (!TSEE_Resource_Init(tsee)) {
+		TSEE_Critical("Failed to initialise the TSEE resource manager.\n");
+		TSEE_Close(tsee);
+		return false;
+	}
+	TSEE_Log("Initialised TSEE Resource Manager.\n");
+	if (!TSEE_Text_Init(tsee, true)) {
+		TSEE_Critical("Failed to initialize the TSEE Text Module.\n");
 		TSEE_Close(tsee);
 		return false;
 	}
 	TSEE_Log("Initialized TSEE Text.\n");
 	if (!TSEE_Events_Init(tsee)) {
-		TSEE_Critical("Failed to initialize TSEE Events Module.\n");
+		TSEE_Critical("Failed to initialize the TSEE Events Module.\n");
 		TSEE_Close(tsee);
 		return false;
 	}
 	TSEE_Log("Initialized TSEE Events.\n");
 	if (!TSEE_Input_Init(tsee)) {
-		TSEE_Critical("Failed to initialize TSEE Input Module.\n");
+		TSEE_Critical("Failed to initialize the TSEE Input Module.\n");
 		TSEE_Close(tsee);
 		return false;
 	}
 	TSEE_Log("Initialized TSEE Input.\n");
 	if (!TSEE_UI_Init(tsee)) {
-		TSEE_Critical("Failed to initialize TSEE UI Module.\n");
+		TSEE_Critical("Failed to initialize the TSEE UI Module.\n");
 		TSEE_Close(tsee);
 		return false;
 	}
 	TSEE_Log("Initialized TSEE UI.\n");
 	if (!TSEE_Resource_Init(tsee)) {
-		TSEE_Critical("Failed to initialize TSEE Resource Module.\n");
+		TSEE_Critical("Failed to initialize the TSEE Resource Module.\n");
 		TSEE_Close(tsee);
 		return false;
 	}
@@ -151,7 +157,9 @@ bool TSEE_InitAll(TSEE *tsee) {
  * @return success status
  */
 bool TSEE_Close(TSEE *tsee) {
-	tsee->window->running = false;
+	if (tsee->window)
+		tsee->window->running = false;
+
 	if (tsee->world->objects) {
 		if (tsee->world->objects->data) {
 			for (size_t i = 0; i < tsee->world->objects->size; i++) {
@@ -161,12 +169,6 @@ bool TSEE_Close(TSEE *tsee) {
 		}
 		TSEE_Array_Destroy(tsee->world->objects);
 	}
-	/*while (tsee->textures->size > 0) {
-		TSEE_Texture *tex = TSEE_Array_Get(tsee->textures, 0);
-		TSEE_Texture_Destroy(tsee, tex);
-	}
-	TSEE_Array_Destroy(tsee->textures);
-	TSEE_Font_UnloadAll(tsee);*/
 	TSEE_Resource_Unload(tsee);
 	
 	if (tsee->player)
