@@ -28,6 +28,9 @@ bool TSEE_Vec2_Normalise(TSEE_Vec2 *vec) {
 		TSEE_Error("Attempted to normalise a NULL vector\n");
 		return false;
 	}
+	if (vec->x + vec->y == 0) {
+		return false;
+	}
 
 	double len = sqrt(vec->x * vec->x + vec->y * vec->y);
 	if (len == 0) {

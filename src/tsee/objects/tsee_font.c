@@ -54,7 +54,8 @@ bool TSEE_Font_UnloadName(TSEE *tsee, char *name) {
 		TSEE_Warn("Attempted to unload non-existant font `%s`\n", name);
 		return false;
 	}
-	TSEE_Font_Unload(tsee, font);
+	return TSEE_Font_Unload(tsee, font);
+	
 }
 
 /**

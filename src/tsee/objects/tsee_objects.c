@@ -160,7 +160,8 @@ bool TSEE_Object_Render(TSEE *tsee, TSEE_Object *object) {
  */
 void TSEE_Object_Destroy(TSEE *tsee, TSEE_Object *object, bool destroyTexture) {
 	if (destroyTexture) {
-		TSEE_Texture_Destroy(tsee, object->texture);
+		TSEE_Texture_Destroy(object->texture);
+		TSEE_Resource_Texture_Delete(tsee, object->texture);
 	}
 	if (TSEE_Object_CheckAttribute(object, TSEE_ATTRIB_TEXT)) {
 		xfree(object->text.text);
