@@ -26,9 +26,10 @@ void TSEE_Parallax_Destroy(TSEE *tsee, TSEE_Object *para, bool destroyTexture);
 
 bool TSEE_Object_Init(TSEE *tsee, bool loadDefault);
 bool TSEE_Font_Load(TSEE *tsee, char *path, int size, char *name);
-bool TSEE_Font_Unload(TSEE *tsee, char *name);
+bool TSEE_Font_Unload(TSEE *tsee, TSEE_Font *font);
+bool TSEE_Font_UnloadName(TSEE *tsee, char *name);
 bool TSEE_Font_UnloadAll(TSEE *tsee);
-TTF_Font *TSEE_Font_Get(TSEE *tsee, char *name);
+TSEE_Font *TSEE_Font_Get(TSEE *tsee, char *name);
 TSEE_Object *TSEE_Text_Create(TSEE *tsee, char *fontName, char *text, SDL_Color color);
 bool TSEE_Text_Render(TSEE *tsee, TSEE_Object *text);
 void TSEE_Text_Destroy(TSEE *tsee, TSEE_Object *text, bool destroyTexture);

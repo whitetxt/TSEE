@@ -36,7 +36,7 @@ TSEE_Texture *TSEE_Texture_Create(TSEE *tsee, char *path) {
 	tex->texture = stex;
 	tex->path = strdup(path);
 
-	SDL_QueryTexture(tex, NULL, NULL, &tex->rect.w, &tex->rect.h);
+	SDL_QueryTexture(stex, NULL, NULL, &tex->rect.w, &tex->rect.h);
 	tex->rect = (SDL_Rect){0, 0, tex->rect.w, tex->rect.h};
 	TSEE_Resource_Texture_Store(tsee, tex);
 	return tex;
@@ -50,7 +50,7 @@ TSEE_Texture *TSEE_Texture_Create(TSEE *tsee, char *path) {
  * @return TSEE_Texture* 
  */
 TSEE_Texture *TSEE_Texture_Find(TSEE *tsee, char *path) {
-	TSEE_Texture *texture = TSEE_Resource_Texture_Find(tsee, path);
+	TSEE_Texture *texture = TSEE_Resource_Texture_Get(tsee, path);
 	if (!texture) {
 		TSEE_Warn("Couldn't find texture `%s`\n", path);
 		return NULL;
@@ -63,7 +63,7 @@ TSEE_Texture *TSEE_Texture_Find(TSEE *tsee, char *path) {
  * 
  * @param tex Texture to destroy
  */
-void TSEE_Texture_Destroy(TSEE *tsee, TSEE_Texture *tex) {
+void TSEE_Texture_Destroy(TSEE_Texture *tex) {
 	if (!tex) return;
 	if (tex->path)
 		xfree(tex->path)

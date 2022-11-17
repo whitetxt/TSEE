@@ -37,7 +37,7 @@ void TSEE_Settings_LoadCallback(TSEE *tsee, char *section, char *value) {
  * @brief Loads TSEE's internal settings.
  * 
  * @param tsee TSEE object to load into.
- * @return true on success, false on fail.
+ * @return success status
  */
 bool TSEE_Settings_Load(TSEE *tsee) {
 	FILE *fp = fopen("TSEE-Settings.ini", "r");
@@ -60,7 +60,7 @@ bool TSEE_Settings_Load(TSEE *tsee) {
  * @brief Saves TSEE's internal settings.
  * 
  * @param tsee TSEE object to save.
- * @return true on success, false on fail.
+ * @return success status
  */
 bool TSEE_Settings_Save(TSEE *tsee) {
 	FILE *fp = fopen("TSEE-Settings.ini", "w");

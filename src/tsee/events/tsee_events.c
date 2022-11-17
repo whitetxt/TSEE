@@ -4,7 +4,7 @@
  * @brief Initialises the event subsystem.
  * 
  * @param tsee TSEE object to initialise.
- * @return true on success, false on fail.
+ * @return success status
  */
 bool TSEE_Events_Init(TSEE *tsee) {
 	if (tsee->init->events) {
@@ -33,7 +33,7 @@ bool TSEE_Events_Init(TSEE *tsee) {
  * @brief Handler for all events
  * 
  * @param tsee TSEE object to handle for.
- * @return true on success, false on fail.
+ * @return success status
  */
 bool TSEE_Events_Handle(TSEE *tsee) {
 	Uint64 start = SDL_GetPerformanceCounter();

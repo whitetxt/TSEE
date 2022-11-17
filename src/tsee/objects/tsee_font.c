@@ -7,7 +7,7 @@
  * @param path Path to the font file.
  * @param size Font size
  * @param name Name of the font.
- * @return true on success, false on fail.
+ * @return success status
  */
 bool TSEE_Font_Load(TSEE *tsee, char *path, int size, char *name) {
 	TSEE_Font *font = xmalloc(sizeof(*font));
@@ -26,16 +26,14 @@ bool TSEE_Font_Load(TSEE *tsee, char *path, int size, char *name) {
 }
 
 /**
- * @brief Unloads a font from a TSEE object
+ * @brief Unloads a font by its pointer.
  * 
- * @param tsee TSEE object to find the font in.
- * @param name Name of the font to unload
- * @return true on success, false on fail.
+ * @param font Pointer to the font to unload.
+ * @return success status
  */
-bool TSEE_Font_Unload(TSEE *tsee, char *name) {
-	TSEE_Font *font = TSEE_Resource_Font_Get(tsee, name);
+bool TSEE_Font_Unload(TSEE *tsee, TSEE_Font *font) {
 	if (!font) {
-		TSEE_Warn("Attempted to unload non-existant font `%s`\n", name);
+		TSEE_Warn("Attempted to unload NULL font\n");
 		return false;
 	}
 	TTF_CloseFont(font->font);
@@ -45,10 +43,25 @@ bool TSEE_Font_Unload(TSEE *tsee, char *name) {
 }
 
 /**
+ * @brief Unloads a font from a TSEE object identified by its name
+ * 
+ * @param name Name of the font to unload
+ * @return success status
+ */
+bool TSEE_Font_UnloadName(TSEE *tsee, char *name) {
+	TSEE_Font *font = TSEE_Resource_Font_Get(tsee, name);
+	if (!font) {
+		TSEE_Warn("Attempted to unload non-existant font `%s`\n", name);
+		return false;
+	}
+	TSEE_Font_Unload(tsee, font);
+}
+
+/**
  * @brief Unloads all fonts in a TSEE object.
  * 
  * @param tsee TSEE object to unload all fonts in.
- * @return true on success, false on fail.
+ * @return success status
  */
 bool TSEE_Font_UnloadAll(TSEE *tsee) {
 	while (tsee->resources->fonts->size > 0) {
@@ -65,13 +78,15 @@ bool TSEE_Font_UnloadAll(TSEE *tsee) {
  * @param name Name of the font.
  * @return TTF_Font* 
  */
-TTF_Font *TSEE_Font_Get(TSEE *tsee, char *name) {
-	for (size_t i = 0; i < tsee->fonts->size; i++) {
-		TSEE_Font *data = TSEE_Array_Get(tsee->fonts, i);
-		if (strcmp(data->name, name) == 0) {
-			return data->font;
-		}
+TSEE_Font *TSEE_Font_Get(TSEE *tsee, char *name) {
+	if (!name) {
+		TSEE_Warn("Attempted to get font with no name.\n");
+		return NULL;
 	}
-	TSEE_Warn("Failed to find font `%s`\n", name);
-	return NULL;
+	TSEE_Font *font = TSEE_Resource_Font_Get(tsee, name);
+	if (!font) {
+		TSEE_Warn("Failed to find font `%s`\n", name);
+		return NULL;
+	}
+	return font;
 }

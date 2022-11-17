@@ -1,5 +1,6 @@
 {
 	"C_Cpp.dimInactiveRegions": true,
+	"editor.formatOnSave": true,
 	"files.associations": {
 		"typeinfo": "c"
 	}

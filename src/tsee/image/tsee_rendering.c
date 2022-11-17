@@ -4,7 +4,7 @@
  * @brief Initialises rendering for a TSEE object.
  * 
  * @param tsee TSEE object to initialise
- * @return true on success, false on fail.
+ * @return success status
  */
 bool TSEE_Rendering_Init(TSEE *tsee) {
 	if (tsee->init->rendering) {
@@ -78,7 +78,7 @@ void TSEE_Window_Destroy(TSEE_Window *window) {
  * 
  * @param tsee TSEE object with the window in it.
  * @param title New title of the window.
- * @return true on success, false on fail.
+ * @return success status
  */
 bool TSEE_Window_SetTitle(TSEE *tsee, char *title) {
 	if (tsee->window->window == NULL) {
@@ -95,7 +95,7 @@ bool TSEE_Window_SetTitle(TSEE *tsee, char *title) {
  * @brief Render everything inside a TSEE object.
  * 
  * @param tsee TSEE object to render
- * @return true on success, false on fail.
+ * @return success status
  */
 bool TSEE_RenderAll(TSEE *tsee) {
 	Uint64 start = SDL_GetPerformanceCounter();

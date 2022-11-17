@@ -34,7 +34,7 @@ int TSEE_Array_Extend(TSEE_Array *arr, int size) {
  * 
  * @param arr Array to append to
  * @param data Data to append
- * @return true on success, false on fail.
+ * @return success status
  */
 bool TSEE_Array_Append(TSEE_Array *arr, void *data) {
 	TSEE_Array_Extend(arr, 1);
@@ -50,7 +50,7 @@ bool TSEE_Array_Append(TSEE_Array *arr, void *data) {
  * @param arr The array to insert into
  * @param data The data to insert into the array
  * @param index The index to insert the data at
- * @return true on success, false on fail.
+ * @return success status
  */
 bool TSEE_Array_Insert(TSEE_Array *arr, void *data, size_t index) {
 	if (!arr || !data) {
@@ -79,7 +79,7 @@ bool TSEE_Array_Insert(TSEE_Array *arr, void *data, size_t index) {
  * 
  * @param arr Array to delete from
  * @param index Index of the item to delete.
- * @return true on success, false on fail.
+ * @return success status
  */
 bool TSEE_Array_Delete(TSEE_Array *arr, size_t index) {
 	if (index >= arr->size) {
@@ -151,7 +151,7 @@ int TSEE_Array_GetIndex(TSEE_Array *arr, void *data) {
  * Note: Does not free the data.
  * 
  * @param arr Array to clear
- * @return true on success, false on fail.
+ * @return success status
  */
 bool TSEE_Array_Clear(TSEE_Array *arr) {
 	if (!arr) return false;
@@ -167,7 +167,7 @@ bool TSEE_Array_Clear(TSEE_Array *arr) {
  * Note: Does not free the array's data.
  * 
  * @param arr Array to destroy
- * @return true on success, false on fail.
+ * @return success status
  */
 bool TSEE_Array_Destroy(TSEE_Array *arr) {
 	if (!arr) return false;

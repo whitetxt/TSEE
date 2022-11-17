@@ -73,7 +73,7 @@ bool TSEE_WriteFile(void *src, size_t size, size_t n, FILE *fp) {
  * 
  * @param tsee TSEE object to load the map into.
  * @param fn File name to load from.
- * @return true on success, false on fail.
+ * @return success status
  */
 bool TSEE_Map_Load(TSEE *tsee, char *fn) {
 	// Open the file
@@ -232,7 +232,7 @@ bool TSEE_Map_Load(TSEE *tsee, char *fn) {
  * 
  * @param tsee TSEE object to save.
  * @param fn File name to save to.
- * @return true on success, false on fail.
+ * @return success status
  */
 bool TSEE_Map_Save(TSEE *tsee, char *fn) {
 	FILE *fp = fopen(fn, "wb");

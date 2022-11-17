@@ -3,27 +3,20 @@
 /**
  * @brief Initialises the text subsystem.
  * 
- * @param tsee TSEE object to initialise text for.
  * @param loadDefault True to load the default font, false to not.
- * @return true on success, false on fail.
+ * @return success status
  */
 bool TSEE_Object_Init(TSEE *tsee, bool loadDefault) {
-	if (tsee->init->text) {
+	if (tsee->init->text)
 		return true;
-	}
+
 	if (TTF_Init() == -1) {
 		TSEE_Error("Failed to init SDL_TTF (%s)\n", TTF_GetError());
 		return false;
 	}
-	tsee->fonts = TSEE_Array_Create();
 	if (loadDefault) {
-		if (TSEE_Font_Load(tsee, "fonts/default.ttf", 16, "_default")) {
-			tsee->init->text = true;
-			return true;
-		} else {
-			tsee->init->text = false;
-			return false;
-		}
+		tsee->init->text = TSEE_Font_Load(tsee, "fonts/default.ttf", 16, "_default");
+		return tsee->init->text;
 	}
 	tsee->init->text = true;
 	return true;
@@ -32,7 +25,6 @@ bool TSEE_Object_Init(TSEE *tsee, bool loadDefault) {
 /**
  * @brief Creates a text object with from a font, text and colour.
  * 
- * @param tsee TSEE object to create the text for.
  * @param fontName Name of the font to use.
  * @param text Text to display.
  * @param color Colour of the text.
@@ -44,7 +36,7 @@ TSEE_Object *TSEE_Text_Create(TSEE *tsee, char *fontName, char *text, SDL_Color 
 		TSEE_Error("Failed to malloc for text object.\n");
 		return NULL;
 	}
-	TTF_Font *font = TSEE_Font_Get(tsee, fontName);
+	TSEE_Font *font = TSEE_Font_Get(tsee, fontName);
 	if (!font) {
 		TSEE_Warn("Failed to create text `%s` with font `%s` (Failed to get font)\n", text, fontName);
 		return NULL;
@@ -56,7 +48,7 @@ TSEE_Object *TSEE_Text_Create(TSEE *tsee, char *fontName, char *text, SDL_Color 
 		return NULL;
 	}
 	textObj->texture->path = NULL;
-	SDL_Surface *surf = TTF_RenderText_Blended(font, text, color);
+	SDL_Surface *surf = TTF_RenderText_Blended(font->font, text, color);
 	if (!surf) {
 		TSEE_Warn("Failed to create text `%s` with font `%s` (Failed to create surface)\n", text, fontName);
 		return NULL;
@@ -67,7 +59,7 @@ TSEE_Object *TSEE_Text_Create(TSEE *tsee, char *fontName, char *text, SDL_Color 
 	textObj->attributes = TSEE_ATTRIB_TEXT | TSEE_ATTRIB_UI;
 	SDL_QueryTexture(textObj->texture->texture, NULL, NULL, &textObj->texture->rect.w, &textObj->texture->rect.h);
 	SDL_FreeSurface(surf);
-	TSEE_Array_Append(tsee->textures, textObj->texture);
+	TSEE_Resource_Texture_Store(tsee, textObj->texture);
 	return textObj;
 }
 
@@ -80,7 +72,7 @@ TSEE_Object *TSEE_Text_Create(TSEE *tsee, char *fontName, char *text, SDL_Color 
 void TSEE_Text_Destroy(TSEE *tsee, TSEE_Object *text, bool destroyTexture) {
 	if (!TSEE_Object_CheckAttribute(text, TSEE_ATTRIB_TEXT)) return;
 	if (destroyTexture) {
-		TSEE_Texture_Destroy(tsee, text->texture);
+		TSEE_Texture_Destroy(text->texture);
 	}
 	xfree(text->text.text);
 	xfree(text);
@@ -91,7 +83,7 @@ void TSEE_Text_Destroy(TSEE *tsee, TSEE_Object *text, bool destroyTexture) {
  * 
  * @param tsee TSEE object to render the text to.
  * @param text Text object to render.
- * @return true on success, false on fail.
+ * @return success status
  */
 bool TSEE_Text_Render(TSEE *tsee, TSEE_Object *text) {
 	if (!TSEE_Object_CheckAttribute(text, TSEE_ATTRIB_TEXT)) return false;

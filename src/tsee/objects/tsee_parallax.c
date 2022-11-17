@@ -54,7 +54,7 @@ TSEE_Object *TSEE_Parallax_CreateFromObject(TSEE *tsee, TSEE_Object *obj, float 
  * 
  * @param tsee TSEE object to render.
  * @param parallax Parallax object to render.
- * @return true on success, false on fail.
+ * @return success status
  */
 bool TSEE_Parallax_Render(TSEE *tsee, TSEE_Object *parallax) {
 	Uint64 start = 0;
