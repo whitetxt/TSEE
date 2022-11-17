@@ -20,7 +20,7 @@ bool TSEE_Resource_Unload(TSEE *tsee) {
 	if (!tsee->resources) return false;
 	while (tsee->resources->textures->size > 0) {
 		TSEE_Texture *tex = TSEE_Array_Get(tsee->resources->textures, 0);
-		TSEE_Texture_Destroy(tsee, tex);
+		TSEE_Texture_Destroy(tex);
 		TSEE_Array_Delete(tsee->resources->textures, 0);
 	}
 	TSEE_Array_Destroy(tsee->resources->textures);
@@ -31,6 +31,7 @@ bool TSEE_Resource_Unload(TSEE *tsee) {
 	}
 	TSEE_Array_Destroy(tsee->resources->fonts);
 	tsee->resources->fonts = TSEE_Array_Create();
+	return true;
 }
 
 /**

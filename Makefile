@@ -1,27 +1,28 @@
 out = build/TSEE
 
 CC = gcc
-CFLAGS = -Wall -Wextra -pedantic -fstack-protector -fno-common -rdynamic -lz -lm ${pkg-config --cflags sdl2 SDL2_image SDL2_ttf}
-LD = $(CC)
+CFLAGS = -Wall -Wextra -Wshadow -Wstrict-aliasing -Wstrict-overflow  -pedantic -fstack-protector-all -fno-common -rdynamic ${shell pkg-config --cflags sdl2 SDL2_image SDL2_ttf}
 
-LDFLAGS = ${pkg-config --libs sdl2 SDL2_image SDL2_ttf}
+LD = $(CC)
+LDFLAGS = ${shell pkg-config --libs sdl2 SDL2_image SDL2_ttf} -lm -lz
 
 files = ${wildcard src/*.c src/tsee/*/*.c}
 obj = ${files:.c=.o}
 
 ifeq ($(DEV),1)
 CFLAGS += -DTSEE_DEV -g
+OPT = 
 else
-CFLAGS += -O3
+OPT = -O3 -flto
 endif
 
 all: check_folder $(out)
 
 $(out): $(obj)
-	$(LD) $(LDFLAGS) -o $@ $(obj) $(LIBS)
+	$(LD) -o $@ $(obj) $(LDFLAGS)
 
 .c.o:
-	$(CC) $(CFLAGS) -c -o $@ $<
+	$(CC) $(OPT) -c -o $@ $< $(CFLAGS)
 
 clean: check_folder
 	-rm -rf ${out}

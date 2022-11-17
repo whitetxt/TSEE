@@ -99,7 +99,8 @@ bool TSEE_Parallax_Render(TSEE *tsee, TSEE_Object *parallax) {
  */
 void TSEE_Parallax_Destroy(TSEE *tsee, TSEE_Object *para, bool destroyTexture) {
 	if (destroyTexture) {
-		TSEE_Texture_Destroy(tsee, para->texture);
+		TSEE_Texture_Destroy(para->texture);
+		TSEE_Resource_Texture_Delete(tsee, para->texture);
 	}
 	xfree(para);
 }
