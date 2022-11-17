@@ -55,4 +55,4 @@ build/TSEE
 git_resources/
 
 # Don't push docs lmao
-src/docs/
+docs/

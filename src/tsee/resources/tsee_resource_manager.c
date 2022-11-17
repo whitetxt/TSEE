@@ -14,6 +14,16 @@ bool TSEE_Resource_Init(TSEE *tsee) {
 
 bool TSEE_Resource_Unload(TSEE *tsee) {
 	if (!tsee->resources) return false;
+	while (tsee->resources->images->size > 0) {
+		TSEE_Image *img = TSEE_Array_Get(tsee->resources->images, 0);
+		xfree(img->path);
+		TSEE_Array_Delete(tsee->resources->images, 0);
+	}
+	while (tsee->resources->fonts->size > 0) {
+		TSEE_Font *font = TSEE_Array_Get(tsee->resources->fonts, 0);
+		xfree(font->name);
+		TSEE_Font_Unload(tsee, TTF_FontFaceIsFixedWidth);
+	}
 }
 
 bool TSEE_Resource_Clear(TSEE *tsee) {
@@ -65,6 +75,13 @@ bool TSEE_Resource_Texture_Delete(TSEE *tsee) {
 
 }
 
+/**
+ * @brief Gets a font from TSEE's resource manager.
+ * 
+ * @param tsee TSEE to search
+ * @param name Name of the font to find.
+ * @return TSEE_Font* on success, NULL on fail.
+ */
 TSEE_Font *TSEE_Resource_Font_Get(TSEE *tsee, char *name) {
 	for (size_t i = 0; i < tsee->resources->fonts->size; i++) {
 		TSEE_Font *foundFont = TSEE_Array_Get(tsee->resources->fonts, i);
@@ -75,10 +92,28 @@ TSEE_Font *TSEE_Resource_Font_Get(TSEE *tsee, char *name) {
 	return NULL;
 }
 
-bool TSEE_Resource_Font_Store(TSEE *tsee) {
-
+/**
+ * @brief Stores a font in TSEE's resource manager.
+ * Will warn if storing a duplicate font.
+ * 
+ * @param tsee TSEE Object to store the font in
+ * @param font Font to store
+ * @return if the operation succeeded.
+ */
+bool TSEE_Resource_Font_Store(TSEE *tsee, TSEE_Font *font) {
+	if (TSEE_Resource_Font_Get(tsee, font->name) == font) {
+		TSEE_Warn("Storing duplicate font: `%s`\n", font->name);
+	}
+	return TSEE_Array_Append(tsee->resources->fonts, font);
 }
 
-bool TSEE_Resource_Font_Delete(TSEE *tsee) {
-
+/**
+ * @brief Deletes a font from TSEE's resource manager.
+ * 
+ * @param tsee TSEE to delete the font in
+ * @param font Font to delete.
+ * @return if the operation succeeded.
+ */
+bool TSEE_Resource_Font_Delete(TSEE *tsee, TSEE_Font *font) {
+	return TSEE_Array_DeleteItem(tsee->resources->fonts, font);
 }

@@ -22,8 +22,7 @@ bool TSEE_Font_Load(TSEE *tsee, char *path, int size, char *name) {
 	}
 	font->name = strdup(name);
 	font->size = size;
-	TSEE_Array_Append(tsee->fonts, font);
-	return true;
+	return TSEE_Resource_Font_Store(tsee, font);
 }
 
 /**
@@ -34,18 +33,15 @@ bool TSEE_Font_Load(TSEE *tsee, char *path, int size, char *name) {
  * @return true on success, false on fail.
  */
 bool TSEE_Font_Unload(TSEE *tsee, char *name) {
-	for (size_t i = 0; i < tsee->fonts->size; i++) {
-		TSEE_Font *font = tsee->fonts->data[i];
-		if (strcmp(font->name, name) == 0) {
-			TTF_CloseFont(font->font);
-			xfree(font->name);
-			xfree(font);
-			TSEE_Array_Delete(tsee->fonts, i);
-			return true;
-		}
+	TSEE_Font *font = TSEE_Resource_Font_Get(tsee, name);
+	if (!font) {
+		TSEE_Warn("Attempted to unload non-existant font `%s`\n", name);
+		return false;
 	}
-	TSEE_Warn("Attempted to unload non-existant font `%s`\n", name);
-	return false;
+	TTF_CloseFont(font->font);
+	xfree(font->name);
+	xfree(font);
+	return TSEE_Resource_Font_Delete(tsee, font);
 }
 
 /**
