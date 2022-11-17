@@ -21,7 +21,7 @@ bool TSEE_Vec2_Add(TSEE_Vec2 *final, TSEE_Vec2 add) {
  * @brief Normalises a vector.
  * 
  * @param vec Vector to normalise.
- * @return true on success, false on fail.
+ * @return success status
  */
 bool TSEE_Vec2_Normalise(TSEE_Vec2 *vec) {
 	if (!vec) {
@@ -43,7 +43,7 @@ bool TSEE_Vec2_Normalise(TSEE_Vec2 *vec) {
  * 
  * @param vec Vector to multiply.
  * @param mult Multiplier
- * @return true on success, false on fail.
+ * @return success status
  */
 bool TSEE_Vec2_Multiply(TSEE_Vec2 *vec, float mult) {
 	if (!vec) {
@@ -60,7 +60,7 @@ bool TSEE_Vec2_Multiply(TSEE_Vec2 *vec, float mult) {
  * 
  * @param vec Vector to divide
  * @param div Divisor
- * @return true on success, false on fail.
+ * @return success status
  */
 bool TSEE_Vec2_Divide(TSEE_Vec2 *vec, float div) {
 	if (!vec) {

@@ -101,7 +101,7 @@ TSEE *TSEE_Create(int width, int height) {
  * @brief Initialises all subsystems for a TSEE.
  * 
  * @param tsee TSEE to initialise for.
- * @return true on success, false on fail.
+ * @return success status
  */
 bool TSEE_InitAll(TSEE *tsee) {
 	TSEE_Log("Initialising TSEE modules...\n");
@@ -148,7 +148,7 @@ bool TSEE_InitAll(TSEE *tsee) {
  * @brief Closes a TSEE object, freeing all memory used.
  * 
  * @param tsee TSEE object to close.
- * @return true on success, false on fail.
+ * @return success status
  */
 bool TSEE_Close(TSEE *tsee) {
 	tsee->window->running = false;
@@ -219,7 +219,7 @@ bool TSEE_Close(TSEE *tsee) {
  * @brief Calculates delta-time for a TSEE object.
  * 
  * @param tsee TSEE object to calculate delta-time for.
- * @return true on success, false on fail.
+ * @return success status
  */
 bool TSEE_CalculateDT(TSEE *tsee) {
 	tsee->last_time = tsee->current_time;
@@ -233,7 +233,7 @@ bool TSEE_CalculateDT(TSEE *tsee) {
  * 
  * @param tsee TSEE object to set gravity for.
  * @param gravity New gravity value.
- * @return true on success, false on fail.
+ * @return success status
  */
 bool TSEE_World_SetGravity(TSEE *tsee, TSEE_Vec2 gravity) {
 	tsee->world->gravity = gravity;

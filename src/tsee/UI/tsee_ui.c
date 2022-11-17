@@ -4,7 +4,7 @@
  * @brief Initialises the UI subsystem.
  * 
  * @param tsee TSEE object to initialise UI for.
- * @return true on success, false on fail.
+ * @return success status
  */
 bool TSEE_UI_Init(TSEE *tsee) {
 	if (!tsee->init->text) {
@@ -26,7 +26,7 @@ bool TSEE_UI_Init(TSEE *tsee) {
  * @param tsee TSEE to add the button to.
  * @param font Font to use for the button.
  * @param text Text for the button.
- * @return true on success, false on fail.
+ * @return success status
  */
 bool TSEE_Toolbar_AddButton(TSEE *tsee, char *font, char *text) {
 	TSEE_Toolbar_Object *toolbarobj = xmalloc(sizeof(*toolbarobj));
@@ -66,7 +66,7 @@ bool TSEE_Toolbar_AddButton(TSEE *tsee, char *font, char *text) {
  * @param font Font to use for the text.
  * @param text Text to display on the child.
  * @param cb Callback to use when the button is clicked.
- * @return true on success, false on fail.
+ * @return success status
  */
 bool TSEE_Toolbar_AddChild(TSEE *tsee, char *parentName, char *font, char *text, void (*cb) (void *tsee)) {
 	TSEE_Toolbar_Object *parent = NULL;
@@ -112,7 +112,7 @@ bool TSEE_Toolbar_AddChild(TSEE *tsee, char *parentName, char *font, char *text,
  * @param tsee TSEE object to check against.
  * @param x X position of the mouse.
  * @param y Y position of the mouse.
- * @return true on success, false on fail.
+ * @return success status
  */
 bool TSEE_UI_Click(TSEE *tsee, int x, int y) {
 	SDL_Point m = {x, y};
@@ -138,7 +138,7 @@ bool TSEE_UI_Click(TSEE *tsee, int x, int y) {
  * @brief Renders the UI of a TSEE object.
  * 
  * @param tsee TSEE object to render the UI of.
- * @return true on success, false on fail.
+ * @return success status
  */
 bool TSEE_UI_Render(TSEE *tsee) {
 	if (tsee->ui->toolbar_enabled) {

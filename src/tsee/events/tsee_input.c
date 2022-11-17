@@ -4,7 +4,7 @@
  * @brief Initialise the input subsystem.
  * 
  * @param tsee TSEE object to initialise input for.
- * @return true on success, false on fail.
+ * @return success status
  */
 bool TSEE_Input_Init(TSEE *tsee) {
 	if (tsee->init->input) {

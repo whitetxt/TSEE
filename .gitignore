@@ -56,3 +56,4 @@ git_resources/
 
 # Don't push docs lmao
 docs/
+.vscode/

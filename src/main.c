@@ -1,4 +1,3 @@
-#define TSEE_DEV
 #include "main.h"
 
 void quitGame(void *t) {
