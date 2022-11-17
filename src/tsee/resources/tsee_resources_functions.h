@@ -7,5 +7,5 @@ bool TSEE_Resource_Texture_Store();
 bool TSEE_Resource_Texture_Delete();
 
 TSEE_Font *TSEE_Resource_Font_Get();
-bool TSEE_Resource_Font_Store();
+bool TSEE_Resource_Font_Store(TSEE *tsee, TSEE_Font *font);
 bool TSEE_Resource_Font_Delete();

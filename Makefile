@@ -39,4 +39,7 @@ vg:
 check_folder:
 	mkdir -p build
 
+docs:
+	doxygen src/tsee.dxg
+
 -include $(files:.c=.d)

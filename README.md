@@ -7,6 +7,7 @@ A pure C game engine designed to be intuitive and easy to use.
 * Intuitive UI system
 * Simple yet informative logging capabilites
 * Optimised parallax backgrounds
+* Full resource management
 * And its open-source!
 
 ## Example Project
@@ -14,7 +15,7 @@ A pure C game engine designed to be intuitive and easy to use.
 
 TSEE was used to make this simple demo, and its entire source code is 60 lines long!
 
-Look at the source in [this file!](https://github.com/EvieUwU/TSEE/blob/master/src/main.c)
+Look at the source in [this file](https://github.com/EvieUwU/TSEE/blob/master/src/main.c)
 
 ## Uses
 

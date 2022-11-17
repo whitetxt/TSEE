@@ -10,7 +10,7 @@
  */
 TSEE_Texture *TSEE_Texture_Create(TSEE *tsee, char *path) {
 	TSEE_Image *img = NULL;
-	if (img = TSEE_Resource_Image_Find(tsee, path)) {
+	if (img = TSEE_Resource_Image_Get(tsee, path)) {
 		TSEE_Texture *newTexture = xmalloc(sizeof(*newTexture));
 		if (!newTexture) {
 			TSEE_Error("Couldn't malloc memory for texture `%s`\n", path);
@@ -73,6 +73,8 @@ TSEE_Texture *TSEE_Texture_Find(TSEE *tsee, char *path) {
 
 /**
  * @brief Destroys a texture
+ * 
+ * @deprecated
  * 
  * @param tex Texture to destroy
  */
