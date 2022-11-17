@@ -1,4 +1,4 @@
-#ifdef TSEE_DEV
+#if TSEE_DEV
 
 // Log something to the console, typically for debugging.
 #define TSEE_Log(message, ...) \
@@ -19,12 +19,10 @@
 #else
 
 // Log something to the console, typically for debugging.
-#define TSEE_Log(message, ...) \
-		fprintf(stdout, "TSEE [Log] (%s): " message "", __func__, ##__VA_ARGS__)
+#define TSEE_Log(message, ...) return NULL
 
 // Inform the user of a warning, typically used for something important, but not a full error.
-#define TSEE_Warn(message, ...) \
-		fprintf(stdout, "TSEE [Warn] (%s): " message "", __func__, ##__VA_ARGS__)
+#define TSEE_Warn(message, ...) return NULL
 
 // Inform the user of an error in the console, typically used for something being invalid, but not a full crash.
 #define TSEE_Error(message, ...) \

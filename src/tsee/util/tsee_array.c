@@ -103,7 +103,7 @@ bool TSEE_Array_Delete(TSEE_Array *arr, size_t index) {
  * 
  * @param arr Array to delete from
  * @param data Data to delete.
- * @return true on success, false on failure.
+ * @return success status.
  */
 bool TSEE_Array_DeleteItem(TSEE_Array *arr, void *data) {
 	int idx = TSEE_Array_GetIndex(arr, data);
