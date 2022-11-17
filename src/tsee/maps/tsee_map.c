@@ -2,9 +2,9 @@
 
 /**
  * @brief Reads from a file pointer until a null character is hit.
- * 
+ *
  * @param fp File pointer to read from.
- * @return char* 
+ * @return char*
  */
 char *TSEE_ReadFile_UntilNull(FILE *fp) {
 	char c;
@@ -25,7 +25,7 @@ char *TSEE_ReadFile_UntilNull(FILE *fp) {
 
 /**
  * @brief Writes a null-terminated string to a file.
- * 
+ *
  * @param fp File to write to
  * @param string String to write
  */
@@ -36,7 +36,7 @@ void TSEE_WriteFile_String(FILE *fp, char *string) {
 
 /**
  * @brief Reads from a file
- * 
+ *
  * @param dst Destination buffer
  * @param size Size to read
  * @param n Number of items to read
@@ -53,7 +53,7 @@ bool TSEE_ReadFile(void *dst, size_t size, size_t n, FILE *fp) {
 
 /**
  * @brief Writes to a file
- * 
+ *
  * @param src Source buffer
  * @param size Size to write
  * @param n Number to items to write
@@ -70,7 +70,7 @@ bool TSEE_WriteFile(void *src, size_t size, size_t n, FILE *fp) {
 
 /**
  * @brief Loads a TSEE map from a file
- * 
+ *
  * @param tsee TSEE object to load the map into.
  * @param fn File name to load from.
  * @return success status
@@ -106,14 +106,19 @@ bool TSEE_Map_Load(TSEE *tsee, char *fn) {
 
 	// Read all of the map header data
 	char *mapName = NULL;
-	if (!(mapName = TSEE_ReadFile_UntilNull(fp))) return false;
+	if (!(mapName = TSEE_ReadFile_UntilNull(fp)))
+		return false;
 	char *mapAuthor = NULL;
-	if (!(mapAuthor = TSEE_ReadFile_UntilNull(fp))) return false;
+	if (!(mapAuthor = TSEE_ReadFile_UntilNull(fp)))
+		return false;
 	char *mapVersion = NULL;
-	if (!(mapVersion = TSEE_ReadFile_UntilNull(fp))) return false;
+	if (!(mapVersion = TSEE_ReadFile_UntilNull(fp)))
+		return false;
 	char *mapDescription = NULL;
-	if (!(mapDescription = TSEE_ReadFile_UntilNull(fp))) return false;
-	TSEE_Log("Loading into %s by %s\nVersion: %s\n%s\n", mapName, mapAuthor, mapVersion, mapDescription);
+	if (!(mapDescription = TSEE_ReadFile_UntilNull(fp)))
+		return false;
+	TSEE_Log("Loading into %s by %s\nVersion: %s\n%s\n", mapName, mapAuthor,
+			 mapVersion, mapDescription);
 
 	// Read the gravity (for some reason its here in the header?)
 	float gravityX = 0;
@@ -140,8 +145,10 @@ bool TSEE_Map_Load(TSEE *tsee, char *fn) {
 	char *texturePath = NULL;
 	for (size_t i = 0; i < numTextures; i++) {
 		texturePath = NULL;
-		if (!(texturePath = TSEE_ReadFile_UntilNull(fp))) return false;
-		texturePaths = xrealloc(texturePaths, sizeof(*texturePaths) * (++numTexPaths));
+		if (!(texturePath = TSEE_ReadFile_UntilNull(fp)))
+			return false;
+		texturePaths =
+			xrealloc(texturePaths, sizeof(*texturePaths) * (++numTexPaths));
 		texturePaths[numTexPaths - 1] = strdup(texturePath);
 		free(texturePath);
 	}
@@ -165,7 +172,8 @@ bool TSEE_Map_Load(TSEE *tsee, char *fn) {
 		float y = 0;
 		TSEE_Object_Attributes attr;
 
-		if (TSEE_ReadFile(&x, sizeof(x), 1, fp) != 1 || TSEE_ReadFile(&y, sizeof(y), 1, fp) != 1) {
+		if (TSEE_ReadFile(&x, sizeof(x), 1, fp) != 1 ||
+			TSEE_ReadFile(&y, sizeof(y), 1, fp) != 1) {
 			TSEE_Error("Failed to read object position\n");
 			return false;
 		}
@@ -178,21 +186,30 @@ bool TSEE_Map_Load(TSEE *tsee, char *fn) {
 		TSEE_Object *object;
 
 		if (TSEE_Attributes_Check(attr, TSEE_ATTRIB_PARALLAX)) {
-			object = TSEE_Parallax_Create(tsee, TSEE_Texture_Create(tsee, path), 1000);
+			object = TSEE_Parallax_Create(tsee, TSEE_Texture_Create(tsee, path),
+										  1000);
 		} else {
-			object = TSEE_Object_Create(tsee, TSEE_Texture_Create(tsee, path), attr, x, y);
+			object = TSEE_Object_Create(tsee, TSEE_Texture_Create(tsee, path),
+										attr, x, y);
 		}
 
 		if (TSEE_Attributes_Check(attr, TSEE_ATTRIB_PHYS)) {
-			TSEE_ReadFile(&object->physics.mass, sizeof(object->physics.mass), 1, fp);
-			TSEE_ReadFile(&object->physics.restitution, sizeof(object->physics.restitution), 1, fp);
+			TSEE_ReadFile(&object->physics.mass, sizeof(object->physics.mass),
+						  1, fp);
+			TSEE_ReadFile(&object->physics.restitution,
+						  sizeof(object->physics.restitution), 1, fp);
 		} else if (TSEE_Attributes_Check(attr, TSEE_ATTRIB_PARALLAX)) {
-			TSEE_ReadFile(&object->parallax.distance, sizeof(object->parallax.distance), 1, fp);
-		} else if(TSEE_Attributes_Check(attr, TSEE_ATTRIB_TEXT)) {
+			TSEE_ReadFile(&object->parallax.distance,
+						  sizeof(object->parallax.distance), 1, fp);
+		} else if (TSEE_Attributes_Check(attr, TSEE_ATTRIB_TEXT)) {
 			object->text.text = TSEE_ReadFile_UntilNull(fp);
 		}
-		
-		TSEE_Log("Loaded object `%s` at (%f, %f, %d, %d) with texture at (%d, %d)\n", object->texture->path, object->position.x, object->position.y, object->texture->rect.w, object->texture->rect.h, object->texture->rect.x, object->texture->rect.y);
+
+		TSEE_Log(
+			"Loaded object `%s` at (%f, %f, %d, %d) with texture at (%d, %d)\n",
+			object->texture->path, object->position.x, object->position.y,
+			object->texture->rect.w, object->texture->rect.h,
+			object->texture->rect.x, object->texture->rect.y);
 	}
 
 	// Setup the player
@@ -229,7 +246,7 @@ bool TSEE_Map_Load(TSEE *tsee, char *fn) {
 
 /**
  * @brief Saves the current TSEE to a map file
- * 
+ *
  * @param tsee TSEE object to save.
  * @param fn File name to save to.
  * @return success status
@@ -256,12 +273,14 @@ bool TSEE_Map_Save(TSEE *tsee, char *fn) {
 	TSEE_WriteFile(&gravityY, sizeof(gravityY), 1, fp);
 	// Write the number of textures
 
-	// As not all textures are loaded from files, we must figure out how many unique ones there are.
+	// As not all textures are loaded from files, we must figure out how many
+	// unique ones there are.
 	size_t numTextures = 0;
 	char **texturesSeen = NULL;
 	for (size_t i = 0; i < tsee->resources->textures->size; i++) {
 		TSEE_Texture *texture = TSEE_Array_Get(tsee->resources->textures, i);
-		if (!texture->path) continue;
+		if (!texture->path)
+			continue;
 		if (!texturesSeen) {
 			texturesSeen = xmalloc(sizeof(*texturesSeen) * ++numTextures);
 			if (!texturesSeen) {
@@ -277,8 +296,10 @@ bool TSEE_Map_Save(TSEE *tsee, char *fn) {
 				break;
 			}
 		}
-		if (found) continue;
-		texturesSeen = xrealloc(texturesSeen, sizeof(*texturesSeen) * (++numTextures));
+		if (found)
+			continue;
+		texturesSeen =
+			xrealloc(texturesSeen, sizeof(*texturesSeen) * (++numTextures));
 		texturesSeen[numTextures - 1] = strdup(texture->path);
 	}
 	TSEE_Log("Found %ld unique textures.\n", numTextures);
@@ -291,7 +312,8 @@ bool TSEE_Map_Save(TSEE *tsee, char *fn) {
 
 	// Write the objects with texture indexes.
 	TSEE_Log("Writing %ld objects.\n", tsee->world->objects->size);
-	TSEE_WriteFile(&tsee->world->objects->size, sizeof(tsee->world->objects->size), 1, fp);
+	TSEE_WriteFile(&tsee->world->objects->size,
+				   sizeof(tsee->world->objects->size), 1, fp);
 	for (size_t i = 0; i < tsee->world->objects->size; i++) {
 		bool written = false;
 		TSEE_Object *object = TSEE_Array_Get(tsee->world->objects, i);
@@ -312,18 +334,22 @@ bool TSEE_Map_Save(TSEE *tsee, char *fn) {
 		TSEE_WriteFile(&object->attributes, sizeof(object->attributes), 1, fp);
 		// Write individual fields for each attribute
 		if (TSEE_Object_CheckAttribute(object, TSEE_ATTRIB_PHYS)) {
-			TSEE_WriteFile(&object->physics.mass, sizeof(object->physics.mass), 1, fp);
-			TSEE_WriteFile(&object->physics.restitution, sizeof(object->physics.restitution), 1, fp);
+			TSEE_WriteFile(&object->physics.mass, sizeof(object->physics.mass),
+						   1, fp);
+			TSEE_WriteFile(&object->physics.restitution,
+						   sizeof(object->physics.restitution), 1, fp);
 		} else if (TSEE_Object_CheckAttribute(object, TSEE_ATTRIB_PARALLAX)) {
-			TSEE_WriteFile(&object->parallax.distance, sizeof(object->parallax.distance), 1, fp);
-		} else if(TSEE_Object_CheckAttribute(object, TSEE_ATTRIB_TEXT)) {
+			TSEE_WriteFile(&object->parallax.distance,
+						   sizeof(object->parallax.distance), 1, fp);
+		} else if (TSEE_Object_CheckAttribute(object, TSEE_ATTRIB_TEXT)) {
 			TSEE_WriteFile_String(fp, object->text.text);
 		}
 	}
 
 	// Write player information
 	TSEE_WriteFile(&tsee->player->speed, sizeof(tsee->player->speed), 1, fp);
-	TSEE_WriteFile(&tsee->player->jump_force, sizeof(tsee->player->jump_force), 1, fp);
+	TSEE_WriteFile(&tsee->player->jump_force, sizeof(tsee->player->jump_force),
+				   1, fp);
 	fclose(fp);
 	TSEE_Log("Saved map to %s\n", fn);
 	return true;

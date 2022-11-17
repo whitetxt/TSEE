@@ -16,6 +16,7 @@ typedef struct TSEE_Init {
 	bool events;
 	bool input;
 	bool ui;
+	bool resources;
 } TSEE_Init;
 
 typedef struct TSEE_Debug_RenderTimes {
@@ -37,8 +38,8 @@ typedef struct TSEE_Debug {
 typedef struct TSEE {
 	TSEE_Window *window;
 	// Moved to using a resource manager.
-	//TSEE_Array *textures;
-	//TSEE_Array *fonts;
+	// TSEE_Array *textures;
+	// TSEE_Array *fonts;
 	TSEE_ResManager *resources;
 	TSEE_World *world;
 	TSEE_Events *events;

@@ -2,7 +2,7 @@
 
 /**
  * @brief Sets the player's speed in u/s
- * 
+ *
  * @param tsee TSEE object which the player is in
  * @param speed New speed of the player
  */
@@ -12,7 +12,7 @@ void TSEE_Player_SetSpeed(TSEE *tsee, float speed) {
 
 /**
  * @brief Sets the player's jump force as a multiple of the gravity.
- * 
+ *
  * @param tsee TSEE object which the player is in
  * @param jump_force New jump force of the player
  */
@@ -22,26 +22,32 @@ void TSEE_Player_SetJumpForce(TSEE *tsee, float jump_force) {
 
 /**
  * @brief Handles the player's input, and applies necessary forces.
- * 
+ *
  * @param tsee TSEE which holds the player.
  */
 void TSEE_Player_HandleInput(TSEE *tsee) {
 	TSEE_Player *player = tsee->player;
-	if (!player->object) return;
+	if (!player->object)
+		return;
 
-	TSEE_Vec2_Add(&player->object->physics.force, (TSEE_Vec2){(player->movement.right - player->movement.left) * player->speed, 0});
+	TSEE_Vec2_Add(&player->object->physics.force,
+				  (TSEE_Vec2){(player->movement.right - player->movement.left) *
+								  player->speed,
+							  0});
 
 	if (player->movement.up && player->grounded) {
 		TSEE_Vec2 grav = tsee->world->gravity;
 		TSEE_Vec2_Multiply(&grav, player->jump_force);
 		TSEE_Vec2_Multiply(&grav, -1);
 		if (grav.x != 0) {
-			player->object->physics.velocity.x = grav.x * player->object->physics.mass * tsee->dt;
-			//player->object->physics.force.x += grav.x;
+			player->object->physics.velocity.x =
+				grav.x * player->object->physics.mass * tsee->dt;
+			// player->object->physics.force.x += grav.x;
 		}
 		if (grav.y != 0) {
-			player->object->physics.velocity.y = grav.y * player->object->physics.mass * tsee->dt;
-			//player->object->physics.force.y += grav.y;
+			player->object->physics.velocity.y =
+				grav.y * player->object->physics.mass * tsee->dt;
+			// player->object->physics.force.y += grav.y;
 		}
 		if (player->held_up > 0.1f) {
 			player->grounded = false;

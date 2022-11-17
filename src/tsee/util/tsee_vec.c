@@ -2,7 +2,7 @@
 
 /**
  * @brief Adds two vectors
- * 
+ *
  * @param final Destination vector
  * @param add Vector to add
  * @return true on success
@@ -19,7 +19,7 @@ bool TSEE_Vec2_Add(TSEE_Vec2 *final, TSEE_Vec2 add) {
 
 /**
  * @brief Normalises a vector.
- * 
+ *
  * @param vec Vector to normalise.
  * @return success status
  */
@@ -43,7 +43,7 @@ bool TSEE_Vec2_Normalise(TSEE_Vec2 *vec) {
 
 /**
  * @brief Multiplies a vector by a scalar.
- * 
+ *
  * @param vec Vector to multiply.
  * @param mult Multiplier
  * @return success status
@@ -60,7 +60,7 @@ bool TSEE_Vec2_Multiply(TSEE_Vec2 *vec, float mult) {
 
 /**
  * @brief Divides a vector by a scalar.
- * 
+ *
  * @param vec Vector to divide
  * @param div Divisor
  * @return success status
@@ -77,7 +77,7 @@ bool TSEE_Vec2_Divide(TSEE_Vec2 *vec, float div) {
 
 /**
  * @brief Calculate the dot product of two vectors.
- * 
+ *
  * @param first First vector
  * @param second Second vector
  * @return float The resultant dot product
@@ -87,8 +87,9 @@ float TSEE_Vec2_Dot(TSEE_Vec2 first, TSEE_Vec2 second) {
 }
 
 /**
- * @brief Subtract one vector from another, storing the result in the first vector.
- * 
+ * @brief Subtract one vector from another, storing the result in the first
+ * vector.
+ *
  * @param first The first vector
  * @param minus The vector to subtract
  * @return true on success

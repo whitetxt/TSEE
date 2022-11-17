@@ -35,21 +35,32 @@ int main(int argc, char *argv[]) {
 		TSEE_Warn("Failed to set window title.\n");
 	}
 
-	TSEE_Object_Create(tsee, TSEE_Texture_Create(tsee, "assets/test_image.png"), TSEE_ATTRIB_PHYS | TSEE_ATTRIB_PLAYER, 200, 300);
+	TSEE_Object_Create(tsee, TSEE_Texture_Create(tsee, "assets/test_image.png"),
+					   TSEE_ATTRIB_PHYS | TSEE_ATTRIB_PLAYER, 200, 300);
 	TSEE_Player_SetJumpForce(tsee, 25);
-	TSEE_Player_SetSpeed(tsee, 10);
+	TSEE_Player_SetSpeed(tsee, 500);
 	TSEE_World_SetGravity(tsee, (TSEE_Vec2){0, -9.81});
-	TSEE_Object_Create(tsee, TSEE_Texture_Create(tsee, "assets/test_image.png"), TSEE_ATTRIB_STATIC, 160, 30);
-	TSEE_Object_Create(tsee, TSEE_Texture_Create(tsee, "assets/test_image.png"), TSEE_ATTRIB_STATIC, 170, 35);
-	TSEE_Object_Create(tsee, TSEE_Texture_Create(tsee, "assets/test_image.png"), TSEE_ATTRIB_STATIC, 180, 40);
-	TSEE_Object_Create(tsee, TSEE_Texture_Create(tsee, "assets/test_image.png"), TSEE_ATTRIB_STATIC, 190, 45);
-	TSEE_Parallax_Create(tsee, TSEE_Texture_Create(tsee, "assets/parallax1.png"), 6);
-	TSEE_Parallax_Create(tsee, TSEE_Texture_Create(tsee, "assets/parallax2.png"), 4);
-	TSEE_Parallax_Create(tsee, TSEE_Texture_Create(tsee, "assets/parallax3.png"), 2);
-	TSEE_Parallax_Create(tsee, TSEE_Texture_Create(tsee, "assets/parallax4.png"), 1);
+	TSEE_Object_Create(tsee, TSEE_Texture_Create(tsee, "assets/test_image.png"),
+					   TSEE_ATTRIB_STATIC, 160, 30);
+	TSEE_Object_Create(tsee, TSEE_Texture_Create(tsee, "assets/test_image.png"),
+					   TSEE_ATTRIB_STATIC, 170, 35);
+	TSEE_Object_Create(tsee, TSEE_Texture_Create(tsee, "assets/test_image.png"),
+					   TSEE_ATTRIB_STATIC, 180, 40);
+	TSEE_Object_Create(tsee, TSEE_Texture_Create(tsee, "assets/test_image.png"),
+					   TSEE_ATTRIB_STATIC, 190, 45);
+	TSEE_Parallax_Create(tsee,
+						 TSEE_Texture_Create(tsee, "assets/parallax1.png"), 6);
+	TSEE_Parallax_Create(tsee,
+						 TSEE_Texture_Create(tsee, "assets/parallax2.png"), 4);
+	TSEE_Parallax_Create(tsee,
+						 TSEE_Texture_Create(tsee, "assets/parallax3.png"), 2);
+	TSEE_Parallax_Create(tsee,
+						 TSEE_Texture_Create(tsee, "assets/parallax4.png"), 1);
 
 	for (int x = 0; x < tsee->window->width; x += 88) {
-		TSEE_Object_Create(tsee, TSEE_Texture_Create(tsee, "assets/test_image.png"), TSEE_ATTRIB_STATIC, x, 25);
+		TSEE_Object_Create(tsee,
+						   TSEE_Texture_Create(tsee, "assets/test_image.png"),
+						   TSEE_ATTRIB_STATIC, x, 25);
 	}
 
 	TSEE_Toolbar_AddButton(tsee, "_default", "Home");
@@ -61,7 +72,7 @@ int main(int argc, char *argv[]) {
 	// After setup for the map, correct dt
 	tsee->current_time = SDL_GetPerformanceCounter();
 
-	while (tsee->window->running) {		
+	while (tsee->window->running) {
 		TSEE_Events_Handle(tsee);
 		TSEE_CalculateDT(tsee);
 		TSEE_Player_HandleInput(tsee);
@@ -71,9 +82,10 @@ int main(int argc, char *argv[]) {
 
 	TSEE_Log("Saving settings.\n");
 	if (!TSEE_Settings_Save(tsee)) {
-		TSEE_Error("Failed to save settings. All changes will be lost.\nSorry.");
+		TSEE_Error(
+			"Failed to save settings. All changes will be lost.\nSorry.");
 	}
 	TSEE_Log("Closing.\n");
 	TSEE_Close(tsee);
-	return 0; 
+	return 0;
 }
