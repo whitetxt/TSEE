@@ -11,9 +11,9 @@ obj = ${files:.c=.o}
 
 ifeq ($(DEV),1)
 CFLAGS += -DTSEE_DEV -g
-OPT = 
+OPT = -Og
 else
-OPT = -O3 -flto
+OPT = -Ofast -flto
 endif
 
 all: check_folder $(out)
