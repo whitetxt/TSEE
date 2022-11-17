@@ -51,13 +51,10 @@ bool TSEE_Font_Unload(TSEE *tsee, char *name) {
  * @return true on success, false on fail.
  */
 bool TSEE_Font_UnloadAll(TSEE *tsee) {
-	for (size_t i = 0; i < tsee->fonts->size; i++) {
-		TSEE_Font *font = TSEE_Array_Get(tsee->fonts, i);
-		TTF_CloseFont(font->font);
-		xfree(font->name);
-		xfree(font);
+	while (tsee->resources->fonts->size > 0) {
+		TSEE_Font *font = TSEE_Array_Get(tsee->resources->fonts, 0);
+		TSEE_Font_Unload(tsee, font);
 	}
-	TSEE_Array_Destroy(tsee->fonts);
 	return true;
 }
 

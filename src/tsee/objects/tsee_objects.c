@@ -66,7 +66,7 @@ TSEE_Object *TSEE_Object_Create(TSEE *tsee, TSEE_Texture *texture, TSEE_Object_A
  * @param obj Object to set
  * @param x New X position
  * @param y New Y position
- * @return true on success, false on failure
+ * @return success status
  */
 bool TSEE_Object_SetPosition(TSEE *tsee, TSEE_Object *obj, float x, float y) {
 	if (!obj) {
@@ -91,7 +91,7 @@ bool TSEE_Object_SetPosition(TSEE *tsee, TSEE_Object *obj, float x, float y) {
  * @param tsee TSEE which the object is inside
  * @param obj Object to set
  * @param vec Vector with the new position in
- * @return true on success, false on failure
+ * @return success status
  */
 bool TSEE_Object_SetPositionVec2(TSEE *tsee, TSEE_Object *obj, TSEE_Vec2 vec) {
 	return TSEE_Object_SetPosition(tsee, obj, vec.x, vec.y);

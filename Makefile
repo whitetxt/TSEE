@@ -9,6 +9,10 @@ LDFLAGS = ${pkg-config --libs sdl2 SDL2_image SDL2_ttf}
 files = ${wildcard src/*.c src/tsee/*/*.c}
 obj = ${files:.c=.o}
 
+ifeq ($(DEV),1)
+CFLAGS += -DTSEE_DEV
+endif
+
 all: check_folder $(out)
 
 $(out): $(obj)

@@ -9,46 +9,37 @@
  * @return TSEE_Texture* 
  */
 TSEE_Texture *TSEE_Texture_Create(TSEE *tsee, char *path) {
-	TSEE_Image *img = NULL;
-	if (img = TSEE_Resource_Image_Get(tsee, path)) {
+	TSEE_Texture *tex = NULL;
+	if ((tex = TSEE_Resource_Texture_Get(tsee, path))) {
 		TSEE_Texture *newTexture = xmalloc(sizeof(*newTexture));
 		if (!newTexture) {
 			TSEE_Error("Couldn't malloc memory for texture `%s`\n", path);
 			return NULL;
 		}
-		newTexture->image = img;
-		SDL_QueryTexture(img->texture, NULL, NULL, &newTexture->rect.w, &newTexture->rect.h);
+		newTexture->texture = tex->texture;
+		SDL_QueryTexture(tex->texture, NULL, NULL, &newTexture->rect.w, &newTexture->rect.h);
 		newTexture->rect = (SDL_Rect){0, 0, newTexture->rect.w, newTexture->rect.h};
 		TSEE_Resource_Texture_Store(tsee, newTexture);
 		return newTexture;
 	}
-	TSEE_Texture *texture = xmalloc(sizeof(*texture));
-	if (!texture) {
-		TSEE_Error("Couldn't malloc memory for texture `%s`\n", path);
-		return NULL;
-	}
-	SDL_Texture *tex = IMG_LoadTexture(tsee->window->renderer, path);
-	if (!tex) {
+	SDL_Texture *stex = IMG_LoadTexture(tsee->window->renderer, path);
+	if (!stex) {
 		TSEE_Error("Couldn't load texture from file `%s`\n", path);
-		xfree(texture);
 		return NULL;
 	}
-	TSEE_Image *img = xmalloc(sizeof(*img));
-	if (!img) {
-		TSEE_Error("Couldn't malloc for image `%s`\n", path);
+	tex = xmalloc(sizeof(*tex));
+	if (!stex) {
+		TSEE_Error("Couldn't malloc for texture `%s`\n", path);
 		xfree(tex);
-		xfree(texture);
 		return NULL;
 	}
-	img->texture = tex;
-	img->path = strdup(path);
-	TSEE_Resource_Image_Store(tsee, img);
+	tex->texture = stex;
+	tex->path = strdup(path);
 
-	SDL_QueryTexture(tex, NULL, NULL, &texture->rect.w, &texture->rect.h);
-	texture->image = img;
-	texture->rect = (SDL_Rect){0, 0, texture->rect.w, texture->rect.h};
-	TSEE_Resource_Texture_Store(tsee, texture);
-	return texture;
+	SDL_QueryTexture(tex, NULL, NULL, &tex->rect.w, &tex->rect.h);
+	tex->rect = (SDL_Rect){0, 0, tex->rect.w, tex->rect.h};
+	TSEE_Resource_Texture_Store(tsee, tex);
+	return tex;
 }
 
 /**
@@ -59,36 +50,24 @@ TSEE_Texture *TSEE_Texture_Create(TSEE *tsee, char *path) {
  * @return TSEE_Texture* 
  */
 TSEE_Texture *TSEE_Texture_Find(TSEE *tsee, char *path) {
-	for (size_t i = 0; i < tsee->textures->size; i++) {
-		TSEE_Texture *texture = (TSEE_Texture *)TSEE_Array_Get(tsee->textures, i);
-		TSEE_Log("Checking texture %s against %s\n", texture->path, path);
-		if (strcmp(texture->path, path) == 0) {
-			TSEE_Log("Found texture with same path %s\n", path);
-			return texture;
-		}
+	TSEE_Texture *texture = TSEE_Resource_Texture_Find(tsee, path);
+	if (!texture) {
+		TSEE_Warn("Couldn't find texture `%s`\n", path);
+		return NULL;
 	}
-	TSEE_Warn("Couldn't find loaded texture `%s`\n", path);
-	return NULL;
+	return texture;
 }
 
 /**
  * @brief Destroys a texture
  * 
- * @deprecated
- * 
  * @param tex Texture to destroy
  */
 void TSEE_Texture_Destroy(TSEE *tsee, TSEE_Texture *tex) {
 	if (!tex) return;
+	if (tex->path)
+		xfree(tex->path)
 	if (tex->texture)
 		SDL_DestroyTexture(tex->texture);
-	if (tex->path)
-		xfree(tex->path);
-	for (size_t i = 0; i < tsee->textures->size; i++) {
-		if (tex == TSEE_Array_Get(tsee->textures, i)) {
-			TSEE_Array_Delete(tsee->textures, i);
-			break;
-		}
-	}
 	xfree(tex);
 }

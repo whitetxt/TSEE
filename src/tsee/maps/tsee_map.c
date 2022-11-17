@@ -41,7 +41,7 @@ void TSEE_WriteFile_String(FILE *fp, char *string) {
  * @param size Size to read
  * @param n Number of items to read
  * @param fp File to read from
- * @return true on success, false on failure
+ * @return success status
  */
 bool TSEE_ReadFile(void *dst, size_t size, size_t n, FILE *fp) {
 	if (fread(dst, size, n, fp) != n) {
@@ -58,7 +58,7 @@ bool TSEE_ReadFile(void *dst, size_t size, size_t n, FILE *fp) {
  * @param size Size to write
  * @param n Number to items to write
  * @param fp File to write to
- * @return true on success, false on failure
+ * @return success status
  */
 bool TSEE_WriteFile(void *src, size_t size, size_t n, FILE *fp) {
 	if (fwrite(src, size, n, fp) != n) {
@@ -78,7 +78,7 @@ bool TSEE_WriteFile(void *src, size_t size, size_t n, FILE *fp) {
 bool TSEE_Map_Load(TSEE *tsee, char *fn) {
 	// Open the file
 	FILE *fp = fopen(fn, "rb");
-	if (fp == NULL) {
+	if (!fp) {
 		TSEE_Error("Failed to open map file (%s)\n", fn);
 		return false;
 	}
@@ -92,10 +92,7 @@ bool TSEE_Map_Load(TSEE *tsee, char *fn) {
 			}
 		}
 	}
-	while (tsee->textures->size > 0) {
-		TSEE_Texture *tex = TSEE_Array_Get(tsee->textures, 0);
-		TSEE_Texture_Destroy(tsee, tex);
-	}
+	TSEE_Resource_Unload(tsee);
 
 	// Reset the player
 	tsee->player->grounded = true;
@@ -262,8 +259,8 @@ bool TSEE_Map_Save(TSEE *tsee, char *fn) {
 	// As not all textures are loaded from files, we must figure out how many unique ones there are.
 	size_t numTextures = 0;
 	char **texturesSeen = NULL;
-	for (size_t i = 0; i < tsee->textures->size; i++) {
-		TSEE_Texture *texture = TSEE_Array_Get(tsee->textures, i);
+	for (size_t i = 0; i < tsee->resources->textures->size; i++) {
+		TSEE_Texture *texture = TSEE_Array_Get(tsee->resources->textures, i);
 		if (!texture->path) continue;
 		if (!texturesSeen) {
 			texturesSeen = xmalloc(sizeof(*texturesSeen) * ++numTextures);
