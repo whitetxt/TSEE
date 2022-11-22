@@ -9,7 +9,7 @@ obj = ${files:.c=.o}
 
 ifeq ($(DEV),1)
 CFLAGS += -DTSEE_DEV -g
-OPT = -Og
+OPT = 
 out = build/dev/TSEE
 else
 OPT = -Ofast -flto
@@ -28,7 +28,13 @@ clean: check_folder
 	-rm -rf ${out}
 	-rm -rf ${obj}
 	-rm -rf ${src:.c=.d}
-	
+
+cleandev: out = build/dev/TSEE
+cleandev: check_folder
+	-rm -rf ${out}
+	-rm -rf ${obj}
+	-rm -rf ${src:.c=.d}
+
 fresh: clean all
 
 run:
