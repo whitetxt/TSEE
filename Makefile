@@ -1,4 +1,4 @@
-out = build/TSEE
+
 
 CC = gcc
 CFLAGS = -Wall -Wextra -Wshadow -Wstrict-aliasing -Wstrict-overflow  -pedantic -fstack-protector-all -fno-common -rdynamic ${shell pkg-config --cflags sdl2 SDL2_image SDL2_ttf}
@@ -12,8 +12,10 @@ obj = ${files:.c=.o}
 ifeq ($(DEV),1)
 CFLAGS += -DTSEE_DEV -g
 OPT = -Og
+out = build/dev/TSEE
 else
 OPT = -Ofast -flto
+out = build/release/TSEE
 endif
 
 all: check_folder $(out)
@@ -32,16 +34,22 @@ clean: check_folder
 fresh: clean all
 
 run:
+	out = build/release/TSEE
 	chmod +x ${out}
-	cd build && ../${out}
+	cd build/release && ../../${out}
 
-start: all run
+rundev: out = build/dev/TSEE
+rundev:
+	chmod +x ${out}
+	cd build/dev && ../../${out}
 
+gdb: out = build/dev/TSEE
 gdb:
-	cd build && gdb ../${out}
+	cd build/dev && gdb ../../${out}
 
+vg: out = build/dev/TSEE
 vg:
-	cd build && valgrind --leak-check=full --show-possibly-lost=no --show-reachable=no -s ../${out}
+	cd build/dev && valgrind --leak-check=full --show-possibly-lost=no --show-reachable=no -s ../${out}
 
 check_folder:
 	mkdir -p build
