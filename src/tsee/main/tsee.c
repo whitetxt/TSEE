@@ -2,10 +2,10 @@
 
 /**
  * @brief Creates a TSEE object
- * 
+ *
  * @param width Window width
  * @param height Window height
- * @return TSEE* 
+ * @return TSEE*
  */
 TSEE *TSEE_Create(int width, int height) {
 	TSEE_Log("Initialising TSEE Engine...\n");
@@ -58,7 +58,7 @@ TSEE *TSEE_Create(int width, int height) {
 	tsee->dt = 0;
 	tsee->last_time = 0;
 	tsee->current_time = SDL_GetPerformanceCounter();
-	
+
 	// Setup UI
 	tsee->ui = xmalloc(sizeof(*tsee->ui));
 	if (!tsee->ui) {
@@ -99,7 +99,7 @@ TSEE *TSEE_Create(int width, int height) {
 
 /**
  * @brief Initialises all subsystems for a TSEE.
- * 
+ *
  * @param tsee TSEE to initialise for.
  * @return success status
  */
@@ -152,7 +152,7 @@ bool TSEE_InitAll(TSEE *tsee) {
 
 /**
  * @brief Closes a TSEE object, freeing all memory used.
- * 
+ *
  * @param tsee TSEE object to close.
  * @return success status
  */
@@ -170,12 +170,12 @@ bool TSEE_Close(TSEE *tsee) {
 		TSEE_Array_Destroy(tsee->world->objects);
 	}
 	TSEE_Resource_Unload(tsee);
-	
+
 	if (tsee->player)
 		xfree(tsee->player);
 	if (tsee->world)
 		xfree(tsee->world);
-	
+
 	if (tsee->init->events) {
 		xfree(tsee->events->event);
 		xfree(tsee->events);
@@ -185,10 +185,12 @@ bool TSEE_Close(TSEE *tsee) {
 		if (tsee->ui->toolbar) {
 			if (tsee->ui->toolbar->data) {
 				for (size_t i = 0; i < tsee->ui->toolbar->size; i++) {
-					TSEE_Toolbar_Object *obj = TSEE_Array_Get(tsee->ui->toolbar, i);
+					TSEE_Toolbar_Object *obj =
+						TSEE_Array_Get(tsee->ui->toolbar, i);
 					TSEE_Text_Destroy(tsee, obj->text, false);
 					for (size_t j = 0; j < obj->buttons->size; j++) {
-						TSEE_Toolbar_Child *child = TSEE_Array_Get(obj->buttons, j);
+						TSEE_Toolbar_Child *child =
+							TSEE_Array_Get(obj->buttons, j);
 						TSEE_Text_Destroy(tsee, child->text, false);
 						xfree(child);
 					}
@@ -219,20 +221,21 @@ bool TSEE_Close(TSEE *tsee) {
 
 /**
  * @brief Calculates delta-time for a TSEE object.
- * 
+ *
  * @param tsee TSEE object to calculate delta-time for.
  * @return success status
  */
 bool TSEE_CalculateDT(TSEE *tsee) {
 	tsee->last_time = tsee->current_time;
 	tsee->current_time = SDL_GetPerformanceCounter();
-	tsee->dt = (float) ( (tsee->current_time - tsee->last_time) / (float) SDL_GetPerformanceFrequency() );
+	tsee->dt = (float)((tsee->current_time - tsee->last_time) /
+					   (float)SDL_GetPerformanceFrequency());
 	return true;
 }
 
 /**
  * @brief Sets the gravity strength for a TSEE object
- * 
+ *
  * @param tsee TSEE object to set gravity for.
  * @param gravity New gravity value.
  * @return success status
@@ -244,7 +247,7 @@ bool TSEE_World_SetGravity(TSEE *tsee, TSEE_Vec2 gravity) {
 
 /**
  * @brief Centers the camera around an object.
- * 
+ *
  * @param tsee TSEE to center
  * @param obj Object to center around
  */
@@ -263,7 +266,8 @@ void TSEE_World_ScrollToObject(TSEE *tsee, TSEE_Object *obj) {
 		float diff = half_width - mid_x;
 		tsee->world->scroll_x -= diff;
 		obj->texture->rect.x = half_width - pos.w / 2;
-	} else if (mid_x > half_width && tsee->world->scroll_x != tsee->world->max_scroll_x) {
+	} else if (mid_x > half_width &&
+			   tsee->world->scroll_x != tsee->world->max_scroll_x) {
 		float diff = mid_x - half_width;
 		tsee->world->scroll_x += diff;
 		obj->texture->rect.x = half_width - pos.w / 2;
@@ -291,10 +295,14 @@ void TSEE_World_ScrollToObject(TSEE *tsee, TSEE_Object *obj) {
 
 	for (size_t i = 0; i < tsee->world->objects->size; i++) {
 		TSEE_Object *object = TSEE_Array_Get(tsee->world->objects, i);
-		if (TSEE_Object_CheckAttribute(object, TSEE_ATTRIB_UI) || TSEE_Object_CheckAttribute(object, TSEE_ATTRIB_PLAYER)) continue;
+		if (TSEE_Object_CheckAttribute(object, TSEE_ATTRIB_UI) ||
+			TSEE_Object_CheckAttribute(object, TSEE_ATTRIB_PLAYER))
+			continue;
 		if (!TSEE_Object_CheckAttribute(object, TSEE_ATTRIB_PARALLAX)) {
-			object->texture->rect.x = object->position.x - tsee->world->scroll_x;
+			object->texture->rect.x =
+				object->position.x - tsee->world->scroll_x;
 		}
-		object->texture->rect.y = object->position.y * -1 + tsee->window->height - tsee->world->scroll_y;
+		object->texture->rect.y = object->position.y * -1 +
+								  tsee->window->height - tsee->world->scroll_y;
 	}
 }

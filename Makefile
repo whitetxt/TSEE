@@ -1,7 +1,5 @@
-
-
 CC = gcc
-CFLAGS = -Wall -Wextra -Wshadow -Wstrict-aliasing -Wstrict-overflow  -pedantic -fstack-protector-all -fno-common -rdynamic ${shell pkg-config --cflags sdl2 SDL2_image SDL2_ttf}
+CFLAGS = -Wall -Wextra -Wshadow -Wstrict-aliasing -Wstrict-overflow -pedantic -fstack-protector-all -fno-common -rdynamic ${shell pkg-config --cflags sdl2 SDL2_image SDL2_ttf}
 
 LD = $(CC)
 LDFLAGS = ${shell pkg-config --libs sdl2 SDL2_image SDL2_ttf} -lm -lz

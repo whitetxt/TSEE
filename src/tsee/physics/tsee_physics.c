@@ -6,7 +6,7 @@
  * @param obj Object to change
  * @param mass New mass
  */
-void TSEE_Physics_SetObjectMass(TSEE_Object* obj, float mass) {
+void TSEE_Physics_SetObjectMass(TSEE_Object *obj, float mass) {
 	if (!TSEE_Object_CheckAttribute(obj, TSEE_ATTRIB_PHYS))
 		return;	 // Ignore objects which are not physics objects.
 	obj->physics.mass = mass;
@@ -18,10 +18,10 @@ void TSEE_Physics_SetObjectMass(TSEE_Object* obj, float mass) {
  *
  * @param tsee TSEE to perform the step for
  */
-void TSEE_Physics_PerformStep(TSEE* tsee) {
+void TSEE_Physics_PerformStep(TSEE *tsee) {
 	Uint64 start = SDL_GetPerformanceCounter();
 	for (size_t i = 0; i < tsee->world->objects->size; i++) {
-		TSEE_Object* object = tsee->world->objects->data[i];
+		TSEE_Object *object = tsee->world->objects->data[i];
 		if (TSEE_Object_CheckAttribute(object, TSEE_ATTRIB_PHYS)) {
 			TSEE_Physics_UpdateObject(tsee, object);
 		}
@@ -42,7 +42,7 @@ void TSEE_Physics_PerformStep(TSEE* tsee) {
  * @param tsee TSEE object this object is in
  * @param obj Object to update
  */
-void TSEE_Physics_UpdateObject(TSEE* tsee, TSEE_Object* obj) {
+void TSEE_Physics_UpdateObject(TSEE *tsee, TSEE_Object *obj) {
 	// Apply gravity
 	// F = ma
 	TSEE_Vec2 grav = tsee->world->gravity;
@@ -85,9 +85,9 @@ void TSEE_Physics_UpdateObject(TSEE* tsee, TSEE_Object* obj) {
  * @param tsee TSEE to check for collisions in
  * @param obj Object to check collisions for
  */
-void TSEE_Physics_CheckCollisions(TSEE* tsee, TSEE_Object* obj) {
+void TSEE_Physics_CheckCollisions(TSEE *tsee, TSEE_Object *obj) {
 	for (size_t i = 0; i < tsee->world->objects->size; i++) {
-		TSEE_Object* other = tsee->world->objects->data[i];
+		TSEE_Object *other = tsee->world->objects->data[i];
 		if (TSEE_Object_CheckAttribute(other, TSEE_ATTRIB_PARALLAX))
 			continue;
 		if (other == obj)
@@ -105,9 +105,9 @@ void TSEE_Physics_CheckCollisions(TSEE* tsee, TSEE_Object* obj) {
  * @param first First object
  * @param second Second object
  */
-void TSEE_Physics_ResolveCollision(TSEE* tsee,
-								   TSEE_Object* first,
-								   TSEE_Object* second) {
+void TSEE_Physics_ResolveCollision(TSEE *tsee,
+								   TSEE_Object *first,
+								   TSEE_Object *second) {
 	if (TSEE_Object_CheckAttribute(first, TSEE_ATTRIB_PHYS) &&
 		TSEE_Object_CheckAttribute(second, TSEE_ATTRIB_PHYS)) {
 		// If this works Github Copilot is good

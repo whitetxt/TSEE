@@ -7,7 +7,7 @@
  * @param attr Attribute to check against.
  * @return true if it is set.
  */
-bool TSEE_Object_CheckAttribute(TSEE_Object* obj, TSEE_Object_Attributes attr) {
+bool TSEE_Object_CheckAttribute(TSEE_Object *obj, TSEE_Object_Attributes attr) {
 	return TSEE_Attributes_Check(obj->attributes, attr);
 }
 
@@ -21,8 +21,8 @@ bool TSEE_Object_CheckAttribute(TSEE_Object* obj, TSEE_Object_Attributes attr) {
  * @param y Y position for the object
  * @return TSEE_Object* or NULL
  */
-TSEE_Object* TSEE_Object_Create(TSEE* tsee,
-								TSEE_Texture* texture,
+TSEE_Object *TSEE_Object_Create(TSEE *tsee,
+								TSEE_Texture *texture,
 								TSEE_Object_Attributes attributes,
 								float x,
 								float y) {
@@ -36,7 +36,7 @@ TSEE_Object* TSEE_Object_Create(TSEE* tsee,
 		TSEE_Error("Cannot create object with UI and physics attributes.\n");
 		return NULL;
 	}
-	TSEE_Object* obj = xmalloc(sizeof(*obj));
+	TSEE_Object *obj = xmalloc(sizeof(*obj));
 	if (!obj) {
 		TSEE_Error("Failed to malloc for object.\n");
 		return NULL;
@@ -81,7 +81,7 @@ TSEE_Object* TSEE_Object_Create(TSEE* tsee,
  * @param y New Y position
  * @return success status
  */
-bool TSEE_Object_SetPosition(TSEE* tsee, TSEE_Object* obj, float x, float y) {
+bool TSEE_Object_SetPosition(TSEE *tsee, TSEE_Object *obj, float x, float y) {
 	if (!obj) {
 		TSEE_Error("Attempted to set position on NULL pointer.\n");
 		return false;
@@ -107,7 +107,7 @@ bool TSEE_Object_SetPosition(TSEE* tsee, TSEE_Object* obj, float x, float y) {
  * @param vec Vector with the new position in
  * @return success status
  */
-bool TSEE_Object_SetPositionVec2(TSEE* tsee, TSEE_Object* obj, TSEE_Vec2 vec) {
+bool TSEE_Object_SetPositionVec2(TSEE *tsee, TSEE_Object *obj, TSEE_Vec2 vec) {
 	return TSEE_Object_SetPosition(tsee, obj, vec.x, vec.y);
 }
 
@@ -118,7 +118,7 @@ bool TSEE_Object_SetPositionVec2(TSEE* tsee, TSEE_Object* obj, TSEE_Vec2 vec) {
  * @param other Second object
  * @return SDL_Rect - Check with TSEE_IsNullRect to verify if it is real.
  */
-SDL_Rect TSEE_Object_GetCollisionRect(TSEE_Object* obj, TSEE_Object* other) {
+SDL_Rect TSEE_Object_GetCollisionRect(TSEE_Object *obj, TSEE_Object *other) {
 	SDL_Rect new_rect;
 	SDL_Rect obj_rect = TSEE_Object_GetRect(obj);
 	SDL_Rect other_rect = TSEE_Object_GetRect(other);
@@ -128,7 +128,7 @@ SDL_Rect TSEE_Object_GetCollisionRect(TSEE_Object* obj, TSEE_Object* other) {
 	return (SDL_Rect){0, 0, -1, -1};
 }
 
-SDL_Rect TSEE_Object_GetRect(TSEE_Object* obj) {
+SDL_Rect TSEE_Object_GetRect(TSEE_Object *obj) {
 	// return (SDL_Rect){obj->position.x, obj->position.y * -1 +
 	// tsee->window->height, obj->texture->rect.w, obj->texture->rect.h}; No
 	// longer needs to calculate it, make sure everything goes through
@@ -145,7 +145,7 @@ SDL_Rect TSEE_Object_GetRect(TSEE_Object* obj) {
  * @param object Object to render
  * @return true on success, false on fail
  */
-bool TSEE_Object_Render(TSEE* tsee, TSEE_Object* object) {
+bool TSEE_Object_Render(TSEE *tsee, TSEE_Object *object) {
 	if (!TSEE_Object_CheckAttribute(object, TSEE_ATTRIB_PARALLAX)) {
 		Uint64 start = 0;
 		if (tsee->debug->active) {
@@ -179,7 +179,7 @@ bool TSEE_Object_Render(TSEE* tsee, TSEE_Object* object) {
  * @param object Object to destroy
  * @param destroyTexture Whether to destroy the texture or not
  */
-void TSEE_Object_Destroy(TSEE* tsee, TSEE_Object* object, bool destroyTexture) {
+void TSEE_Object_Destroy(TSEE *tsee, TSEE_Object *object, bool destroyTexture) {
 	if (destroyTexture) {
 		TSEE_Texture_Destroy(object->texture);
 		TSEE_Resource_Texture_Delete(tsee, object->texture);

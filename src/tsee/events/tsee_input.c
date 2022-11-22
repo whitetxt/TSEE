@@ -2,7 +2,7 @@
 
 /**
  * @brief Initialise the input subsystem.
- * 
+ *
  * @param tsee TSEE object to initialise input for.
  * @return success status
  */
@@ -11,7 +11,9 @@ bool TSEE_Input_Init(TSEE *tsee) {
 		return true;
 	}
 	if (!tsee->init->events) {
-		TSEE_Warn("Attempted to inititalise TSEEInput without initialising TSEEEvents");
+		TSEE_Warn(
+			"Attempted to inititalise TSEEInput without initialising "
+			"TSEEEvents");
 		return false;
 	}
 	tsee->events->keypress = TSEE_Key_Press;
@@ -22,7 +24,7 @@ bool TSEE_Input_Init(TSEE *tsee) {
 
 /**
  * @brief Callback for key press events.
- * 
+ *
  * @param tsee TSEE object to update.
  * @param keycode Keycode for the pressed button.
  */
@@ -52,7 +54,7 @@ void TSEE_Key_Press(void *tsee, SDL_Keycode keycode) {
 
 /**
  * @brief Callback for the key release event.
- * 
+ *
  * @param tsee TSEE object to update.
  * @param keycode Keycode for the released button.
  */

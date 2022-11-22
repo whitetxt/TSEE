@@ -2,7 +2,7 @@
 
 /**
  * @brief Initialises the event subsystem.
- * 
+ *
  * @param tsee TSEE object to initialise.
  * @return success status
  */
@@ -31,7 +31,7 @@ bool TSEE_Events_Init(TSEE *tsee) {
 
 /**
  * @brief Handler for all events
- * 
+ *
  * @param tsee TSEE object to handle for.
  * @return success status
  */
@@ -44,29 +44,42 @@ bool TSEE_Events_Handle(TSEE *tsee) {
 				break;
 			case SDL_KEYDOWN:
 				if (tsee->events->keypress) {
-					tsee->events->keypress(tsee, tsee->events->event->key.keysym.sym);
+					tsee->events->keypress(tsee,
+										   tsee->events->event->key.keysym.sym);
 				}
 				break;
 			case SDL_KEYUP:
 				if (tsee->events->keyrelease) {
-					tsee->events->keyrelease(tsee, tsee->events->event->key.keysym.sym);
+					tsee->events->keyrelease(
+						tsee, tsee->events->event->key.keysym.sym);
 				}
 				break;
 			case SDL_MOUSEMOTION:
-				tsee->window->mouse = (SDL_Point){tsee->events->event->motion.x, tsee->events->event->motion.y};
+				tsee->window->mouse =
+					(SDL_Point){tsee->events->event->motion.x,
+								tsee->events->event->motion.y};
 				if (tsee->events->mousemotion) {
-					tsee->events->mousemotion(tsee, tsee->events->event->motion.x, tsee->events->event->motion.y);
+					tsee->events->mousemotion(tsee,
+											  tsee->events->event->motion.x,
+											  tsee->events->event->motion.y);
 				}
 				break;
 			case SDL_MOUSEBUTTONUP:
-				if (tsee->events->event->button.button == SDL_BUTTON_LEFT) {TSEE_UI_Click(tsee, tsee->events->event->button.x, tsee->events->event->button.y);} // Checks if the UI is clicked
+				if (tsee->events->event->button.button == SDL_BUTTON_LEFT) {
+					TSEE_UI_Click(tsee, tsee->events->event->button.x,
+								  tsee->events->event->button.y);
+				}  // Checks if the UI is clicked
 				if (tsee->events->mouseclick) {
-					tsee->events->mouseclick(tsee, tsee->events->event->button.x, tsee->events->event->button.y, tsee->events->event->button.button);
+					tsee->events->mouseclick(
+						tsee, tsee->events->event->button.x,
+						tsee->events->event->button.y,
+						tsee->events->event->button.button);
 				}
 				break;
 		}
 	}
 	Uint64 end = SDL_GetPerformanceCounter();
-	tsee->debug->event_time += (end - start) * 1000/ (double) SDL_GetPerformanceFrequency();
+	tsee->debug->event_time +=
+		(end - start) * 1000 / (double)SDL_GetPerformanceFrequency();
 	return true;
 }

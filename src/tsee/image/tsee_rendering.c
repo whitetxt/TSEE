@@ -2,7 +2,7 @@
 
 /**
  * @brief Initialises rendering for a TSEE object.
- * 
+ *
  * @param tsee TSEE object to initialise
  * @return success status
  */
@@ -15,23 +15,32 @@ bool TSEE_Rendering_Init(TSEE *tsee) {
 		return false;
 	}
 
-	if (IMG_Init(IMG_INIT_JPG | IMG_INIT_PNG | IMG_INIT_TIF | IMG_INIT_WEBP) == 0) {
+	if (IMG_Init(IMG_INIT_JPG | IMG_INIT_PNG | IMG_INIT_TIF | IMG_INIT_WEBP) ==
+		0) {
 		TSEE_Error("SDL_IMG could not initialize (%s)\n", IMG_GetError());
 		return false;
 	}
 
-	tsee->window->window = SDL_CreateWindow("No window title set: Call TSEE_Window_SetTitle", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, tsee->window->width, tsee->window->height, SDL_WINDOW_SHOWN);
+	tsee->window->window = SDL_CreateWindow(
+		"No window title set: Call TSEE_Window_SetTitle",
+		SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, tsee->window->width,
+		tsee->window->height, SDL_WINDOW_SHOWN);
 	if (tsee->window->window == NULL) {
-		TSEE_Error("Window could not be created! SDL_Error: %s\n", SDL_GetError());
+		TSEE_Error("Window could not be created! SDL_Error: %s\n",
+				   SDL_GetError());
 		SDL_Quit();
 		return false;
 	}
 
-	TSEE_Log("Width: %d, Height: %d\n", tsee->window->width, tsee->window->height);
+	TSEE_Log("Width: %d, Height: %d\n", tsee->window->width,
+			 tsee->window->height);
 
-	tsee->window->renderer = SDL_CreateRenderer(tsee->window->window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+	tsee->window->renderer = SDL_CreateRenderer(
+		tsee->window->window, -1,
+		SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 	if (tsee->window->renderer == NULL) {
-		TSEE_Error("Renderer could not be created! SDL_Error: %s\n", SDL_GetError());
+		TSEE_Error("Renderer could not be created! SDL_Error: %s\n",
+				   SDL_GetError());
 		SDL_DestroyWindow(tsee->window->window);
 		SDL_Quit();
 		return false;
@@ -55,16 +64,17 @@ bool TSEE_Rendering_Init(TSEE *tsee) {
 
 /**
  * @brief Updates the window size for a TSEE object
- * 
+ *
  * @param tsee TSEE object to update
  */
 void TSEE_Window_UpdateSize(TSEE *tsee) {
-	SDL_SetWindowSize(tsee->window->window, tsee->window->width, tsee->window->height);
+	SDL_SetWindowSize(tsee->window->window, tsee->window->width,
+					  tsee->window->height);
 }
 
 /**
  * @brief Destroys a window and renderer for a TSEE_Window
- * 
+ *
  * @param window Window to destroy
  */
 void TSEE_Window_Destroy(TSEE_Window *window) {
@@ -75,7 +85,7 @@ void TSEE_Window_Destroy(TSEE_Window *window) {
 
 /**
  * @brief Sets the title of a window.
- * 
+ *
  * @param tsee TSEE object with the window in it.
  * @param title New title of the window.
  * @return success status
@@ -93,7 +103,7 @@ bool TSEE_Window_SetTitle(TSEE *tsee, char *title) {
 
 /**
  * @brief Render everything inside a TSEE object.
- * 
+ *
  * @param tsee TSEE object to render
  * @return success status
  */
@@ -147,7 +157,8 @@ bool TSEE_RenderAll(TSEE *tsee) {
 		SDL_RenderFillRect(tsee->window->renderer, &tex->texture->rect);
 		TSEE_Text_Render(tsee, tex);
 		TSEE_Text_Destroy(tsee, tex, true);
-		sprintf(text, "Object Render: %.3f ms", tsee->debug->render_times.object_time);
+		sprintf(text, "Object Render: %.3f ms",
+				tsee->debug->render_times.object_time);
 		tex = TSEE_Text_Create(tsee, "_default", text, colour);
 		tex->texture->rect.x = 0;
 		tex->texture->rect.y = height_off;
@@ -155,7 +166,8 @@ bool TSEE_RenderAll(TSEE *tsee) {
 		SDL_RenderFillRect(tsee->window->renderer, &tex->texture->rect);
 		TSEE_Text_Render(tsee, tex);
 		TSEE_Text_Destroy(tsee, tex, true);
-		sprintf(text, "Parallax Render: %.3f ms", tsee->debug->render_times.parallax_time);
+		sprintf(text, "Parallax Render: %.3f ms",
+				tsee->debug->render_times.parallax_time);
 		tex = TSEE_Text_Create(tsee, "_default", text, colour);
 		tex->texture->rect.x = 0;
 		tex->texture->rect.y = height_off;
@@ -182,10 +194,15 @@ bool TSEE_RenderAll(TSEE *tsee) {
 	}
 
 	SDL_RenderPresent(tsee->window->renderer);
-	tsee->debug->framerate = 1000 / (tsee->window->last_render - SDL_GetPerformanceCounter()) / (double)SDL_GetPerformanceFrequency();
+	tsee->debug->framerate =
+		1000 / (tsee->window->last_render - SDL_GetPerformanceCounter()) /
+		(double)SDL_GetPerformanceFrequency();
 	tsee->window->last_render = SDL_GetPerformanceCounter();
-	tsee->debug->render_time = (tsee->window->last_render - start) * 1000 / (double)SDL_GetPerformanceFrequency();
-	tsee->debug->frame_time = tsee->debug->event_time + tsee->debug->physics_time + tsee->debug->render_time;
+	tsee->debug->render_time = (tsee->window->last_render - start) * 1000 /
+							   (double)SDL_GetPerformanceFrequency();
+	tsee->debug->frame_time = tsee->debug->event_time +
+							  tsee->debug->physics_time +
+							  tsee->debug->render_time;
 	tsee->debug->event_time = 0;
 	tsee->debug->physics_time = 0;
 	tsee->debug->render_times.object_time = 0;
@@ -196,12 +213,14 @@ bool TSEE_RenderAll(TSEE *tsee) {
 /**
  * @brief Checks if the TSEE is ready to render yet, according to the framerate
  *        set in the window object.
- * 
+ *
  * @param tsee TSEE to check if ready
  * @return true if ready, false if not.
  */
 bool TSEE_Rendering_IsReady(TSEE *tsee) {
 	float timeBetweenFrames = 1.0f / tsee->window->fps;
-	float dt = (float) ( (SDL_GetPerformanceCounter() - tsee->window->last_render) / (float) SDL_GetPerformanceFrequency() );
+	float dt =
+		(float)((SDL_GetPerformanceCounter() - tsee->window->last_render) /
+				(float)SDL_GetPerformanceFrequency());
 	return dt - timeBetweenFrames > -0.1f;
 }

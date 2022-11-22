@@ -2,7 +2,7 @@
 
 /**
  * @brief Load a font into a TSEE object
- * 
+ *
  * @param tsee TSEE object to load the font into.
  * @param path Path to the font file.
  * @param size Font size
@@ -27,7 +27,7 @@ bool TSEE_Font_Load(TSEE *tsee, char *path, int size, char *name) {
 
 /**
  * @brief Unloads a font by its pointer.
- * 
+ *
  * @param font Pointer to the font to unload.
  * @return success status
  */
@@ -44,7 +44,7 @@ bool TSEE_Font_Unload(TSEE *tsee, TSEE_Font *font) {
 
 /**
  * @brief Unloads a font from a TSEE object identified by its name
- * 
+ *
  * @param name Name of the font to unload
  * @return success status
  */
@@ -55,12 +55,11 @@ bool TSEE_Font_UnloadName(TSEE *tsee, char *name) {
 		return false;
 	}
 	return TSEE_Font_Unload(tsee, font);
-	
 }
 
 /**
  * @brief Unloads all fonts in a TSEE object.
- * 
+ *
  * @param tsee TSEE object to unload all fonts in.
  * @return success status
  */
@@ -74,10 +73,10 @@ bool TSEE_Font_UnloadAll(TSEE *tsee) {
 
 /**
  * @brief Gets an already loaded font from a TSEE object by its name.
- * 
+ *
  * @param tsee TSEE object to find the font in.
  * @param name Name of the font.
- * @return TTF_Font* 
+ * @return TTF_Font*
  */
 TSEE_Font *TSEE_Font_Get(TSEE *tsee, char *name) {
 	if (!name) {

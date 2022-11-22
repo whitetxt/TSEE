@@ -1,17 +1,17 @@
 #include "main.h"
 
-void quitGame(void* t) {
-	TSEE* tsee = (TSEE*)t;
+void quitGame(void *t) {
+	TSEE *tsee = (TSEE *)t;
 	tsee->window->running = false;
 }
 
-void saveMap(void* t) {
-	TSEE* tsee = (TSEE*)t;
+void saveMap(void *t) {
+	TSEE *tsee = (TSEE *)t;
 	TSEE_Map_Save(tsee, "map.tsee_map");
 }
 
-void loadMap(void* t) {
-	TSEE* tsee = (TSEE*)t;
+void loadMap(void *t) {
+	TSEE *tsee = (TSEE *)t;
 	TSEE_Map_Load(tsee, "map.tsee_map");
 	TSEE_Toolbar_AddButton(tsee, "_default", "Home");
 	TSEE_Toolbar_AddChild(tsee, "Home", "_default", "Quit", quitGame);
@@ -20,11 +20,11 @@ void loadMap(void* t) {
 	TSEE_Toolbar_AddChild(tsee, "Maps", "_default", "Load", loadMap);
 }
 
-int main(int argc, char* argv[]) {
+int main(int argc, char *argv[]) {
 	(void)argc;
 	(void)argv;
 
-	TSEE* tsee = TSEE_Create(800, 600);
+	TSEE *tsee = TSEE_Create(800, 600);
 
 	if (!TSEE_InitAll(tsee)) {
 		TSEE_Critical("Failed to initialize TSEE\n");

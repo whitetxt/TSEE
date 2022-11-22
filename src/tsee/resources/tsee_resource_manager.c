@@ -14,11 +14,12 @@ bool TSEE_Resource_Init(TSEE *tsee) {
 
 /**
  * @brief Unloads and frees all data in the resource manager.
- * 
+ *
  * @return success status
  */
 bool TSEE_Resource_Unload(TSEE *tsee) {
-	if (!tsee->resources) return false;
+	if (!tsee->resources)
+		return false;
 	while (tsee->resources->textures->size > 0) {
 		TSEE_Texture *tex = TSEE_Array_Get(tsee->resources->textures, 0);
 		TSEE_Texture_Destroy(tex);
@@ -37,12 +38,13 @@ bool TSEE_Resource_Unload(TSEE *tsee) {
 
 /**
  * @brief Gets a texture from the resource manager.
- * 
+ *
  * @param path Path of the texture to get.
  * @return TSEE_Texture* on success, NULL on failure.
  */
 TSEE_Texture *TSEE_Resource_Texture_Get(TSEE *tsee, char *path) {
-	if (!tsee->resources) return NULL;
+	if (!tsee->resources)
+		return NULL;
 	for (size_t i = 0; i < tsee->resources->textures->size; i++) {
 		TSEE_Texture *tex = TSEE_Array_Get(tsee->resources->textures, i);
 		if (strcmp(path, tex->path) == 0) {
@@ -54,35 +56,38 @@ TSEE_Texture *TSEE_Resource_Texture_Get(TSEE *tsee, char *path) {
 
 /**
  * @brief Stores a texture in the resource manager.
- * 
- * @param tex Texture to store 
+ *
+ * @param tex Texture to store
  * @return success status
  */
 bool TSEE_Resource_Texture_Store(TSEE *tsee, TSEE_Texture *tex) {
-	if (!tsee->resources) return false;
+	if (!tsee->resources)
+		return false;
 	return TSEE_Array_Append(tsee->resources->textures, tex);
 }
 
 /**
  * @brief Deletes a texture in the resource manager.
  * !! It is up to the calling function to ensure that memory is freed.
- * 
+ *
  * @param tex Texture to delete.
  * @return success status
  */
 bool TSEE_Resource_Texture_Delete(TSEE *tsee, TSEE_Texture *tex) {
-	if (!tsee->resources) return false;
+	if (!tsee->resources)
+		return false;
 	return TSEE_Array_DeleteItem(tsee->resources->textures, tex);
 }
 
 /**
  * @brief Deletes a texture in the resource manager by its path.
- * 
+ *
  * @param path Path of the texture to delete.
  * @return success status
  */
 bool TSEE_Resource_Texture_DeletePath(TSEE *tsee, char *path) {
-	if (!tsee->resources) return false;
+	if (!tsee->resources)
+		return false;
 	TSEE_Texture *tex = TSEE_Resource_Texture_Get(tsee, path);
 	if (!tex) {
 		TSEE_Warn("Attempted to delete non-existant resource `%s`\n", path);
@@ -99,12 +104,13 @@ bool TSEE_Resource_Texture_DeletePath(TSEE *tsee, char *path) {
 
 /**
  * @brief Gets a font from TSEE's resource manager.
- * 
+ *
  * @param name Name of the font to find.
  * @return TSEE_Font* on success, NULL on fail.
  */
 TSEE_Font *TSEE_Resource_Font_Get(TSEE *tsee, char *name) {
-	if (!tsee->resources) return NULL;
+	if (!tsee->resources)
+		return NULL;
 	for (size_t i = 0; i < tsee->resources->fonts->size; i++) {
 		TSEE_Font *foundFont = TSEE_Array_Get(tsee->resources->fonts, i);
 		if (strcmp(name, foundFont->name) == 0) {
@@ -117,12 +123,13 @@ TSEE_Font *TSEE_Resource_Font_Get(TSEE *tsee, char *name) {
 /**
  * @brief Stores a font in TSEE's resource manager.
  * Will warn if storing a duplicate font.
- * 
+ *
  * @param font Font to store
  * @return if the operation succeeded.
  */
 bool TSEE_Resource_Font_Store(TSEE *tsee, TSEE_Font *font) {
-	if (!tsee->resources) return false;
+	if (!tsee->resources)
+		return false;
 	if (TSEE_Resource_Font_Get(tsee, font->name) == font) {
 		TSEE_Warn("Storing duplicate font: `%s`\n", font->name);
 	}
@@ -131,11 +138,12 @@ bool TSEE_Resource_Font_Store(TSEE *tsee, TSEE_Font *font) {
 
 /**
  * @brief Deletes a font from TSEE's resource manager.
- * 
+ *
  * @param font Font to delete.
  * @return if the operation succeeded.
  */
 bool TSEE_Resource_Font_Delete(TSEE *tsee, TSEE_Font *font) {
-	if (!tsee->resources) return false;
+	if (!tsee->resources)
+		return false;
 	return TSEE_Array_DeleteItem(tsee->resources->fonts, font);
 }
