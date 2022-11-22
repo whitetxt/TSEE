@@ -26,8 +26,8 @@ void TSEE_Physics_PerformStep(TSEE *tsee) {
 	}
 	if (tsee->player->object) {
 		TSEE_World_ScrollToObject(tsee, tsee->player->object);
-		TSEE_Log("Scroll: %f, %f\n", tsee->world->scroll_x,
-				 tsee->world->scroll_y);
+		/*TSEE_Log("Scroll: %f, %f\n", tsee->world->scroll_x,
+				 tsee->world->scroll_y);*/
 	}
 	Uint64 end = SDL_GetPerformanceCounter();
 	tsee->debug->physics_time +=
@@ -54,8 +54,9 @@ void TSEE_Physics_UpdateObject(TSEE *tsee, TSEE_Object *obj) {
 	// F = ma
 	// a = F / m
 	// a = F * (1 / m)
-	TSEE_Vec2 accel = (TSEE_Vec2){obj->physics.force.x * obj->physics.inv_mass,
-								  obj->physics.force.y * obj->physics.inv_mass};
+	TSEE_Vec2 accel = obj->physics.force;
+	TSEE_Vec2_Multiply(&accel, obj->physics.inv_mass);
+
 	TSEE_Vec2_Multiply(&accel, dt);
 	// Euler Explicit
 	TSEE_Vec2_Add(&obj->physics.velocity, accel);

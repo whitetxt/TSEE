@@ -129,64 +129,90 @@ bool TSEE_RenderAll(TSEE *tsee) {
 		SDL_Color colour = {255, 255, 255, SDL_ALPHA_OPAQUE};
 		int height_off = 0;
 		sprintf(text, "Event: %.3f ms", tsee->debug->event_time);
-		TSEE_Object *tex = TSEE_Text_Create(tsee, "_default", text, colour);
-		tex->texture->rect.x = 0;
-		tex->texture->rect.y = height_off;
-		height_off += tex->texture->rect.h;
-		SDL_SetRenderDrawColor(tsee->window->renderer, 100, 100, 100, 255);
-		SDL_RenderFillRect(tsee->window->renderer, &tex->texture->rect);
-		TSEE_Text_Render(tsee, tex);
-		TSEE_Text_Destroy(tsee, tex, true);
+		TSEE_Object *eventText =
+			TSEE_Text_Create(tsee, "_default", text, colour);
+		if (eventText) {
+			eventText->texture->rect.x = 0;
+			eventText->texture->rect.y = height_off;
+			height_off += eventText->texture->rect.h;
+			SDL_SetRenderDrawColor(tsee->window->renderer, 100, 100, 100, 255);
+			SDL_RenderFillRect(tsee->window->renderer,
+							   &eventText->texture->rect);
+			TSEE_Text_Render(tsee, eventText);
+			TSEE_Text_Destroy(tsee, eventText, true);
+		}
 		sprintf(text, "Physics: %.3f ms", tsee->debug->physics_time);
-		tex = TSEE_Text_Create(tsee, "_default", text, colour);
-		tex->texture->rect.x = 0;
-		tex->texture->rect.y = height_off;
-		height_off += tex->texture->rect.h;
-		SDL_RenderFillRect(tsee->window->renderer, &tex->texture->rect);
-		TSEE_Text_Render(tsee, tex);
-		TSEE_Text_Destroy(tsee, tex, true);
+		TSEE_Object *physicsText =
+			TSEE_Text_Create(tsee, "_default", text, colour);
+		if (physicsText) {
+			physicsText->texture->rect.x = 0;
+			physicsText->texture->rect.y = height_off;
+			height_off += physicsText->texture->rect.h;
+			SDL_RenderFillRect(tsee->window->renderer,
+							   &physicsText->texture->rect);
+			TSEE_Text_Render(tsee, physicsText);
+			TSEE_Text_Destroy(tsee, physicsText, true);
+		}
 		sprintf(text, "Render: %.3f ms", tsee->debug->render_time);
-		tex = TSEE_Text_Create(tsee, "_default", text, colour);
-		tex->texture->rect.x = 0;
-		tex->texture->rect.y = height_off;
-		height_off += tex->texture->rect.h;
-		SDL_RenderFillRect(tsee->window->renderer, &tex->texture->rect);
-		TSEE_Text_Render(tsee, tex);
-		TSEE_Text_Destroy(tsee, tex, true);
+		TSEE_Object *renderText =
+			TSEE_Text_Create(tsee, "_default", text, colour);
+		if (renderText) {
+			renderText->texture->rect.x = 0;
+			renderText->texture->rect.y = height_off;
+			height_off += renderText->texture->rect.h;
+			SDL_RenderFillRect(tsee->window->renderer,
+							   &renderText->texture->rect);
+			TSEE_Text_Render(tsee, renderText);
+			TSEE_Text_Destroy(tsee, renderText, true);
+		}
 		sprintf(text, "Object Render: %.3f ms",
 				tsee->debug->render_times.object_time);
-		tex = TSEE_Text_Create(tsee, "_default", text, colour);
-		tex->texture->rect.x = 0;
-		tex->texture->rect.y = height_off;
-		height_off += tex->texture->rect.h;
-		SDL_RenderFillRect(tsee->window->renderer, &tex->texture->rect);
-		TSEE_Text_Render(tsee, tex);
-		TSEE_Text_Destroy(tsee, tex, true);
+		TSEE_Object *objRenderText =
+			TSEE_Text_Create(tsee, "_default", text, colour);
+		if (objRenderText) {
+			objRenderText->texture->rect.x = 0;
+			objRenderText->texture->rect.y = height_off;
+			height_off += objRenderText->texture->rect.h;
+			SDL_RenderFillRect(tsee->window->renderer,
+							   &objRenderText->texture->rect);
+			TSEE_Text_Render(tsee, objRenderText);
+			TSEE_Text_Destroy(tsee, objRenderText, true);
+		}
 		sprintf(text, "Parallax Render: %.3f ms",
 				tsee->debug->render_times.parallax_time);
-		tex = TSEE_Text_Create(tsee, "_default", text, colour);
-		tex->texture->rect.x = 0;
-		tex->texture->rect.y = height_off;
-		height_off += tex->texture->rect.h;
-		SDL_RenderFillRect(tsee->window->renderer, &tex->texture->rect);
-		TSEE_Text_Render(tsee, tex);
-		TSEE_Text_Destroy(tsee, tex, true);
+		TSEE_Object *parallaxTimeText =
+			TSEE_Text_Create(tsee, "_default", text, colour);
+		if (parallaxTimeText) {
+			parallaxTimeText->texture->rect.x = 0;
+			parallaxTimeText->texture->rect.y = height_off;
+			height_off += parallaxTimeText->texture->rect.h;
+			SDL_RenderFillRect(tsee->window->renderer,
+							   &parallaxTimeText->texture->rect);
+			TSEE_Text_Render(tsee, parallaxTimeText);
+			TSEE_Text_Destroy(tsee, parallaxTimeText, true);
+		}
 		sprintf(text, "Frame: %.3f ms", tsee->debug->frame_time);
-		tex = TSEE_Text_Create(tsee, "_default", text, colour);
-		tex->texture->rect.x = 0;
-		tex->texture->rect.y = height_off;
-		height_off += tex->texture->rect.h;
-		SDL_RenderFillRect(tsee->window->renderer, &tex->texture->rect);
-		TSEE_Text_Render(tsee, tex);
-		TSEE_Text_Destroy(tsee, tex, true);
+		TSEE_Object *frameTimeText =
+			TSEE_Text_Create(tsee, "_default", text, colour);
+		if (frameTimeText) {
+			frameTimeText->texture->rect.x = 0;
+			frameTimeText->texture->rect.y = height_off;
+			height_off += frameTimeText->texture->rect.h;
+			SDL_RenderFillRect(tsee->window->renderer,
+							   &frameTimeText->texture->rect);
+			TSEE_Text_Render(tsee, frameTimeText);
+			TSEE_Text_Destroy(tsee, frameTimeText, true);
+		}
 		sprintf(text, "Framerate: %.3f", 1000 / tsee->debug->frame_time);
-		tex = TSEE_Text_Create(tsee, "_default", text, colour);
-		tex->texture->rect.x = 0;
-		tex->texture->rect.y = height_off;
-		height_off += tex->texture->rect.h;
-		SDL_RenderFillRect(tsee->window->renderer, &tex->texture->rect);
-		TSEE_Text_Render(tsee, tex);
-		TSEE_Text_Destroy(tsee, tex, true);
+		TSEE_Object *fpsText = TSEE_Text_Create(tsee, "_default", text, colour);
+		if (fpsText) {
+			fpsText->texture->rect.x = 0;
+			fpsText->texture->rect.y = height_off;
+			height_off += fpsText->texture->rect.h;
+			SDL_RenderFillRect(tsee->window->renderer, &fpsText->texture->rect);
+			TSEE_Text_Render(tsee, fpsText);
+			TSEE_Text_Destroy(tsee, fpsText, true);
+		}
 	}
 
 	SDL_RenderPresent(tsee->window->renderer);

@@ -48,12 +48,14 @@ TSEE_Object *TSEE_Text_Create(TSEE *tsee,
 		TSEE_Warn(
 			"Failed to create text `%s` with font `%s` (Failed to get font)\n",
 			text, fontName);
+		xfree(textObj);
 		return NULL;
 	}
 	textObj->text.text = strdup(text);
 	textObj->texture = xmalloc(sizeof(*textObj->texture));
 	if (!textObj->texture) {
 		TSEE_Error("Failed to malloc for text object's texture.\n");
+		xfree(textObj);
 		return NULL;
 	}
 	textObj->texture->path = NULL;
@@ -63,6 +65,8 @@ TSEE_Object *TSEE_Text_Create(TSEE *tsee,
 			"Failed to create text `%s` with font `%s` (Failed to create "
 			"surface)\n",
 			text, fontName);
+		xfree(textObj->texture);
+		xfree(textObj);
 		return NULL;
 	}
 	textObj->texture->texture =
