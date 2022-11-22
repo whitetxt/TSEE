@@ -17,6 +17,7 @@ bool TSEE_Font_Load(TSEE *tsee, char *path, int size, char *name) {
 	font->font = TTF_OpenFont(path, size);
 	if (font->font == NULL) {
 		TSEE_Warn("Failed to load font `%s` (%s)\n", path, TTF_GetError());
+		xfree(font);
 		return false;
 	}
 	font->name = strdup(name);
@@ -73,7 +74,7 @@ bool TSEE_Font_UnloadAll(TSEE *tsee) {
  * @brief Gets an already loaded font from a TSEE object by its name.
  *
  * @param name Name of the font.
- * @return TTF_Font*
+ * @return The located font, or NULL if not found
  */
 TSEE_Font *TSEE_Font_Get(TSEE *tsee, char *name) {
 	if (!name) {

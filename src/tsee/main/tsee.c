@@ -20,6 +20,7 @@ TSEE *TSEE_Create(int width, int height) {
 	tsee->window = xmalloc(sizeof(*tsee->window));
 	if (!tsee->window) {
 		TSEE_Error("Failed to malloc for window.\n");
+		xfree(tsee);
 		return NULL;
 	}
 	tsee->window->width = width;
@@ -32,6 +33,8 @@ TSEE *TSEE_Create(int width, int height) {
 	tsee->world = xmalloc(sizeof(*tsee->world));
 	if (!tsee->world) {
 		TSEE_Error("Failed to malloc for world.\n");
+		xfree(tsee->window);
+		xfree(tsee);
 		return NULL;
 	}
 	tsee->world->objects = TSEE_Array_Create();
@@ -42,6 +45,10 @@ TSEE *TSEE_Create(int width, int height) {
 	tsee->player = xmalloc(sizeof(*tsee->player));
 	if (!tsee->player) {
 		TSEE_Error("Failed to malloc for player.\n");
+		TSEE_Array_Destroy(tsee->world->objects);
+		xfree(tsee->world);
+		xfree(tsee->window);
+		xfree(tsee);
 		return NULL;
 	}
 	tsee->player->object = NULL;
@@ -63,6 +70,11 @@ TSEE *TSEE_Create(int width, int height) {
 	tsee->ui = xmalloc(sizeof(*tsee->ui));
 	if (!tsee->ui) {
 		TSEE_Error("Failed to malloc for UI.\n");
+		xfree(tsee->player);
+		TSEE_Array_Destroy(tsee->world->objects);
+		xfree(tsee->world);
+		xfree(tsee->window);
+		xfree(tsee);
 		return NULL;
 	}
 
@@ -70,6 +82,12 @@ TSEE *TSEE_Create(int width, int height) {
 	tsee->init = xmalloc(sizeof(*tsee->init));
 	if (!tsee->init) {
 		TSEE_Error("Failed to malloc for tsee->init");
+		xfree(tsee->ui);
+		xfree(tsee->player);
+		TSEE_Array_Destroy(tsee->world->objects);
+		xfree(tsee->world);
+		xfree(tsee->window);
+		xfree(tsee);
 		return NULL;
 	}
 	tsee->init->text = false;
@@ -82,6 +100,13 @@ TSEE *TSEE_Create(int width, int height) {
 	tsee->debug = xmalloc(sizeof(*tsee->debug));
 	if (!tsee->debug) {
 		TSEE_Error("Failed to malloc for tsee->debug.\n");
+		xfree(tsee->init);
+		xfree(tsee->ui);
+		xfree(tsee->player);
+		TSEE_Array_Destroy(tsee->world->objects);
+		xfree(tsee->world);
+		xfree(tsee->window);
+		xfree(tsee);
 		return NULL;
 	}
 	tsee->debug->event_time = 0;

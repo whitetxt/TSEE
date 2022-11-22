@@ -24,21 +24,21 @@ TSEE_Texture *TSEE_Texture_Create(TSEE *tsee, char *path) {
 		TSEE_Resource_Texture_Store(tsee, newTexture);
 		return newTexture;
 	}
-	SDL_Texture *stex = IMG_LoadTexture(tsee->window->renderer, path);
-	if (!stex) {
+	SDL_Texture *SDL_tex = IMG_LoadTexture(tsee->window->renderer, path);
+	if (!SDL_tex) {
 		TSEE_Error("Couldn't load texture from file `%s`\n", path);
 		return NULL;
 	}
 	tex = xmalloc(sizeof(*tex));
-	if (!stex) {
+	if (!tex) {
 		TSEE_Error("Couldn't malloc for texture `%s`\n", path);
-		xfree(tex);
+		xfree(SDL_tex);
 		return NULL;
 	}
-	tex->texture = stex;
+	tex->texture = SDL_tex;
 	tex->path = strdup(path);
 
-	SDL_QueryTexture(stex, NULL, NULL, &tex->rect.w, &tex->rect.h);
+	SDL_QueryTexture(SDL_tex, NULL, NULL, &tex->rect.w, &tex->rect.h);
 	tex->rect = (SDL_Rect){0, 0, tex->rect.w, tex->rect.h};
 	TSEE_Resource_Texture_Store(tsee, tex);
 	return tex;
