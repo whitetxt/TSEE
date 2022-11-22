@@ -97,7 +97,6 @@ void TSEE_Text_Destroy(TSEE *tsee, TSEE_Object *text, bool destroyTexture) {
 /**
  * @brief Render a text object to a TSEE object.
  *
- * @param tsee TSEE object to render the text to.
  * @param text Text object to render.
  * @return success status
  */

@@ -3,7 +3,6 @@
 /**
  * @brief Sets the player's speed in u/s
  *
- * @param tsee TSEE object which the player is in
  * @param speed New speed of the player
  */
 void TSEE_Player_SetSpeed(TSEE *tsee, float speed) {
@@ -13,7 +12,6 @@ void TSEE_Player_SetSpeed(TSEE *tsee, float speed) {
 /**
  * @brief Sets the player's jump force as a multiple of the gravity.
  *
- * @param tsee TSEE object which the player is in
  * @param jump_force New jump force of the player
  */
 void TSEE_Player_SetJumpForce(TSEE *tsee, float jump_force) {
@@ -22,8 +20,6 @@ void TSEE_Player_SetJumpForce(TSEE *tsee, float jump_force) {
 
 /**
  * @brief Handles the player's input, and applies necessary forces.
- *
- * @param tsee TSEE which holds the player.
  */
 void TSEE_Player_HandleInput(TSEE *tsee) {
 	TSEE_Player *player = tsee->player;

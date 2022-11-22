@@ -3,7 +3,6 @@
 /**
  * @brief Callback for TSEE_Settings_Load, DO NOT USE.
  *
- * @param tsee TSEE object to load settings for
  * @param section Section which the setting is in
  * @param value Value for the setting
  */
@@ -43,7 +42,6 @@ void TSEE_Settings_LoadCallback(TSEE *tsee, char *section, char *value) {
 /**
  * @brief Loads TSEE's internal settings.
  *
- * @param tsee TSEE object to load into.
  * @return success status
  */
 bool TSEE_Settings_Load(TSEE *tsee) {
@@ -68,7 +66,6 @@ bool TSEE_Settings_Load(TSEE *tsee) {
 /**
  * @brief Saves TSEE's internal settings.
  *
- * @param tsee TSEE object to save.
  * @return success status
  */
 bool TSEE_Settings_Save(TSEE *tsee) {

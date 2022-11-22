@@ -14,7 +14,6 @@ bool TSEE_Object_CheckAttribute(TSEE_Object *obj, TSEE_Object_Attributes attr) {
 /**
  * @brief Creates an object from a texture, with the given attributes.
  *
- * @param tsee TSEE object
  * @param texture Texture to use for the object
  * @param attributes TSEE_Object_Attributes OR'd together
  * @param x X position for the object
@@ -102,7 +101,6 @@ bool TSEE_Object_SetPosition(TSEE *tsee, TSEE_Object *obj, float x, float y) {
 /**
  * @brief Sets the position of an object from a 2d vector.
  *
- * @param tsee TSEE which the object is inside
  * @param obj Object to set
  * @param vec Vector with the new position in
  * @return success status
@@ -141,7 +139,6 @@ SDL_Rect TSEE_Object_GetRect(TSEE_Object *obj) {
 /**
  * @brief Renders an object
  *
- * @param tsee TSEE to render to
  * @param object Object to render
  * @return true on success, false on fail
  */

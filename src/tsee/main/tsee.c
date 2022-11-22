@@ -100,7 +100,6 @@ TSEE *TSEE_Create(int width, int height) {
 /**
  * @brief Initialises all subsystems for a TSEE.
  *
- * @param tsee TSEE to initialise for.
  * @return success status
  */
 bool TSEE_InitAll(TSEE *tsee) {
@@ -153,7 +152,6 @@ bool TSEE_InitAll(TSEE *tsee) {
 /**
  * @brief Closes a TSEE object, freeing all memory used.
  *
- * @param tsee TSEE object to close.
  * @return success status
  */
 bool TSEE_Close(TSEE *tsee) {
@@ -222,7 +220,6 @@ bool TSEE_Close(TSEE *tsee) {
 /**
  * @brief Calculates delta-time for a TSEE object.
  *
- * @param tsee TSEE object to calculate delta-time for.
  * @return success status
  */
 bool TSEE_CalculateDT(TSEE *tsee) {
@@ -236,7 +233,6 @@ bool TSEE_CalculateDT(TSEE *tsee) {
 /**
  * @brief Sets the gravity strength for a TSEE object
  *
- * @param tsee TSEE object to set gravity for.
  * @param gravity New gravity value.
  * @return success status
  */
@@ -248,7 +244,6 @@ bool TSEE_World_SetGravity(TSEE *tsee, TSEE_Vec2 gravity) {
 /**
  * @brief Centers the camera around an object.
  *
- * @param tsee TSEE to center
  * @param obj Object to center around
  */
 void TSEE_World_ScrollToObject(TSEE *tsee, TSEE_Object *obj) {
