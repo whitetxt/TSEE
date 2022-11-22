@@ -3,7 +3,6 @@
 /**
  * @brief Initialises rendering for a TSEE object.
  *
- * @param tsee TSEE object to initialise
  * @return success status
  */
 bool TSEE_Rendering_Init(TSEE *tsee) {
@@ -65,7 +64,6 @@ bool TSEE_Rendering_Init(TSEE *tsee) {
 /**
  * @brief Updates the window size for a TSEE object
  *
- * @param tsee TSEE object to update
  */
 void TSEE_Window_UpdateSize(TSEE *tsee) {
 	SDL_SetWindowSize(tsee->window->window, tsee->window->width,
@@ -86,7 +84,6 @@ void TSEE_Window_Destroy(TSEE_Window *window) {
 /**
  * @brief Sets the title of a window.
  *
- * @param tsee TSEE object with the window in it.
  * @param title New title of the window.
  * @return success status
  */
@@ -104,7 +101,6 @@ bool TSEE_Window_SetTitle(TSEE *tsee, char *title) {
 /**
  * @brief Render everything inside a TSEE object.
  *
- * @param tsee TSEE object to render
  * @return success status
  */
 bool TSEE_RenderAll(TSEE *tsee) {
@@ -214,7 +210,6 @@ bool TSEE_RenderAll(TSEE *tsee) {
  * @brief Checks if the TSEE is ready to render yet, according to the framerate
  *        set in the window object.
  *
- * @param tsee TSEE to check if ready
  * @return true if ready, false if not.
  */
 bool TSEE_Rendering_IsReady(TSEE *tsee) {

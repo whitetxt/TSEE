@@ -4,7 +4,6 @@
  * @brief Creates a texture from a file path. If the texture is already loaded,
  *        the new texture uses a reference to the other texture.
  *
- * @param tsee TSEE object to load the texture into
  * @param path Path to read the texture from.
  * @return TSEE_Texture*
  */
@@ -48,7 +47,6 @@ TSEE_Texture *TSEE_Texture_Create(TSEE *tsee, char *path) {
 /**
  * @brief Finds a texture if it is already loaded.
  *
- * @param tsee TSEE object to look for the texture in
  * @param path Path to the texture
  * @return TSEE_Texture*
  */

@@ -2,8 +2,6 @@
 
 /**
  * @brief Initialises the animation subsystem.
- *
- * @param tsee TSEE object to initialise for.
  */
 void TSEE_Animation_Init(TSEE *tsee) {
 	return;

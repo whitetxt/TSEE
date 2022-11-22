@@ -3,7 +3,6 @@
 /**
  * @brief Creates a parallax object from a texture.
  *
- * @param tsee TSEE object to create the parallax for.
  * @param texture Texture to use for the object.
  * @param distanceFromCamera Distance from the camera to the object.
  * @return The new object (or NULL on failure).
@@ -48,7 +47,6 @@ TSEE_Object *TSEE_Parallax_Create(TSEE *tsee,
 /**
  * @brief Create a parallax object from another object.
  *
- * @param tsee TSEE object to create the parallax for.
  * @param obj Object to create the parallax object from.
  * @param distanceFromCamera Distance from the camera to the object.
  * @return The new object.
@@ -62,7 +60,6 @@ TSEE_Object *TSEE_Parallax_CreateFromObject(TSEE *tsee,
 /**
  * @brief Renders a parallax object in a TSEE object.
  *
- * @param tsee TSEE object to render.
  * @param parallax Parallax object to render.
  * @return success status
  */

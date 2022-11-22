@@ -3,7 +3,6 @@
 /**
  * @brief Initialises the event subsystem.
  *
- * @param tsee TSEE object to initialise.
  * @return success status
  */
 bool TSEE_Events_Init(TSEE *tsee) {
@@ -32,7 +31,6 @@ bool TSEE_Events_Init(TSEE *tsee) {
 /**
  * @brief Handler for all events
  *
- * @param tsee TSEE object to handle for.
  * @return success status
  */
 bool TSEE_Events_Handle(TSEE *tsee) {

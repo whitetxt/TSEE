@@ -15,8 +15,6 @@ void TSEE_Physics_SetObjectMass(TSEE_Object *obj, float mass) {
 
 /**
  * @brief Perform a physics step
- *
- * @param tsee TSEE to perform the step for
  */
 void TSEE_Physics_PerformStep(TSEE *tsee) {
 	Uint64 start = SDL_GetPerformanceCounter();
@@ -39,7 +37,6 @@ void TSEE_Physics_PerformStep(TSEE *tsee) {
 /**
  * @brief Update a physics object
  *
- * @param tsee TSEE object this object is in
  * @param obj Object to update
  */
 void TSEE_Physics_UpdateObject(TSEE *tsee, TSEE_Object *obj) {
@@ -76,16 +73,42 @@ void TSEE_Physics_UpdateObject(TSEE *tsee, TSEE_Object *obj) {
 	TSEE_Vec2_Multiply(&obj->physics.velocity, 0.99);
 
 	// Check collisions now that we have moved
-	TSEE_Physics_CheckCollisions(tsee, obj);
+	TSEE_Physics_CheckAndResolveCollisions(tsee, obj);
 }
 
 /**
  * @brief Check for collisions with other objects
  *
- * @param tsee TSEE to check for collisions in
+ * @param obj Object to check collisions for
+ *
+ * @return The object collided with or NULL
+ */
+TSEE_Object *TSEE_Physics_CheckCollisions(TSEE *tsee, TSEE_Object *obj) {
+	if (TSEE_Object_CheckAttribute(obj, TSEE_ATTRIB_PARALLAX))
+		return NULL;
+	for (size_t i = 0; i < tsee->world->objects->size; i++) {
+		TSEE_Object *other = tsee->world->objects->data[i];
+		if (TSEE_Object_CheckAttribute(other, TSEE_ATTRIB_PARALLAX))
+			continue;
+		if (other == obj)
+			continue;
+
+		if (!TSEE_IsRectNull(TSEE_Object_GetCollisionRect(obj, other))) {
+			return other;
+		}
+	}
+	return NULL;
+}
+
+/**
+ * @brief Check for collisions with other objects and resolve any resulting
+ * collisions
+ *
  * @param obj Object to check collisions for
  */
-void TSEE_Physics_CheckCollisions(TSEE *tsee, TSEE_Object *obj) {
+void TSEE_Physics_CheckAndResolveCollisions(TSEE *tsee, TSEE_Object *obj) {
+	if (TSEE_Object_CheckAttribute(obj, TSEE_ATTRIB_PARALLAX))
+		return;
 	for (size_t i = 0; i < tsee->world->objects->size; i++) {
 		TSEE_Object *other = tsee->world->objects->data[i];
 		if (TSEE_Object_CheckAttribute(other, TSEE_ATTRIB_PARALLAX))

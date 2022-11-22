@@ -3,7 +3,6 @@
 /**
  * @brief Initialises the UI subsystem.
  *
- * @param tsee TSEE object to initialise UI for.
  * @return success status
  */
 bool TSEE_UI_Init(TSEE *tsee) {
@@ -26,7 +25,6 @@ bool TSEE_UI_Init(TSEE *tsee) {
 /**
  * @brief Adds a button to the toolbar of a TSEE object.
  *
- * @param tsee TSEE to add the button to.
  * @param font Font to use for the button.
  * @param text Text for the button.
  * @return success status
@@ -68,7 +66,6 @@ bool TSEE_Toolbar_AddButton(TSEE *tsee, char *font, char *text) {
 /**
  * @brief Adds a child button to a top-level button in the toolbar.
  *
- * @param tsee TSEE object to add the child to.
  * @param parentName Name of the parent (top-level) button.
  * @param font Font to use for the text.
  * @param text Text to display on the child.
@@ -124,7 +121,6 @@ bool TSEE_Toolbar_AddChild(TSEE *tsee,
 /**
  * @brief Handles if a button is clicked when the mouse is pressed.
  *
- * @param tsee TSEE object to check against.
  * @param x X position of the mouse.
  * @param y Y position of the mouse.
  * @return success status
@@ -156,7 +152,6 @@ bool TSEE_UI_Click(TSEE *tsee, int x, int y) {
 /**
  * @brief Renders the UI of a TSEE object.
  *
- * @param tsee TSEE object to render the UI of.
  * @return success status
  */
 bool TSEE_UI_Render(TSEE *tsee) {

@@ -71,7 +71,6 @@ bool TSEE_WriteFile(void *src, size_t size, size_t n, FILE *fp) {
 /**
  * @brief Loads a TSEE map from a file
  *
- * @param tsee TSEE object to load the map into.
  * @param fn File name to load from.
  * @return success status
  */
@@ -247,7 +246,6 @@ bool TSEE_Map_Load(TSEE *tsee, char *fn) {
 /**
  * @brief Saves the current TSEE to a map file
  *
- * @param tsee TSEE object to save.
  * @param fn File name to save to.
  * @return success status
  */
