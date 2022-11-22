@@ -32,7 +32,18 @@ TSEE_Object *TSEE_Object_Create(TSEE *tsee,
 	}
 	if (TSEE_Attributes_Check(attributes, TSEE_ATTRIB_STATIC) &&
 		TSEE_Attributes_Check(attributes, TSEE_ATTRIB_PHYS)) {
-		TSEE_Error("Cannot create object with UI and physics attributes.\n");
+		TSEE_Error(
+			"Cannot create object with static and physics attributes.\n");
+		return NULL;
+	}
+	if (TSEE_Attributes_Check(attributes, TSEE_ATTRIB_PLAYER) &&
+		TSEE_Attributes_Check(attributes, TSEE_ATTRIB_UI)) {
+		TSEE_Error("Cannot create object with player and UI attributes.\n");
+		return NULL;
+	}
+	if (TSEE_Attributes_Check(attributes, TSEE_ATTRIB_PLAYER) &&
+		TSEE_Attributes_Check(attributes, TSEE_ATTRIB_STATIC)) {
+		TSEE_Error("Cannot create object with player and static attributes.\n");
 		return NULL;
 	}
 	TSEE_Object *obj = xmalloc(sizeof(*obj));
@@ -44,11 +55,6 @@ TSEE_Object *TSEE_Object_Create(TSEE *tsee,
 	TSEE_Object_SetPosition(tsee, obj, x, y);
 
 	if (TSEE_Attributes_Check(attributes, TSEE_ATTRIB_PLAYER)) {
-		if (TSEE_Attributes_Check(attributes, TSEE_ATTRIB_UI)) {
-			TSEE_Error("Cannot create object with player and UI attributes.\n");
-			xfree(obj);
-			return NULL;
-		}
 		TSEE_Attributes_Set(&attributes, TSEE_ATTRIB_PHYS);
 		tsee->player->object = obj;
 		tsee->player->movement = (TSEE_Player_Movement){0, 0, 0, 0};

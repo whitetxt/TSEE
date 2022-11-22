@@ -18,6 +18,7 @@ bool TSEE_Events_Init(TSEE *tsee) {
 	tsee->events->event = xmalloc(sizeof(*tsee->events->event));
 	if (!tsee->events->event) {
 		TSEE_Error("Failed to malloc the event\n");
+		xfree(tsee->events);
 		return false;
 	}
 	tsee->events->keypress = NULL;

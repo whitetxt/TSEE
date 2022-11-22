@@ -105,17 +105,25 @@ bool TSEE_Map_Load(TSEE *tsee, char *fn) {
 
 	// Read all of the map header data
 	char *mapName = NULL;
-	if (!(mapName = TSEE_ReadFile_UntilNull(fp)))
+	if (!(mapName = TSEE_ReadFile_UntilNull(fp))) {
+		fclose(fp);
 		return false;
+	}
 	char *mapAuthor = NULL;
-	if (!(mapAuthor = TSEE_ReadFile_UntilNull(fp)))
+	if (!(mapAuthor = TSEE_ReadFile_UntilNull(fp))) {
+		fclose(fp);
 		return false;
+	}
 	char *mapVersion = NULL;
-	if (!(mapVersion = TSEE_ReadFile_UntilNull(fp)))
+	if (!(mapVersion = TSEE_ReadFile_UntilNull(fp))) {
+		fclose(fp);
 		return false;
+	}
 	char *mapDescription = NULL;
-	if (!(mapDescription = TSEE_ReadFile_UntilNull(fp)))
+	if (!(mapDescription = TSEE_ReadFile_UntilNull(fp))) {
+		fclose(fp);
 		return false;
+	}
 	TSEE_Log("Loading into %s by %s\nVersion: %s\n%s\n", mapName, mapAuthor,
 			 mapVersion, mapDescription);
 
@@ -123,11 +131,13 @@ bool TSEE_Map_Load(TSEE *tsee, char *fn) {
 	float gravityX = 0;
 	if (TSEE_ReadFile(&gravityX, sizeof(gravityX), 1, fp) != 1) {
 		TSEE_Error("Failed to read gravity X.\n");
+		fclose(fp);
 		return false;
 	}
 	float gravityY = 0;
 	if (TSEE_ReadFile(&gravityY, sizeof(gravityY), 1, fp) != 1) {
 		TSEE_Error("Failed to read gravity Y.\n");
+		fclose(fp);
 		return false;
 	}
 	TSEE_World_SetGravity(tsee, (TSEE_Vec2){gravityX, gravityY});
@@ -136,6 +146,7 @@ bool TSEE_Map_Load(TSEE *tsee, char *fn) {
 	size_t numTextures = 0;
 	if (TSEE_ReadFile(&numTextures, sizeof(numTextures), 1, fp) != 1) {
 		TSEE_Error("Failed to read number of textures.\n");
+		fclose(fp);
 		return false;
 	}
 	TSEE_Log("Loading %zu textures\n", numTextures);
@@ -149,13 +160,14 @@ bool TSEE_Map_Load(TSEE *tsee, char *fn) {
 		texturePaths =
 			xrealloc(texturePaths, sizeof(*texturePaths) * (++numTexPaths));
 		texturePaths[numTexPaths - 1] = strdup(texturePath);
-		free(texturePath);
+		xfree(texturePath);
 	}
 
 	// Read objects
 	size_t numObjects = 0;
 	if (TSEE_ReadFile(&numObjects, sizeof(numObjects), 1, fp) != 1) {
 		TSEE_Error("Failed to read number of objects.\n");
+		fclose(fp);
 		return false;
 	}
 	TSEE_Log("Loading %zu objects\n", numObjects);
@@ -163,6 +175,7 @@ bool TSEE_Map_Load(TSEE *tsee, char *fn) {
 		size_t texIdx = 0;
 		if (TSEE_ReadFile(&texIdx, sizeof(texIdx), 1, fp) != 1) {
 			TSEE_Error("Failed to read texture index.\n");
+			fclose(fp);
 			return false;
 		}
 		TSEE_Log("Read object %ld with texture %ld\n", i, texIdx);
@@ -174,11 +187,13 @@ bool TSEE_Map_Load(TSEE *tsee, char *fn) {
 		if (TSEE_ReadFile(&x, sizeof(x), 1, fp) != 1 ||
 			TSEE_ReadFile(&y, sizeof(y), 1, fp) != 1) {
 			TSEE_Error("Failed to read object position\n");
+			fclose(fp);
 			return false;
 		}
 
 		if (TSEE_ReadFile(&attr, sizeof(attr), 1, fp) != 1) {
 			TSEE_Error("Failed to read object attributes\n");
+			fclose(fp);
 			return false;
 		}
 
@@ -228,12 +243,14 @@ bool TSEE_Map_Load(TSEE *tsee, char *fn) {
 	float speed = 0;
 	if (TSEE_ReadFile(&speed, sizeof(speed), 1, fp) != 1) {
 		TSEE_Error("Failed to read player speed.\n");
+		fclose(fp);
 		return false;
 	}
 	TSEE_Player_SetSpeed(tsee, speed);
 	float jumpForce = 0;
 	if (TSEE_ReadFile(&jumpForce, sizeof(jumpForce), 1, fp) != 1) {
 		TSEE_Error("Failed to read player jump force.\n");
+		fclose(fp);
 		return false;
 	}
 	TSEE_Player_SetJumpForce(tsee, jumpForce);

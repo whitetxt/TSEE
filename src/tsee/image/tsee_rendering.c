@@ -88,7 +88,7 @@ void TSEE_Window_Destroy(TSEE_Window *window) {
  * @return success status
  */
 bool TSEE_Window_SetTitle(TSEE *tsee, char *title) {
-	if (tsee->window->window == NULL) {
+	if (!tsee->window->window) {
 		TSEE_Error("Window is not initialized\n");
 		return false;
 	}

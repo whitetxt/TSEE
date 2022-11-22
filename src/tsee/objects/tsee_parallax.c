@@ -69,7 +69,7 @@ bool TSEE_Parallax_Render(TSEE *tsee, TSEE_Object *parallax) {
 		start = SDL_GetPerformanceCounter();
 	}
 	if (!TSEE_Object_CheckAttribute(parallax, TSEE_ATTRIB_PARALLAX)) {
-		TSEE_Error("Attempted to parallax render a non parallax object.\n");
+		TSEE_Warn("Attempted to parallax render a non parallax object.\n");
 		return false;
 	}
 	parallax->texture->rect.x =
