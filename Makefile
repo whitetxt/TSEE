@@ -53,7 +53,7 @@ gdb:
 
 vg: out = build/dev/TSEE
 vg:
-	cd build/dev && valgrind --leak-check=full --show-possibly-lost=no --show-reachable=no -s ../${out}
+	cd build/dev && valgrind --leak-check=full --show-possibly-lost=no --show-reachable=no --track-origins=yes -s ../../${out}
 
 check_folder:
 	mkdir -p build

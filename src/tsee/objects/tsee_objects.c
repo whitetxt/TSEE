@@ -101,7 +101,7 @@ bool TSEE_Object_SetPosition(TSEE *tsee, TSEE_Object *obj, float x, float y) {
 	obj->texture->rect.x = x - tsee->world->scroll_x;
 	// Transform the value into coords where bottom-left is the origin.
 	obj->texture->rect.y = -y + tsee->window->height - tsee->world->scroll_y;
-	// TSEE_Log("Y Pos: %i\n", obj->texture->rect.y);
+
 	return true;
 }
 
@@ -138,8 +138,7 @@ SDL_Rect TSEE_Object_GetRect(TSEE_Object *obj) {
 	// tsee->window->height, obj->texture->rect.w, obj->texture->rect.h}; No
 	// longer needs to calculate it, make sure everything goes through
 	// TSEE_Object_SetPosition to make sure it works.
-	return (SDL_Rect){obj->position.x, obj->position.y, obj->texture->rect.w,
-					  obj->texture->rect.h};
+	return obj->texture->rect;
 }
 
 /**
@@ -186,8 +185,8 @@ bool TSEE_Object_Render(TSEE *tsee, TSEE_Object *object) {
  */
 void TSEE_Object_Destroy(TSEE *tsee, TSEE_Object *object, bool destroyTexture) {
 	if (destroyTexture) {
-		TSEE_Texture_Destroy(object->texture);
 		TSEE_Resource_Texture_Delete(tsee, object->texture);
+		TSEE_Texture_Destroy(object->texture);
 	}
 	if (TSEE_Object_CheckAttribute(object, TSEE_ATTRIB_TEXT)) {
 		xfree(object->text.text);

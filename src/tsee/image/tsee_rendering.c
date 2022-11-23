@@ -78,7 +78,9 @@ void TSEE_Window_UpdateSize(TSEE *tsee) {
 void TSEE_Window_Destroy(TSEE_Window *window) {
 	SDL_DestroyRenderer(window->renderer);
 	SDL_DestroyWindow(window->window);
-	xfree(window->title);
+	if (window->title)
+		xfree(window->title);
+	xfree(window);
 }
 
 /**

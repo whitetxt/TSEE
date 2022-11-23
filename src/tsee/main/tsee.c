@@ -40,6 +40,8 @@ TSEE *TSEE_Create(int width, int height) {
 	tsee->world->objects = TSEE_Array_Create();
 	tsee->world->scroll_x = 0;
 	tsee->world->scroll_y = 0;
+	tsee->world->max_scroll_x = 0;
+	tsee->world->gravity = (TSEE_Vec2){0, 0};
 
 	// Setup player
 	tsee->player = xmalloc(sizeof(*tsee->player));
@@ -222,7 +224,10 @@ bool TSEE_Close(TSEE *tsee) {
 	}
 
 	TSEE_Window_Destroy(tsee->window);
-	xfree(tsee->window);
+
+	if (tsee->init->resources) {
+		TSEE_Resource_Close(tsee);
+	}
 
 	if (tsee->init->text) {
 		TTF_Quit();
@@ -298,10 +303,12 @@ void TSEE_World_ScrollToObject(TSEE *tsee, TSEE_Object *obj) {
 		obj->texture->rect.y = half_height * 0.25f - pos.h / 2;
 	}
 
-	if (tsee->world->scroll_x < 0) {
-		tsee->world->scroll_x = 0;
-	} else if (tsee->world->scroll_x > tsee->world->max_scroll_x) {
-		tsee->world->scroll_x = tsee->world->max_scroll_x;
+	if (tsee->world) {
+		if (tsee->world->scroll_x < 0) {
+			tsee->world->scroll_x = 0;
+		} else if (tsee->world->scroll_x > tsee->world->max_scroll_x) {
+			tsee->world->scroll_x = tsee->world->max_scroll_x;
+		}
 	}
 
 	if (tsee->world->scroll_y < 0) {

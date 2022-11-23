@@ -12,6 +12,17 @@ bool TSEE_Resource_Init(TSEE *tsee) {
 	return true;
 }
 
+bool TSEE_Resource_Close(TSEE *tsee) {
+	if (!tsee->resources) {
+		return true;
+	}
+	TSEE_Resource_Unload(tsee);
+	TSEE_Array_Destroy(tsee->resources->textures);
+	TSEE_Array_Destroy(tsee->resources->fonts);
+	xfree(tsee->resources);
+	return true;
+}
+
 /**
  * @brief Unloads and frees all data in the resource manager.
  *
