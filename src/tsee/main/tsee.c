@@ -165,11 +165,6 @@ bool TSEE_InitAll(TSEE *tsee) {
 		return false;
 	}
 	TSEE_Log("Initialized TSEE UI.\n");
-	if (!TSEE_Resource_Init(tsee)) {
-		TSEE_Critical("Failed to initialize the TSEE Resource Module.\n");
-		TSEE_Close(tsee);
-		return false;
-	}
 	TSEE_Log("All TSEE modules initialized.\n");
 	return true;
 }

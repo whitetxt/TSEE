@@ -13,6 +13,9 @@ void saveMap(void *t) {
 void loadMap(void *t) {
 	TSEE *tsee = (TSEE *)t;
 	TSEE_Map_Load(tsee, "map.tsee_map");
+}
+
+void create_menu(TSEE *tsee) {
 	TSEE_Toolbar_AddButton(tsee, "_default", "Home");
 	TSEE_Toolbar_AddChild(tsee, "Home", "_default", "Quit", quitGame);
 	TSEE_Toolbar_AddButton(tsee, "_default", "Maps");
@@ -35,11 +38,14 @@ int main(int argc, char *argv[]) {
 		TSEE_Warn("Failed to set window title.\n");
 	}
 
+	create_menu(tsee);
+
 	TSEE_Object_Create(tsee, TSEE_Texture_Create(tsee, "assets/test_image.png"),
 					   TSEE_ATTRIB_PHYS | TSEE_ATTRIB_PLAYER, 200, 300);
-	TSEE_Player_SetJumpForce(tsee, 25);
+	TSEE_Player_SetJumpForce(tsee, 250);
 	TSEE_Player_SetSpeed(tsee, 500);
-	TSEE_World_SetGravity(tsee, (TSEE_Vec2){0, -9.81});
+	TSEE_Player_SetStepSize(tsee, 5);
+	TSEE_World_SetGravity(tsee, (TSEE_Vec2){0, -50});
 	TSEE_Object_Create(tsee, TSEE_Texture_Create(tsee, "assets/test_image.png"),
 					   TSEE_ATTRIB_STATIC, 160, 30);
 	TSEE_Object_Create(tsee, TSEE_Texture_Create(tsee, "assets/test_image.png"),
@@ -62,12 +68,6 @@ int main(int argc, char *argv[]) {
 						   TSEE_Texture_Create(tsee, "assets/test_image.png"),
 						   TSEE_ATTRIB_STATIC, x, 25);
 	}
-
-	TSEE_Toolbar_AddButton(tsee, "_default", "Home");
-	TSEE_Toolbar_AddChild(tsee, "Home", "_default", "Quit", quitGame);
-	TSEE_Toolbar_AddButton(tsee, "_default", "Maps");
-	TSEE_Toolbar_AddChild(tsee, "Maps", "_default", "Save", saveMap);
-	TSEE_Toolbar_AddChild(tsee, "Maps", "_default", "Load", loadMap);
 
 	// After setup for the map, correct dt
 	tsee->current_time = SDL_GetPerformanceCounter();
