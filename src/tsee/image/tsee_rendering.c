@@ -106,10 +106,11 @@ bool TSEE_Window_SetTitle(TSEE *tsee, char *title) {
 bool TSEE_RenderAll(TSEE *tsee) {
 	Uint64 start = SDL_GetPerformanceCounter();
 	if (SDL_GetWindowFlags(tsee->window->window) & SDL_WINDOW_MINIMIZED) {
+		// Don't render if minimised.
 		SDL_Delay(25);
 		return true;
 	}
-	SDL_SetRenderDrawColor(tsee->window->renderer, 0, 0, 0, 255);
+	SDL_SetRenderDrawColor(tsee->window->renderer, 255, 255, 255, 255);
 	SDL_RenderClear(tsee->window->renderer);
 
 	// Render all objects

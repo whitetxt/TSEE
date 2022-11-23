@@ -48,7 +48,7 @@ void TSEE_Physics_UpdateObject(TSEE *tsee, TSEE_Object *obj) {
 	// a * m
 	TSEE_Vec2_Multiply(&grav, obj->physics.mass);
 
-	// F += am
+	// F += ma
 	TSEE_Vec2_Add(&obj->physics.force, grav);
 
 	// F = ma
@@ -66,6 +66,8 @@ void TSEE_Physics_UpdateObject(TSEE *tsee, TSEE_Object *obj) {
 
 	TSEE_Vec2 pos = obj->position;
 	TSEE_Vec2_Add(&pos, vel);
+	// TSEE_Log("Velocity: %f, %f\n", vel.x, vel.y);
+	// TSEE_Log("Position: %f, %f\n", pos.x, pos.y);
 
 	TSEE_Object_SetPositionVec2(tsee, obj, pos);
 
@@ -181,7 +183,7 @@ void TSEE_Physics_ResolveCollision(TSEE *tsee,
 
 		if (TSEE_Object_CheckAttribute(first, TSEE_ATTRIB_PHYS)) {
 			if (lowest == amtRight) {
-				if (amtTop <= 5) {
+				if (amtTop <= tsee->player->step_size) {
 					TSEE_Object_SetPosition(
 						tsee, first, first->position.x,
 						second->position.y + first->texture->rect.h);
@@ -193,7 +195,7 @@ void TSEE_Physics_ResolveCollision(TSEE *tsee,
 					first->physics.velocity.x = 0;
 				}
 			} else if (lowest == amtLeft) {
-				if (amtTop <= 5) {
+				if (amtTop <= tsee->player->step_size) {
 					TSEE_Object_SetPosition(
 						tsee, first, first->position.x,
 						second->position.y + first->texture->rect.h);
@@ -224,7 +226,7 @@ void TSEE_Physics_ResolveCollision(TSEE *tsee,
 			}
 		} else {
 			if (lowest == amtRight) {
-				if (amtTop < 5) {
+				if (amtTop <= tsee->player->step_size) {
 					TSEE_Object_SetPosition(
 						tsee, second, second->position.x,
 						first->position.y + second->texture->rect.h);
@@ -236,7 +238,7 @@ void TSEE_Physics_ResolveCollision(TSEE *tsee,
 					second->physics.velocity.x = 0;
 				}
 			} else if (lowest == amtLeft) {
-				if (amtTop < 5) {
+				if (amtTop <= tsee->player->step_size) {
 					TSEE_Object_SetPosition(
 						tsee, second, second->position.x,
 						first->position.y + second->texture->rect.h);

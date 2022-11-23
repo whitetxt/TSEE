@@ -6,6 +6,8 @@
  * @param speed New speed of the player
  */
 void TSEE_Player_SetSpeed(TSEE *tsee, float speed) {
+	if (!tsee->player)
+		return;
 	tsee->player->speed = speed;
 }
 
@@ -15,7 +17,20 @@ void TSEE_Player_SetSpeed(TSEE *tsee, float speed) {
  * @param jump_force New jump force of the player
  */
 void TSEE_Player_SetJumpForce(TSEE *tsee, float jump_force) {
+	if (!tsee->player)
+		return;
 	tsee->player->jump_force = jump_force;
+}
+
+/**
+ * @brief Sets the player's jump force as a multiple of the gravity.
+ *
+ * @param step_size The number of pixels the player can step up without jumping
+ */
+void TSEE_Player_SetStepSize(TSEE *tsee, int step_size) {
+	if (!tsee->player)
+		return;
+	tsee->player->step_size = step_size;
 }
 
 /**
@@ -38,12 +53,10 @@ void TSEE_Player_HandleInput(TSEE *tsee) {
 		if (grav.x != 0) {
 			player->object->physics.velocity.x =
 				grav.x * player->object->physics.mass * tsee->dt;
-			// player->object->physics.force.x += grav.x;
 		}
 		if (grav.y != 0) {
 			player->object->physics.velocity.y =
 				grav.y * player->object->physics.mass * tsee->dt;
-			// player->object->physics.force.y += grav.y;
 		}
 		if (player->held_up > 0.1f) {
 			player->grounded = false;

@@ -47,6 +47,8 @@ TSEE_Texture *TSEE_Resource_Texture_Get(TSEE *tsee, char *path) {
 		return NULL;
 	for (size_t i = 0; i < tsee->resources->textures->size; i++) {
 		TSEE_Texture *tex = TSEE_Array_Get(tsee->resources->textures, i);
+		if (!tex->path)
+			continue;
 		if (strcmp(path, tex->path) == 0) {
 			return tex;
 		}

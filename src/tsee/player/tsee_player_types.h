@@ -14,4 +14,5 @@ typedef struct TSEE_Player {
 	float held_up;
 	float jump_force;
 	float speed;
+	int step_size;
 } TSEE_Player;

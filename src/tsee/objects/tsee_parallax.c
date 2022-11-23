@@ -22,6 +22,7 @@ TSEE_Object *TSEE_Parallax_Create(TSEE *tsee,
 	if (!parallax) {
 		return NULL;
 	}
+	TSEE_Array_Delete(tsee->world->objects, 0);
 
 	parallax->parallax.distance = distanceFromCamera;
 	parallax->texture->rect.y = tsee->window->height - texture->rect.h;
@@ -39,7 +40,6 @@ TSEE_Object *TSEE_Parallax_Create(TSEE *tsee,
 			break;
 	}
 
-	TSEE_Array_Delete(tsee->world->objects, 0);
 	TSEE_Array_Insert(tsee->world->objects, parallax, latest_good_index);
 	return parallax;
 }

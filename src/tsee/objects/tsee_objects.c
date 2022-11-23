@@ -99,8 +99,9 @@ bool TSEE_Object_SetPosition(TSEE *tsee, TSEE_Object *obj, float x, float y) {
 	obj->position.y = y;
 
 	obj->texture->rect.x = x - tsee->world->scroll_x;
-	obj->texture->rect.y =
-		y * -1 + tsee->window->height - tsee->world->scroll_y;
+	// Transform the value into coords where bottom-left is the origin.
+	obj->texture->rect.y = -y + tsee->window->height - tsee->world->scroll_y;
+	// TSEE_Log("Y Pos: %i\n", obj->texture->rect.y);
 	return true;
 }
 
@@ -136,10 +137,9 @@ SDL_Rect TSEE_Object_GetRect(TSEE_Object *obj) {
 	// return (SDL_Rect){obj->position.x, obj->position.y * -1 +
 	// tsee->window->height, obj->texture->rect.w, obj->texture->rect.h}; No
 	// longer needs to calculate it, make sure everything goes through
-	// TSEE_Object_SetPosition to make sure it works. return
-	// (SDL_Rect){obj->position.x, obj->position.y, obj->texture->rect.w,
-	// obj->texture->rect.h};
-	return obj->texture->rect;
+	// TSEE_Object_SetPosition to make sure it works.
+	return (SDL_Rect){obj->position.x, obj->position.y, obj->texture->rect.w,
+					  obj->texture->rect.h};
 }
 
 /**
@@ -154,9 +154,11 @@ bool TSEE_Object_Render(TSEE *tsee, TSEE_Object *object) {
 		if (tsee->debug->active) {
 			start = SDL_GetPerformanceCounter();
 		}
-		SDL_Rect rect = TSEE_Object_GetRect(object);
-		int ret = SDL_RenderCopy(tsee->window->renderer,
-								 object->texture->texture, NULL, &rect);
+		TSEE_Log("Object Position: %i, %i\n", object->texture->rect.x,
+				 object->texture->rect.y);
+		int ret =
+			SDL_RenderCopy(tsee->window->renderer, object->texture->texture,
+						   NULL, &object->texture->rect);
 		if (ret != 0) {
 			TSEE_Error("Failed to render object (%s)\n", SDL_GetError());
 			return false;
