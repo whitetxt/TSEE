@@ -31,7 +31,6 @@ int main(int argc, char *argv[]) {
 
 	if (!TSEE_InitAll(tsee)) {
 		TSEE_Critical("Failed to initialize TSEE\n");
-		TSEE_Close(tsee);
 		return -1;
 	}
 	if (!TSEE_Window_SetTitle(tsee, "TSEE - Example Game")) {
