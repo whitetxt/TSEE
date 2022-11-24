@@ -39,20 +39,12 @@ int main(int argc, char *argv[]) {
 
 	create_menu(tsee);
 
-	TSEE_Object_Create(tsee, TSEE_Texture_Create(tsee, "assets/test_image.png"),
-					   TSEE_ATTRIB_PHYS | TSEE_ATTRIB_PLAYER, 200, 300);
-	TSEE_Player_SetJumpForce(tsee, 250);
-	TSEE_Player_SetSpeed(tsee, 500);
+	TSEE_Object_Create(tsee, TSEE_Texture_Create(tsee, "assets/test_image2.png"),
+					   TSEE_ATTRIB_PHYS | TSEE_ATTRIB_PLAYER, 300, 400);
+	TSEE_Player_SetJumpForce(tsee, 75);
+	TSEE_Player_SetSpeed(tsee, 750);
 	TSEE_Player_SetStepSize(tsee, 5);
-	TSEE_World_SetGravity(tsee, (TSEE_Vec2){0, -50});
-	TSEE_Object_Create(tsee, TSEE_Texture_Create(tsee, "assets/test_image.png"),
-					   TSEE_ATTRIB_STATIC, 160, 30);
-	TSEE_Object_Create(tsee, TSEE_Texture_Create(tsee, "assets/test_image.png"),
-					   TSEE_ATTRIB_STATIC, 170, 35);
-	TSEE_Object_Create(tsee, TSEE_Texture_Create(tsee, "assets/test_image.png"),
-					   TSEE_ATTRIB_STATIC, 180, 40);
-	TSEE_Object_Create(tsee, TSEE_Texture_Create(tsee, "assets/test_image.png"),
-					   TSEE_ATTRIB_STATIC, 190, 45);
+	TSEE_World_SetGravity(tsee, (TSEE_Vec2){0, -500});
 	TSEE_Parallax_Create(tsee,
 						 TSEE_Texture_Create(tsee, "assets/parallax1.png"), 6);
 	TSEE_Parallax_Create(tsee,
@@ -62,11 +54,14 @@ int main(int argc, char *argv[]) {
 	TSEE_Parallax_Create(tsee,
 						 TSEE_Texture_Create(tsee, "assets/parallax4.png"), 1);
 
-	for (int x = 0; x < tsee->window->width; x += 88) {
+	for (int x = 0; x < tsee->window->width; x += 64) {
 		TSEE_Object_Create(tsee,
-						   TSEE_Texture_Create(tsee, "assets/test_image.png"),
-						   TSEE_ATTRIB_STATIC, x, 25);
+						   TSEE_Texture_Create(tsee, "assets/box.png"),
+						   TSEE_ATTRIB_STATIC, x, 64);
 	}
+	TSEE_Object_Create(tsee, TSEE_Texture_Create(tsee, "assets/test_image.png"), TSEE_ATTRIB_PHYS, -20, 500);
+	TSEE_Object_Create(tsee, TSEE_Texture_Create(tsee, "assets/box.png"), TSEE_ATTRIB_PHYS, 20, 500);
+	TSEE_Object_Create(tsee, TSEE_Texture_Create(tsee, "assets/box.png"), TSEE_ATTRIB_PHYS, 20, 600);
 
 	// After setup for the map, correct dt
 	tsee->current_time = SDL_GetPerformanceCounter();

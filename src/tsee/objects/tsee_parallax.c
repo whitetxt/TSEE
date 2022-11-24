@@ -9,7 +9,7 @@
  */
 TSEE_Object *TSEE_Parallax_Create(TSEE *tsee,
 								  TSEE_Texture *texture,
-								  float distanceFromCamera) {
+								  double distanceFromCamera) {
 	if (distanceFromCamera <= 0) {
 		TSEE_Error(
 			"Distance from camera must be greater than 0 (Recieved %f)\n",
@@ -53,7 +53,7 @@ TSEE_Object *TSEE_Parallax_Create(TSEE *tsee,
  */
 TSEE_Object *TSEE_Parallax_CreateFromObject(TSEE *tsee,
 											TSEE_Object *obj,
-											float distanceFromCamera) {
+											double distanceFromCamera) {
 	return TSEE_Parallax_Create(tsee, obj->texture, distanceFromCamera);
 }
 

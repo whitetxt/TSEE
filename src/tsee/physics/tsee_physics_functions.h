@@ -1,4 +1,4 @@
-void TSEE_Physics_SetObjectMass(TSEE_Object *obj, float mass);
+void TSEE_Physics_SetObjectMass(TSEE_Object *obj, double mass);
 void TSEE_Physics_PerformStep();
 void TSEE_Physics_UpdateObject(TSEE *tsee, TSEE_Object *obj);
 void TSEE_Physics_CheckAndResolveCollisions(TSEE *tsee, TSEE_Object *obj);

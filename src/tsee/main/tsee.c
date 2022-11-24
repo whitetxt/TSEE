@@ -23,6 +23,9 @@ TSEE *TSEE_Create(int width, int height) {
 		xfree(tsee);
 		return NULL;
 	}
+	if (!SDL_SetHint(SDL_HINT_RENDER_BATCHING, "1")) {
+		TSEE_Warn("Render batching could not be enabled, performance may suffer.\n");
+	}
 	tsee->window->width = width;
 	tsee->window->height = height;
 	tsee->window->running = true;
@@ -62,6 +65,7 @@ TSEE *TSEE_Create(int width, int height) {
 	tsee->player->held_up = 0;
 	tsee->player->jump_force = 1;
 	tsee->player->speed = 1;
+	tsee->player->step_size = 5;
 
 	// Setup DT calculations
 	tsee->dt = 0;
@@ -250,8 +254,8 @@ bool TSEE_Close(TSEE *tsee) {
 bool TSEE_CalculateDT(TSEE *tsee) {
 	tsee->last_time = tsee->current_time;
 	tsee->current_time = SDL_GetPerformanceCounter();
-	tsee->dt = (float)((tsee->current_time - tsee->last_time) /
-					   (float)SDL_GetPerformanceFrequency());
+	tsee->dt = (double)((tsee->current_time - tsee->last_time) /
+					   (double)SDL_GetPerformanceFrequency());
 	return true;
 }
 
@@ -273,32 +277,32 @@ bool TSEE_World_SetGravity(TSEE *tsee, TSEE_Vec2 gravity) {
  */
 void TSEE_World_ScrollToObject(TSEE *tsee, TSEE_Object *obj) {
 	SDL_Rect pos = TSEE_Object_GetRect(obj);
-	float width = tsee->window->width;
-	float height = tsee->window->height;
+	double width = tsee->window->width;
+	double height = tsee->window->height;
 
-	float mid_x = pos.x + pos.w / 2;
-	float mid_y = pos.y + pos.h / 2;
+	double mid_x = pos.x + pos.w / 2;
+	double mid_y = pos.y + pos.h / 2;
 
-	float half_width = width / 2;
-	float half_height = height / 2;
+	double half_width = width / 2;
+	double half_height = height / 2;
 
 	if (mid_x < half_width && tsee->world->scroll_x != 0) {
-		float diff = half_width - mid_x;
+		double diff = half_width - mid_x;
 		tsee->world->scroll_x -= diff;
 		obj->texture->rect.x = half_width - pos.w / 2;
 	} else if (mid_x > half_width &&
 			   tsee->world->scroll_x != tsee->world->max_scroll_x) {
-		float diff = mid_x - half_width;
+		double diff = mid_x - half_width;
 		tsee->world->scroll_x += diff;
 		obj->texture->rect.x = half_width - pos.w / 2;
 	}
 
 	if (mid_y > half_height * 0.75f) {
-		float diff = mid_y - half_height * 0.75f;
+		double diff = mid_y - half_height * 0.75f;
 		tsee->world->scroll_y -= diff;
 		obj->texture->rect.y = half_height * 0.75f - pos.h / 2;
 	} else if (mid_y < half_height * 0.25f && tsee->world->scroll_y <= 0) {
-		float diff = half_height * 0.25f - mid_y;
+		double diff = half_height * 0.25f - mid_y;
 		tsee->world->scroll_y += diff;
 		obj->texture->rect.y = half_height * 0.25f - pos.h / 2;
 	}

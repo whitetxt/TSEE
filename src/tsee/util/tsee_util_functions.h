@@ -23,8 +23,17 @@ bool TSEE_IsRectNull(SDL_Rect rect);
 // Vector
 
 bool TSEE_Vec2_Add(TSEE_Vec2 *final, TSEE_Vec2 add);
+TSEE_Vec2 TSEE_Vec2_RAdd(TSEE_Vec2 final, TSEE_Vec2 add);
+double TSEE_Vec2_Len(TSEE_Vec2 vec);
+double TSEE_Vec2_SqLen(TSEE_Vec2 vec);
 bool TSEE_Vec2_Normalise(TSEE_Vec2 *vec);
-bool TSEE_Vec2_Multiply(TSEE_Vec2 *vec, float mult);
-bool TSEE_Vec2_Divide(TSEE_Vec2 *vec, float div);
-float TSEE_Vec2_Dot(TSEE_Vec2 first, TSEE_Vec2 second);
+TSEE_Vec2 TSEE_Vec2_RNormalise(TSEE_Vec2 vec);
+bool TSEE_Vec2_Multiply(TSEE_Vec2 *vec, double mult);
+TSEE_Vec2 TSEE_Vec2_RMultiply(TSEE_Vec2 vec, double mult);
+bool TSEE_Vec2_Divide(TSEE_Vec2 *vec, double div);
+TSEE_Vec2 TSEE_Vec2_RDivide(TSEE_Vec2 vec, double div);
+double TSEE_Vec2_Dot(TSEE_Vec2 first, TSEE_Vec2 second);
 bool TSEE_Vec2_Subtract(TSEE_Vec2 *first, TSEE_Vec2 minus);
+TSEE_Vec2 TSEE_Vec2_RSubtract(TSEE_Vec2 first, TSEE_Vec2 minus);
+
+#define min(a, b) a < b ? a : b;

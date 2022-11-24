@@ -5,7 +5,7 @@
  *
  * @param speed New speed of the player
  */
-void TSEE_Player_SetSpeed(TSEE *tsee, float speed) {
+void TSEE_Player_SetSpeed(TSEE *tsee, double speed) {
 	if (!tsee->player)
 		return;
 	tsee->player->speed = speed;
@@ -16,7 +16,7 @@ void TSEE_Player_SetSpeed(TSEE *tsee, float speed) {
  *
  * @param jump_force New jump force of the player
  */
-void TSEE_Player_SetJumpForce(TSEE *tsee, float jump_force) {
+void TSEE_Player_SetJumpForce(TSEE *tsee, double jump_force) {
 	if (!tsee->player)
 		return;
 	tsee->player->jump_force = jump_force;

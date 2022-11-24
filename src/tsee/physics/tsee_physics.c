@@ -6,7 +6,7 @@
  * @param obj Object to change
  * @param mass New mass
  */
-void TSEE_Physics_SetObjectMass(TSEE_Object *obj, float mass) {
+void TSEE_Physics_SetObjectMass(TSEE_Object *obj, double mass) {
 	if (!TSEE_Object_CheckAttribute(obj, TSEE_ATTRIB_PHYS))
 		return;	 // Ignore objects which are not physics objects.
 	obj->physics.mass = mass;
@@ -43,7 +43,7 @@ void TSEE_Physics_UpdateObject(TSEE *tsee, TSEE_Object *obj) {
 	// Apply gravity
 	// F = ma
 	TSEE_Vec2 grav = tsee->world->gravity;
-	float dt = tsee->dt;
+	double dt = tsee->dt;
 
 	// a * m
 	TSEE_Vec2_Multiply(&grav, obj->physics.mass);
@@ -69,11 +69,13 @@ void TSEE_Physics_UpdateObject(TSEE *tsee, TSEE_Object *obj) {
 	// TSEE_Log("Velocity: %f, %f\n", vel.x, vel.y);
 	// TSEE_Log("Position: %f, %f\n", pos.x, pos.y);
 
-	TSEE_Object_SetPositionVec2(tsee, obj, pos);
+	TSEE_Object_SetPositionVec2(obj, pos);
 
-	obj->physics.force.x = 0;
-	obj->physics.force.y = 0;
-	TSEE_Vec2_Multiply(&obj->physics.velocity, 0.99);
+	obj->physics.force = (TSEE_Vec2){0, 0};
+
+	// "friction"
+	obj->physics.velocity.y *= 0.99;
+	obj->physics.velocity.x *= 0.975;
 
 	// Check collisions now that we have moved
 	TSEE_Physics_CheckAndResolveCollisions(tsee, obj);
@@ -93,6 +95,7 @@ TSEE_Object *TSEE_Physics_CheckCollisions(TSEE *tsee, TSEE_Object *obj) {
 		TSEE_Object *other = tsee->world->objects->data[i];
 		if (TSEE_Object_CheckAttribute(other, TSEE_ATTRIB_PARALLAX))
 			continue;
+
 		if (other == obj)
 			continue;
 
@@ -126,51 +129,237 @@ void TSEE_Physics_CheckAndResolveCollisions(TSEE *tsee, TSEE_Object *obj) {
 }
 
 /**
- * @brief Resolves a collision between two objects
- *
- * @param first First object
- * @param second Second object
+ * @brief Generates a manifold for an AABB-AABB Collision.
+ * 
+ * @param a first object
+ * @param b second object
+ * @return TSEE_Manifold
  */
-void TSEE_Physics_ResolveCollision(TSEE *tsee,
-								   TSEE_Object *first,
-								   TSEE_Object *second) {
-	if (TSEE_Object_CheckAttribute(first, TSEE_ATTRIB_PHYS) &&
-		TSEE_Object_CheckAttribute(second, TSEE_ATTRIB_PHYS)) {
-		// If this works Github Copilot is good
-		TSEE_Vec2 first_vel = first->physics.velocity;
-		TSEE_Vec2 second_vel = second->physics.velocity;
+TSEE_Manifold TSEE_Physics_GetAABBAABBManifold(TSEE_Object *a, TSEE_Object *b) {
+	// https://github.com/St0wy/GPR4400-PhysicsEngine/blob/64c986032b74ec6aacb1b1dcd4733ab263bc1e8b/StowyPhysicsEngine/src/collision/ManifoldFactory.cpp#L69
+	double aHalfWidth = a->texture->rect.w / 2;
+	double aHalfHeight = a->texture->rect.h / 2;
+	TSEE_Vec2 aCenter = {a->position.x + aHalfWidth, a->position.y + aHalfHeight};
 
-		TSEE_Vec2 first_vel_norm = first_vel;
-		TSEE_Vec2_Normalise(&first_vel_norm);
-		TSEE_Vec2 second_vel_norm = second_vel;
-		TSEE_Vec2_Normalise(&second_vel_norm);
+	double bHalfWidth = b->texture->rect.w / 2;
+	double bHalfHeight = b->texture->rect.h / 2;
+	TSEE_Vec2 bCenter = {b->position.x + bHalfWidth, b->position.y + bHalfHeight};
 
-		// Get the relative velocity
-		TSEE_Vec2 rel_vel = first_vel;
-		TSEE_Vec2_Subtract(&rel_vel, second_vel);
+	TSEE_Vec2 aToB = bCenter;
+	TSEE_Vec2_Subtract(&aToB, aCenter);
 
-		// Check if they're moving away from each other
-		if (TSEE_Vec2_Dot(rel_vel, first_vel_norm) > 0) {
-			return;
+	double xOverlap = aHalfWidth + bHalfWidth - fabs(aToB.x);
+
+	if (xOverlap <= 0) return MANIFOLD_NONE;
+
+	double yOverlap = aHalfHeight + bHalfHeight - fabs(aToB.y);
+
+	if (yOverlap <= 0) return MANIFOLD_NONE;
+
+	if (xOverlap > yOverlap) {
+		TSEE_Vec2 normal;
+		double aY, bY;
+
+		if (aToB.y > 0) {
+			normal = (TSEE_Vec2){0, -1};
+			aY = aCenter.y + aHalfHeight;
+			bY = bCenter.y - bHalfHeight;
+		} else {
+			normal = (TSEE_Vec2){0, 1};
+			aY = aCenter.y - aHalfHeight;
+			bY = bCenter.y + bHalfHeight;
 		}
 
-		// Get the overlap
-		TSEE_Vec2 overlap = first->physics.velocity;
-		TSEE_Vec2_Subtract(&overlap, second->physics.velocity);
-		TSEE_Vec2_Multiply(&overlap, 0.5);
+		double x;
 
-		// Apply the overlap to the objects
-		TSEE_Vec2_Add(&first->physics.velocity, overlap);
-		TSEE_Vec2_Subtract(&second->physics.velocity, overlap);
+		if (aToB.x > 0) {
+			x = aCenter.x + aHalfWidth - xOverlap / 2;
+		} else {
+			x = aCenter.x - aHalfWidth + xOverlap / 2;
+		}
+
+		return (TSEE_Manifold){{x, aY}, {x, bY}, normal, yOverlap};
 	} else {
-		int amtRight = fabs(first->position.x + first->texture->rect.w -
-							second->position.x);
-		int amtLeft = fabs(second->position.x + second->texture->rect.w -
-						   first->position.x);
-		int amtTop = fabs(second->position.y - first->position.y +
-						  first->texture->rect.h);
-		int amtBottom = fabs(first->position.y + first->texture->rect.h -
-							 second->position.y);
+		TSEE_Vec2 normal;
+		double aX, bX;
+
+		if (aToB.x > 0) {
+			normal = (TSEE_Vec2){-1, 0};
+			aX = aCenter.x + aHalfWidth;
+			bX = bCenter.x - bHalfWidth;
+		} else {
+			normal = (TSEE_Vec2){1, 0};
+			aX = aCenter.x - aHalfWidth;
+			bX = bCenter.x + bHalfWidth;
+		}
+
+		double y;
+
+		if (aToB.y > 0) {
+			y = aCenter.x + aHalfWidth - xOverlap / 2;
+		} else {
+			y = aCenter.x - aHalfWidth + xOverlap / 2;
+		}
+
+		return (TSEE_Manifold){{aX, y}, {bX, y}, normal, xOverlap};
+	}
+}
+
+/**
+ * @brief Returns if a manifold is none.
+ * 
+ * @param man manifold to check
+ * @return if the manifold is none
+ */
+bool TSEE_Manifold_IsNone(TSEE_Manifold man) {
+	return man.depth <= 0;
+}
+
+/**
+ * @brief Resolves a collision between two objects
+ *
+ * @param a First object
+ * @param b Second object
+ */
+void TSEE_Physics_ResolveCollision(TSEE *tsee,
+								   TSEE_Object *a,
+								   TSEE_Object *b) {
+	if (TSEE_Object_CheckAttribute(a, TSEE_ATTRIB_PHYS) &&
+		TSEE_Object_CheckAttribute(b, TSEE_ATTRIB_PHYS)) {
+		/*
+		// https://en.wikipedia.org/wiki/Elastic_collision#Two-dimensional_collision_with_two_moving_objects
+
+		TSEE_Vec2 v_1 = a->physics.velocity;
+		TSEE_Vec2 v_2 = b->physics.velocity;
+
+		TSEE_Vec2 x_1 = a->position;
+		TSEE_Vec2_Add(&x_1, (TSEE_Vec2){a->texture->rect.w / 2, a->texture->rect.h / 2});
+		TSEE_Vec2 x_2 = b->position;
+		TSEE_Vec2_Add(&x_2, (TSEE_Vec2){b->texture->rect.w / 2, b->texture->rect.h / 2});
+
+		double m_1 = a->physics.mass;
+		double m_2 = b->physics.mass;
+
+		// Calculating new v_1
+		TSEE_Vec2 v_1new = v_1;
+		double masses = (2 * m_2) / (m_1 + m_2);
+
+		TSEE_Vec2 topV = v_1;
+		TSEE_Vec2_Subtract(&topV, v_2);
+
+		TSEE_Vec2 topX = x_1;
+		TSEE_Vec2_Subtract(&topX, x_2);
+
+		double dotP = TSEE_Vec2_Dot(topV, topX);
+
+		TSEE_Vec2 bottomX = x_1;
+		TSEE_Vec2_Subtract(&bottomX, x_2);
+		double len = TSEE_Vec2_SqLen(bottomX);
+		double mult_fac = dotP / len;
+
+		TSEE_Vec2 multPos = x_1;
+		TSEE_Vec2_Subtract(&multPos, x_2);
+
+		TSEE_Vec2_Multiply(&multPos, masses);
+		TSEE_Vec2_Multiply(&multPos, mult_fac);
+
+		TSEE_Vec2_Subtract(&v_1new, multPos);
+		a->physics.velocity = v_1new;
+
+		// Calculating new v_2
+		TSEE_Vec2 v_2new = v_2;
+		masses = (2 * m_1) / (m_1 + m_2);
+
+		topV = v_2;
+		TSEE_Vec2_Subtract(&topV, v_1);
+
+		topX = x_2;
+		TSEE_Vec2_Subtract(&topX, x_1);
+
+		dotP = TSEE_Vec2_Dot(topV, topX);
+
+		bottomX = x_2;
+		TSEE_Vec2_Subtract(&bottomX, x_1);
+		len = TSEE_Vec2_SqLen(bottomX);
+		mult_fac = dotP / len;
+
+		multPos = x_2;
+		TSEE_Vec2_Subtract(&multPos, x_1);
+
+		TSEE_Vec2_Multiply(&multPos, masses);
+		TSEE_Vec2_Multiply(&multPos, mult_fac);
+
+		TSEE_Vec2_Subtract(&v_2new, multPos);
+		b->physics.velocity = v_2new;*/
+
+		// Trying again with new method.
+		TSEE_Manifold manifold = TSEE_Physics_GetAABBAABBManifold(a, b);
+		if (TSEE_Manifold_IsNone(manifold)) {
+			return;
+		}
+		
+		TSEE_Vec2 aVel = a->physics.velocity;
+		TSEE_Vec2 bVel = b->physics.velocity;
+		TSEE_Vec2 relVel = bVel;
+		TSEE_Vec2_Subtract(&relVel, aVel);
+
+		double velAlongNorm = TSEE_Vec2_Dot(relVel, manifold.normal);
+
+		if (velAlongNorm >= 0) return;
+
+		double e = min(a->physics.restitution, b->physics.restitution);
+		double j = -(1 + e) * velAlongNorm / (a->physics.inv_mass + b->physics.inv_mass);
+
+		TSEE_Vec2 impulse = manifold.normal;
+		TSEE_Vec2_Multiply(&impulse, j);
+
+		TSEE_Vec2 impulseMass = impulse;
+		TSEE_Vec2_Multiply(&impulseMass, a->physics.inv_mass);
+		TSEE_Vec2_Subtract(&aVel, impulseMass);
+
+		impulseMass = impulse;
+		TSEE_Vec2_Multiply(&impulseMass, b->physics.inv_mass);
+		TSEE_Vec2_Add(&bVel, impulseMass);
+
+		// Friction
+		relVel = bVel;
+		TSEE_Vec2_Subtract(&relVel, aVel);
+		velAlongNorm = TSEE_Vec2_Dot(relVel, manifold.normal);
+
+		TSEE_Vec2 tangent = relVel;
+		TSEE_Vec2 newNorm = manifold.normal;
+		TSEE_Vec2_Multiply(&newNorm, velAlongNorm);
+		TSEE_Vec2_Subtract(&tangent, newNorm);
+
+		double fVel = TSEE_Vec2_Dot(relVel, tangent);
+
+		double aSf = a->physics.staticFriction;
+		double bSf = b->physics.staticFriction;
+		double aDf = a->physics.dynamicFriction;
+		double bDf = b->physics.dynamicFriction;
+
+		double mu = TSEE_Vec2_Len((TSEE_Vec2){aSf, bSf});
+		double f = -fVel / (a->physics.inv_mass + b->physics.inv_mass);
+
+		TSEE_Vec2 fric = VEC_ZERO;
+		if (fabs(f) < j * mu) {
+			fric = TSEE_Vec2_RMultiply(tangent, f);
+		} else {
+			mu = TSEE_Vec2_Len((TSEE_Vec2){aDf, bDf});
+			fric = TSEE_Vec2_RMultiply(tangent, -j * mu);
+		}
+
+		a->physics.velocity = TSEE_Vec2_RSubtract(aVel, TSEE_Vec2_RMultiply(fric, a->physics.inv_mass));
+		b->physics.velocity = TSEE_Vec2_RAdd(bVel, TSEE_Vec2_RMultiply(fric, b->physics.inv_mass));
+	} else {
+		int amtRight = fabs(a->position.x + a->texture->rect.w -
+							b->position.x);
+		int amtLeft = fabs(b->position.x + b->texture->rect.w -
+						   a->position.x);
+		int amtTop = fabs(b->position.y - a->position.y +
+						  a->texture->rect.h);
+		int amtBottom = fabs(a->position.y + a->texture->rect.h -
+							 b->position.y);
 
 		int values[4] = {amtRight, amtLeft, amtTop, amtBottom};
 		int lowest = values[0];
@@ -181,90 +370,90 @@ void TSEE_Physics_ResolveCollision(TSEE *tsee,
 			}
 		}
 
-		if (TSEE_Object_CheckAttribute(first, TSEE_ATTRIB_PHYS)) {
+		if (TSEE_Object_CheckAttribute(a, TSEE_ATTRIB_PHYS)) {
 			if (lowest == amtRight) {
 				if (amtTop <= tsee->player->step_size) {
 					TSEE_Object_SetPosition(
-						tsee, first, first->position.x,
-						second->position.y + first->texture->rect.h);
+						a, a->position.x,
+						b->position.y + a->texture->rect.h);
 				} else {
 					TSEE_Object_SetPosition(
-						tsee, first,
-						second->position.x - first->texture->rect.w,
-						first->position.y);
-					first->physics.velocity.x = 0;
+						a,
+						b->position.x - a->texture->rect.w,
+						a->position.y);
+					a->physics.velocity.x = 0;
 				}
 			} else if (lowest == amtLeft) {
 				if (amtTop <= tsee->player->step_size) {
 					TSEE_Object_SetPosition(
-						tsee, first, first->position.x,
-						second->position.y + first->texture->rect.h);
+						a, a->position.x,
+						b->position.y + a->texture->rect.h);
 				} else {
 					TSEE_Object_SetPosition(
-						tsee, first,
-						second->position.x + second->texture->rect.w,
-						first->position.y);
-					first->physics.velocity.x = 0;
+						a,
+						b->position.x + b->texture->rect.w,
+						a->position.y);
+					a->physics.velocity.x = 0;
 				}
 			} else if (lowest == amtTop) {
 				TSEE_Object_SetPosition(
-					tsee, first, first->position.x,
-					second->position.y + first->texture->rect.h);
-				if (first == tsee->player->object) {
+					a, a->position.x,
+					b->position.y + a->texture->rect.h);
+				if (a == tsee->player->object) {
 					tsee->player->grounded = true;
 				}
-				if (first->physics.velocity.y < 0) {
-					first->physics.velocity.y = 0;
+				if (a->physics.velocity.y < 0) {
+					a->physics.velocity.y = 0;
 				}
 			} else if (lowest == amtBottom) {
 				TSEE_Object_SetPosition(
-					tsee, first, first->position.x,
-					second->position.y - second->texture->rect.h);
-				if (first->physics.velocity.y > 0) {
-					first->physics.velocity.y = 0;
+					a, a->position.x,
+					b->position.y - b->texture->rect.h);
+				if (a->physics.velocity.y > 0) {
+					a->physics.velocity.y = 0;
 				}
 			}
 		} else {
 			if (lowest == amtRight) {
 				if (amtTop <= tsee->player->step_size) {
 					TSEE_Object_SetPosition(
-						tsee, second, second->position.x,
-						first->position.y + second->texture->rect.h);
+						b, b->position.x,
+						a->position.y + b->texture->rect.h);
 				} else {
 					TSEE_Object_SetPosition(
-						tsee, second,
-						first->position.x - second->texture->rect.w,
-						second->position.y);
-					second->physics.velocity.x = 0;
+						b,
+						a->position.x - b->texture->rect.w,
+						b->position.y);
+					b->physics.velocity.x = 0;
 				}
 			} else if (lowest == amtLeft) {
 				if (amtTop <= tsee->player->step_size) {
 					TSEE_Object_SetPosition(
-						tsee, second, second->position.x,
-						first->position.y + second->texture->rect.h);
+						b, b->position.x,
+						a->position.y + b->texture->rect.h);
 				} else {
 					TSEE_Object_SetPosition(
-						tsee, second,
-						first->position.x + first->texture->rect.w,
-						second->position.y);
-					second->physics.velocity.x = 0;
+						b,
+						a->position.x + a->texture->rect.w,
+						b->position.y);
+					b->physics.velocity.x = 0;
 				}
 			} else if (lowest == amtTop) {
 				TSEE_Object_SetPosition(
-					tsee, second, second->position.x,
-					first->position.y + second->texture->rect.h);
-				if (second == tsee->player->object) {
+					b, b->position.x,
+					a->position.y + b->texture->rect.h);
+				if (b == tsee->player->object) {
 					tsee->player->grounded = true;
 				}
-				if (second->physics.velocity.y < 0) {
-					second->physics.velocity.y = 0;
+				if (b->physics.velocity.y < 0) {
+					b->physics.velocity.y = 0;
 				}
 			} else if (lowest == amtBottom) {
 				TSEE_Object_SetPosition(
-					tsee, second, second->position.x,
-					first->position.y - first->texture->rect.h);
-				if (second->physics.velocity.y > 0) {
-					second->physics.velocity.y = 0;
+					b, b->position.x,
+					a->position.y - a->texture->rect.h);
+				if (b->physics.velocity.y > 0) {
+					b->physics.velocity.y = 0;
 				}
 			}
 		}

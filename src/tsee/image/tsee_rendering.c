@@ -112,13 +112,17 @@ bool TSEE_RenderAll(TSEE *tsee) {
 		SDL_Delay(25);
 		return true;
 	}
-	SDL_SetRenderDrawColor(tsee->window->renderer, 255, 255, 255, 255);
+	SDL_SetRenderDrawColor(tsee->window->renderer, 127, 0, 0, 255);
 	SDL_RenderClear(tsee->window->renderer);
 
 	// Render all objects
 	for (size_t i = 0; i < tsee->world->objects->size; i++) {
 		TSEE_Object *obj = TSEE_Array_Get(tsee->world->objects, i);
-		if (!TSEE_Object_Render(tsee, obj)) {
+		if (TSEE_Attributes_Check(obj->attributes, TSEE_ATTRIB_PARALLAX)) {
+			if (!TSEE_Parallax_Render(tsee, obj)) {
+				TSEE_Warn("Failed to render parallax object\n");
+			}
+		} else if (!TSEE_Object_Render(tsee, obj)) {
 			TSEE_Warn("Failed to render object\n");
 		}
 	}
@@ -242,9 +246,9 @@ bool TSEE_RenderAll(TSEE *tsee) {
  * @return true if ready, false if not.
  */
 bool TSEE_Rendering_IsReady(TSEE *tsee) {
-	float timeBetweenFrames = 1.0f / tsee->window->fps;
-	float dt =
-		(float)((SDL_GetPerformanceCounter() - tsee->window->last_render) /
-				(float)SDL_GetPerformanceFrequency());
+	double timeBetweenFrames = 1.0f / tsee->window->fps;
+	double dt =
+		(double)((SDL_GetPerformanceCounter() - tsee->window->last_render) /
+				(double)SDL_GetPerformanceFrequency());
 	return dt - timeBetweenFrames > -0.1f;
 }
