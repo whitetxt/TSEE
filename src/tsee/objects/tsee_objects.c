@@ -23,8 +23,8 @@ bool TSEE_Object_CheckAttribute(TSEE_Object *obj, TSEE_Object_Attributes attr) {
 TSEE_Object *TSEE_Object_Create(TSEE *tsee,
 								TSEE_Texture *texture,
 								TSEE_Object_Attributes attributes,
-								float x,
-								float y) {
+								double x,
+								double y) {
 	if (TSEE_Attributes_Check(attributes, TSEE_ATTRIB_UI) &&
 		TSEE_Attributes_Check(attributes, TSEE_ATTRIB_PHYS)) {
 		TSEE_Error("Cannot create object with UI and physics attributes.\n");
@@ -52,7 +52,7 @@ TSEE_Object *TSEE_Object_Create(TSEE *tsee,
 		return NULL;
 	}
 	obj->texture = texture;
-	TSEE_Object_SetPosition(tsee, obj, x, y);
+	TSEE_Object_SetPosition(obj, x, y);
 
 	if (TSEE_Attributes_Check(attributes, TSEE_ATTRIB_PLAYER)) {
 		TSEE_Attributes_Set(&attributes, TSEE_ATTRIB_PHYS);
@@ -86,7 +86,7 @@ TSEE_Object *TSEE_Object_Create(TSEE *tsee,
  * @param y New Y position
  * @return success status
  */
-bool TSEE_Object_SetPosition(TSEE *tsee, TSEE_Object *obj, float x, float y) {
+bool TSEE_Object_SetPosition(TSEE_Object *obj, double x, double y) {
 	if (!obj) {
 		TSEE_Error("Attempted to set position on NULL pointer.\n");
 		return false;
@@ -97,11 +97,6 @@ bool TSEE_Object_SetPosition(TSEE *tsee, TSEE_Object *obj, float x, float y) {
 	}
 	obj->position.x = x;
 	obj->position.y = y;
-
-	obj->texture->rect.x = x - tsee->world->scroll_x;
-	// Transform the value into coords where bottom-left is the origin.
-	obj->texture->rect.y = -y + tsee->window->height - tsee->world->scroll_y;
-
 	return true;
 }
 
@@ -112,8 +107,8 @@ bool TSEE_Object_SetPosition(TSEE *tsee, TSEE_Object *obj, float x, float y) {
  * @param vec Vector with the new position in
  * @return success status
  */
-bool TSEE_Object_SetPositionVec2(TSEE *tsee, TSEE_Object *obj, TSEE_Vec2 vec) {
-	return TSEE_Object_SetPosition(tsee, obj, vec.x, vec.y);
+bool TSEE_Object_SetPositionVec2(TSEE_Object *obj, TSEE_Vec2 vec) {
+	return TSEE_Object_SetPosition(obj, vec.x, vec.y);
 }
 
 /**
@@ -130,7 +125,7 @@ SDL_Rect TSEE_Object_GetCollisionRect(TSEE_Object *obj, TSEE_Object *other) {
 	if (SDL_IntersectRect(&obj_rect, &other_rect, &new_rect) == SDL_TRUE) {
 		return new_rect;
 	}
-	return (SDL_Rect){0, 0, -1, -1};
+	return RECT_NULL;
 }
 
 SDL_Rect TSEE_Object_GetRect(TSEE_Object *obj) {
@@ -153,8 +148,9 @@ bool TSEE_Object_Render(TSEE *tsee, TSEE_Object *object) {
 		if (tsee->debug->active) {
 			start = SDL_GetPerformanceCounter();
 		}
-		TSEE_Log("Object Position: %i, %i\n", object->texture->rect.x,
-				 object->texture->rect.y);
+		object->texture->rect.x = object->position.x - tsee->world->scroll_x;
+		// Transform the value into coords where bottom-left is the origin.
+		object->texture->rect.y = -object->position.y + tsee->window->height - tsee->world->scroll_y;
 		int ret =
 			SDL_RenderCopy(tsee->window->renderer, object->texture->texture,
 						   NULL, &object->texture->rect);

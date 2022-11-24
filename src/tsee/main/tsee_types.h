@@ -4,9 +4,9 @@
 typedef struct TSEE_World {
 	TSEE_Array *objects;
 	TSEE_Vec2 gravity;
-	float scroll_x;
-	float scroll_y;
-	float max_scroll_x;
+	double scroll_x;
+	double scroll_y;
+	double max_scroll_x;
 } TSEE_World;
 
 // TSEE's system of keeping track of what's initialized.
@@ -49,5 +49,5 @@ typedef struct TSEE {
 	TSEE_Debug *debug;
 	Uint64 last_time;
 	Uint64 current_time;
-	float dt;
+	double dt;
 } TSEE;

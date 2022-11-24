@@ -9,9 +9,10 @@ obj = ${files:.c=.o}
 
 ifeq ($(DEV),1)
 CFLAGS += -DTSEE_DEV -g
-OPT = 
+OPT = -Og
 out = build/dev/TSEE
 else
+CFLAGS += -g
 OPT = -Ofast -flto
 out = build/release/TSEE
 endif
@@ -37,8 +38,8 @@ cleandev: check_folder
 
 fresh: clean all
 
+run: out = build/release/TSEE
 run:
-	out = build/release/TSEE
 	chmod +x ${out}
 	cd build/release && ../../${out}
 
@@ -47,13 +48,12 @@ rundev:
 	chmod +x ${out}
 	cd build/dev && ../../${out}
 
-gdb: out = build/dev/TSEE
 gdb:
 	cd build/dev && gdb ../../${out}
 
 vg: out = build/dev/TSEE
 vg:
-	cd build/dev && valgrind --leak-check=full --show-possibly-lost=no --show-reachable=no --track-origins=yes -s ../../${out}
+	cd build/release && valgrind --leak-check=full --show-possibly-lost=no --show-reachable=no --track-origins=yes -s ../../${out}
 
 check_folder:
 	mkdir -p build

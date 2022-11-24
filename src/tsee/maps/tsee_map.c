@@ -128,13 +128,13 @@ bool TSEE_Map_Load(TSEE *tsee, char *fn) {
 			 mapVersion, mapDescription);
 
 	// Read the gravity (for some reason its here in the header?)
-	float gravityX = 0;
+	double gravityX = 0;
 	if (TSEE_ReadFile(&gravityX, sizeof(gravityX), 1, fp) != 1) {
 		TSEE_Error("Failed to read gravity X.\n");
 		fclose(fp);
 		return false;
 	}
-	float gravityY = 0;
+	double gravityY = 0;
 	if (TSEE_ReadFile(&gravityY, sizeof(gravityY), 1, fp) != 1) {
 		TSEE_Error("Failed to read gravity Y.\n");
 		fclose(fp);
@@ -180,8 +180,8 @@ bool TSEE_Map_Load(TSEE *tsee, char *fn) {
 		}
 		TSEE_Log("Read object %ld with texture %ld\n", i, texIdx);
 		char *path = texturePaths[texIdx];
-		float x = 0;
-		float y = 0;
+		double x = 0;
+		double y = 0;
 		TSEE_Object_Attributes attr;
 
 		if (TSEE_ReadFile(&x, sizeof(x), 1, fp) != 1 ||
@@ -240,14 +240,14 @@ bool TSEE_Map_Load(TSEE *tsee, char *fn) {
 		TSEE_Warn("Failed to find player object.\n");
 	}
 
-	float speed = 0;
+	double speed = 0;
 	if (TSEE_ReadFile(&speed, sizeof(speed), 1, fp) != 1) {
 		TSEE_Error("Failed to read player speed.\n");
 		fclose(fp);
 		return false;
 	}
 	TSEE_Player_SetSpeed(tsee, speed);
-	float jumpForce = 0;
+	double jumpForce = 0;
 	if (TSEE_ReadFile(&jumpForce, sizeof(jumpForce), 1, fp) != 1) {
 		TSEE_Error("Failed to read player jump force.\n");
 		fclose(fp);
@@ -282,9 +282,9 @@ bool TSEE_Map_Save(TSEE *tsee, char *fn) {
 	TSEE_WriteFile_String(fp, mapVersion);
 	TSEE_WriteFile_String(fp, mapDescription);
 	// Write the gravity
-	float gravityX = tsee->world->gravity.x;
+	double gravityX = tsee->world->gravity.x;
 	TSEE_WriteFile(&gravityX, sizeof(gravityX), 1, fp);
-	float gravityY = tsee->world->gravity.y;
+	double gravityY = tsee->world->gravity.y;
 	TSEE_WriteFile(&gravityY, sizeof(gravityY), 1, fp);
 	// Write the number of textures
 

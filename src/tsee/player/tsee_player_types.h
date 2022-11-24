@@ -11,8 +11,8 @@ typedef struct TSEE_Player {
 	TSEE_Object *object;
 	TSEE_Player_Movement movement;
 	bool grounded;
-	float held_up;
-	float jump_force;
-	float speed;
+	double held_up;
+	double jump_force;
+	double speed;
 	int step_size;
 } TSEE_Player;

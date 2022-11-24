@@ -11,13 +11,15 @@ typedef enum TSEE_Object_Attributes {
 typedef struct TSEE_Physics_Data {
 	TSEE_Vec2 velocity;
 	TSEE_Vec2 force;
-	float mass;
-	float inv_mass;
-	float restitution;
+	double mass;
+	double inv_mass;
+	double restitution;
+	double staticFriction;
+	double dynamicFriction;
 } TSEE_Physics_Data;
 
 typedef struct TSEE_Parallax_Data {
-	float distance;
+	double distance;
 } TSEE_Parallax_Data;
 
 typedef struct TSEE_Text_Data {
