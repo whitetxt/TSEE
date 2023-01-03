@@ -20,6 +20,8 @@ TSEE was used to make this simple demo, and its entire source code is 60 lines l
 
 Look at the source in [this file](https://github.com/EvieUwU/TSEE/blob/master/src/main.c)
 
+**NOTE:** This is broken at the moment, since I'm trying to rework physics to be better.
+
 ## Uses
 
 TSEE is highly versatile, it can be used to make all kinds of games.
