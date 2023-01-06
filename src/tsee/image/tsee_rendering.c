@@ -116,14 +116,18 @@ bool TSEE_RenderAll(TSEE *tsee) {
 	SDL_SetRenderDrawColor(tsee->window->renderer, 127, 0, 0, 255);
 	SDL_RenderClear(tsee->window->renderer);
 
+	// Render parallax objects
+	for (size_t i = 0; i < tsee->world->parallax_objects->size; i++) {
+		TSEE_Object *para = TSEE_Array_Get(tsee->world->parallax_objects, i);
+		if (!TSEE_Parallax_Render(tsee, para)) {
+			TSEE_Warn("Failed to render parallax object\n");
+		}
+	}
+
 	// Render all objects
 	for (size_t i = 0; i < tsee->world->objects->size; i++) {
 		TSEE_Object *obj = TSEE_Array_Get(tsee->world->objects, i);
-		if (TSEE_Attributes_Check(obj->attributes, TSEE_ATTRIB_PARALLAX)) {
-			if (!TSEE_Parallax_Render(tsee, obj)) {
-				TSEE_Warn("Failed to render parallax object\n");
-			}
-		} else if (!TSEE_Object_Render(tsee, obj)) {
+		if (!TSEE_Object_Render(tsee, obj)) {
 			TSEE_Warn("Failed to render object\n");
 		}
 	}
