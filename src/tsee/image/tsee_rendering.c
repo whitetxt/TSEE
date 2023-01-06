@@ -113,7 +113,7 @@ bool TSEE_RenderAll(TSEE *tsee) {
 		SDL_Delay(33);
 		return true;
 	}
-	SDL_SetRenderDrawColor(tsee->window->renderer, 127, 0, 0, 255);
+	SDL_SetRenderDrawColor(tsee->window->renderer, 0, 0, 0, 255);
 	SDL_RenderClear(tsee->window->renderer);
 
 	// Render parallax objects
