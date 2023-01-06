@@ -41,7 +41,7 @@ int main(int argc, char *argv[]) {
 
 	TSEE_Object_Create(tsee, TSEE_Texture_Create(tsee, "assets/test_image2.png"),
 					   TSEE_ATTRIB_PHYS | TSEE_ATTRIB_PLAYER, 300, 400);
-	TSEE_Player_SetJumpForce(tsee, 75);
+	TSEE_Player_SetJumpForce(tsee, 50);
 	TSEE_Player_SetSpeed(tsee, 750);
 	TSEE_Player_SetStepSize(tsee, 5);
 	TSEE_World_SetGravity(tsee, (TSEE_Vec2){0, -500});
@@ -49,19 +49,21 @@ int main(int argc, char *argv[]) {
 						 TSEE_Texture_Create(tsee, "assets/parallax1.png"), 6);
 	TSEE_Parallax_Create(tsee,
 						 TSEE_Texture_Create(tsee, "assets/parallax2.png"), 4);
-	TSEE_Parallax_Create(tsee,
-						 TSEE_Texture_Create(tsee, "assets/parallax3.png"), 2);
-	TSEE_Parallax_Create(tsee,
-						 TSEE_Texture_Create(tsee, "assets/parallax4.png"), 1);
+	//TSEE_Parallax_Create(tsee,
+	//					 TSEE_Texture_Create(tsee, "assets/parallax3.png"), 2);
+	//TSEE_Parallax_Create(tsee,
+	//					 TSEE_Texture_Create(tsee, "assets/parallax4.png"), 1);
+
+	printf("Breakpoint here\n");
 
 	for (int x = 0; x < tsee->window->width; x += 64) {
 		TSEE_Object_Create(tsee,
 						   TSEE_Texture_Create(tsee, "assets/box.png"),
 						   TSEE_ATTRIB_STATIC, x, 64);
 	}
-	TSEE_Object_Create(tsee, TSEE_Texture_Create(tsee, "assets/test_image.png"), TSEE_ATTRIB_PHYS, -20, 500);
-	TSEE_Object_Create(tsee, TSEE_Texture_Create(tsee, "assets/box.png"), TSEE_ATTRIB_PHYS, 20, 500);
-	TSEE_Object_Create(tsee, TSEE_Texture_Create(tsee, "assets/box.png"), TSEE_ATTRIB_PHYS, 20, 600);
+	//TSEE_Object_Create(tsee, TSEE_Texture_Create(tsee, "assets/test_image.png"), TSEE_ATTRIB_PHYS, -200, 500);
+	//TSEE_Object_Create(tsee, TSEE_Texture_Create(tsee, "assets/box.png"), TSEE_ATTRIB_PHYS, 20, 500);
+	//TSEE_Object_Create(tsee, TSEE_Texture_Create(tsee, "assets/box.png"), TSEE_ATTRIB_PHYS, 20, 600);
 
 	// After setup for the map, correct dt
 	tsee->current_time = SDL_GetPerformanceCounter();

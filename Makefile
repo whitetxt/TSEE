@@ -9,7 +9,7 @@ obj = ${files:.c=.o}
 
 ifeq ($(DEV),1)
 CFLAGS += -DTSEE_DEV -g
-OPT = -Og
+OPT = 
 out = build/dev/TSEE
 else
 CFLAGS += -g
@@ -48,15 +48,18 @@ rundev:
 	chmod +x ${out}
 	cd build/dev && ../../${out}
 
+gdb: out = build/dev/TSEE
 gdb:
 	cd build/dev && gdb ../../${out}
 
 vg: out = build/dev/TSEE
 vg:
-	cd build/release && valgrind --leak-check=full --show-possibly-lost=no --show-reachable=no --track-origins=yes -s ../../${out}
+	cd build/dev && valgrind --leak-check=full --show-possibly-lost=no --show-reachable=no --track-origins=yes -s ../../${out}
 
 check_folder:
 	mkdir -p build
+	mkdir -p build/dev
+	mkdir -p build/release
 
 docs:
 	doxygen src/tsee.dxg

@@ -35,3 +35,11 @@ All documentation is provided in the form of doxygen comments at the start of fu
 Functions are named in the form "TSEE*\<Scope>*\<Function>" (e.g TSEE_Object_Create or TSEE_Object_Destroy)
 
 The full documentation can be generated using the tsee.dxg config with doxygen.
+
+## Building
+
+TSEE depends on SDL2 and libfyaml.
+
+```bash
+sudo apt install libsdl2-dev libsdl2-image-dev libsdl2-ttf-dev libfyaml-dev
+```

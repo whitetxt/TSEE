@@ -69,10 +69,8 @@ TSEE_Object *TSEE_Object_Create(TSEE *tsee,
 
 	obj->attributes = attributes;
 
-	if (TSEE_Attributes_Check(attributes, TSEE_ATTRIB_PARALLAX) &&
-		tsee->world->objects->size > 0)
-		TSEE_Array_Insert(tsee->world->objects, obj, 0);
-	else
+	// Only insert if not parallax, parallax objects will be moved around as needed by the Parallax_Create function.
+	if (!TSEE_Attributes_Check(attributes, TSEE_ATTRIB_PARALLAX))
 		TSEE_Array_Append(tsee->world->objects, obj);
 
 	return obj;
