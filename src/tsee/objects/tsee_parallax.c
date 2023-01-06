@@ -36,8 +36,7 @@ TSEE_Object *TSEE_Parallax_Create(TSEE *tsee,
 			continue;
 
 		num_parallax++;
-		printf("New parallax object found at distance %f, index %ld\nOur distance: %f\n", obj->parallax.distance, i, distanceFromCamera);
-
+		
 		if (parallax->parallax.distance < obj->parallax.distance) {
 			latest_good_index = i + 1;
 		} else {
@@ -48,8 +47,6 @@ TSEE_Object *TSEE_Parallax_Create(TSEE *tsee,
 	if (latest_good_index == 0 && num_parallax != 0) {
 		latest_good_index = num_parallax;
 	}
-
-	printf("Inserting parallax object at position %ld\n", latest_good_index);
 
 	TSEE_Array_Insert(tsee->world->parallax_objects, parallax, latest_good_index);
 	return parallax;
