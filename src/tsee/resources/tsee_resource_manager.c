@@ -31,15 +31,14 @@ bool TSEE_Resource_Close(TSEE *tsee) {
 bool TSEE_Resource_Unload(TSEE *tsee) {
 	if (!tsee->resources)
 		return false;
-	while (tsee->resources->textures->size > 0) {
-		TSEE_Texture *tex = TSEE_Array_Get(tsee->resources->textures, 0);
+	for (size_t i = 0; i < tsee->resources->textures->size; i++) {
+		TSEE_Texture *tex = TSEE_Array_Get(tsee->resources->textures, i);
 		TSEE_Texture_Destroy(tex);
-		TSEE_Array_Delete(tsee->resources->textures, 0);
 	}
 	TSEE_Array_Destroy(tsee->resources->textures);
 	tsee->resources->textures = TSEE_Array_Create();
-	while (tsee->resources->fonts->size > 0) {
-		TSEE_Font *font = TSEE_Array_Get(tsee->resources->fonts, 0);
+	for (size_t i = 0; i < tsee->resources->fonts->size; i++) {
+		TSEE_Font *font = TSEE_Array_Get(tsee->resources->fonts, i);
 		TSEE_Font_Unload(tsee, font);
 	}
 	TSEE_Array_Destroy(tsee->resources->fonts);

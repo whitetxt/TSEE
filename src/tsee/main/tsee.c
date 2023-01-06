@@ -190,13 +190,18 @@ bool TSEE_Close(TSEE *tsee) {
 		tsee->window->running = false;
 
 	if (tsee->world->objects) {
-		if (tsee->world->objects->data) {
-			for (size_t i = 0; i < tsee->world->objects->size; i++) {
-				TSEE_Object *obj = TSEE_Array_Get(tsee->world->objects, i);
-				TSEE_Object_Destroy(tsee, obj, false);
-			}
+		for (size_t i = 0; i < tsee->world->objects->size; i++) {
+			TSEE_Object *obj = TSEE_Array_Get(tsee->world->objects, i);
+			TSEE_Object_Destroy(tsee, obj, false);
 		}
 		TSEE_Array_Destroy(tsee->world->objects);
+	}
+	if (tsee->world->parallax_objects) {
+		for (size_t i = 0; i < tsee->world->parallax_objects->size; i++) {
+			TSEE_Object *para = TSEE_Array_Get(tsee->world->parallax_objects, i);
+			TSEE_Object_Destroy(tsee, para, false);
+		}
+		TSEE_Array_Destroy(tsee->world->parallax_objects);
 	}
 	TSEE_Resource_Unload(tsee);
 
