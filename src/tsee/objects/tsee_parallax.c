@@ -86,10 +86,10 @@ bool TSEE_Parallax_Render(TSEE *tsee, TSEE_Object *parallax) {
 	parallax->texture->rect.x =
 		tsee->world->scroll_x * (-1 / parallax->parallax.distance);
 	while (parallax->texture->rect.x > tsee->window->width) {
-		parallax->texture->rect.x -= tsee->window->width;
+		parallax->texture->rect.x -= parallax->texture->rect.w;
 	}
 	while (parallax->texture->rect.x + parallax->texture->rect.w < 0) {
-		parallax->texture->rect.x += tsee->window->width;
+		parallax->texture->rect.x += parallax->texture->rect.w;
 	}
 	while (parallax->texture->rect.x > 0) {
 		parallax->texture->rect.x -= parallax->texture->rect.w;

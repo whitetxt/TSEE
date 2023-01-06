@@ -56,7 +56,7 @@ int main(int argc, char *argv[]) {
 
 	printf("Breakpoint here\n");
 
-	for (int x = 0; x < tsee->window->width; x += 64) {
+	for (int x = 0; x < tsee->window->width * 5; x += 64) {
 		TSEE_Object_Create(tsee,
 						   TSEE_Texture_Create(tsee, "assets/box.png"),
 						   TSEE_ATTRIB_STATIC, x, 64);
@@ -67,7 +67,7 @@ int main(int argc, char *argv[]) {
 
 	// After setup for the map, correct dt
 	tsee->current_time = SDL_GetPerformanceCounter();
-	tsee->world->max_scroll_x = 1000;
+	tsee->world->max_scroll_x = tsee->window->width * 5;
 
 	while (tsee->window->running) {
 		TSEE_Events_Handle(tsee);
