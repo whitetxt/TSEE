@@ -226,6 +226,8 @@ void TSEE_Physics_ResolveCollision(TSEE *tsee,
 								   TSEE_Object *b) {
 	if (TSEE_Object_CheckAttribute(a, TSEE_ATTRIB_PHYS) &&
 		TSEE_Object_CheckAttribute(b, TSEE_ATTRIB_PHYS)) {
+		// I'm giving up on this for now :/
+		return;
 		/*
 		// https://en.wikipedia.org/wiki/Elastic_collision#Two-dimensional_collision_with_two_moving_objects
 

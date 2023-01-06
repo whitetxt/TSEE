@@ -109,7 +109,8 @@ bool TSEE_RenderAll(TSEE *tsee) {
 	Uint64 start = SDL_GetPerformanceCounter();
 	if (SDL_GetWindowFlags(tsee->window->window) & SDL_WINDOW_MINIMIZED) {
 		// Don't render if minimised.
-		SDL_Delay(25);
+		// Limits max FPS to 30
+		SDL_Delay(33);
 		return true;
 	}
 	SDL_SetRenderDrawColor(tsee->window->renderer, 127, 0, 0, 255);

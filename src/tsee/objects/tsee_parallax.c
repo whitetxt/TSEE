@@ -22,22 +22,35 @@ TSEE_Object *TSEE_Parallax_Create(TSEE *tsee,
 	if (!parallax) {
 		return NULL;
 	}
-	TSEE_Array_Delete(tsee->world->objects, 0);
+	//TSEE_Array_Delete(tsee->world->objects, 0);
 
 	parallax->parallax.distance = distanceFromCamera;
 	parallax->texture->rect.y = tsee->window->height - texture->rect.h;
 
 	size_t latest_good_index = 0;
+	size_t num_parallax = 0;
 
-	for (size_t i = 1; i < tsee->world->objects->size; i++) {
+	for (size_t i = 0; i < tsee->world->objects->size; i++) {
 		TSEE_Object *obj = TSEE_Array_Get(tsee->world->objects, i);
 		if (!TSEE_Object_CheckAttribute(obj, TSEE_ATTRIB_PARALLAX))
 			continue;
 
-		if (parallax->parallax.distance < obj->parallax.distance)
+		num_parallax++;
+		printf("New parallax object found at distance %f, index %ld\nOur distance: %f\n", obj->parallax.distance, i, distanceFromCamera);
+
+		if (parallax->parallax.distance < obj->parallax.distance) {
 			latest_good_index = i;
-		else
 			break;
+		}
+	}
+
+	if (latest_good_index == 0 && num_parallax != 0) {
+		latest_good_index = num_parallax;
+	}
+
+	printf("Inserting parallax object at position %ld\n", latest_good_index);
+	if (latest_good_index != 0) {
+		printf("Object before it distance: %f\n", ((TSEE_Object*)(tsee->world->objects->data[latest_good_index-1]))->parallax.distance);
 	}
 
 	TSEE_Array_Insert(tsee->world->objects, parallax, latest_good_index);
