@@ -5,9 +5,9 @@ typedef struct TSEE_World {
 	TSEE_Array *objects;
 	TSEE_Array *parallax_objects;
 	TSEE_Vec2 gravity;
-	int scroll_x;
-	int scroll_y;
-	int max_scroll_x;
+	double scroll_x;
+	double scroll_y;
+	double max_scroll_x;
 } TSEE_World;
 
 // TSEE's system of keeping track of what's initialized.
