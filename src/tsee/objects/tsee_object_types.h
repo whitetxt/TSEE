@@ -30,7 +30,6 @@ typedef struct TSEE_Text_Data {
 typedef struct TSEE_Object {
 	TSEE_Texture *texture;
 	TSEE_Vec2 position;
-	TSEE_Vec2 render_position;
 	TSEE_Object_Attributes attributes;
 	union {
 		TSEE_Physics_Data physics;

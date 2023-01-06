@@ -329,9 +329,9 @@ void TSEE_World_ScrollToObject(TSEE *tsee, TSEE_Object *obj) {
 
 	for (size_t i = 0; i < tsee->world->objects->size; i++) {
 		TSEE_Object *object = TSEE_Array_Get(tsee->world->objects, i);
-		/*if (TSEE_Object_CheckAttribute(object, TSEE_ATTRIB_UI) ||
+		if (TSEE_Object_CheckAttribute(object, TSEE_ATTRIB_UI) ||
 			TSEE_Object_CheckAttribute(object, TSEE_ATTRIB_PLAYER))
-			continue;*/
+			continue;
 		if (!TSEE_Object_CheckAttribute(object, TSEE_ATTRIB_PARALLAX)) {
 			object->texture->rect.x =
 				object->position.x - tsee->world->scroll_x;

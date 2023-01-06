@@ -52,7 +52,7 @@ TSEE_Object *TSEE_Object_Create(TSEE *tsee,
 		return NULL;
 	}
 	obj->texture = texture;
-	TSEE_Object_SetPosition(obj, x, y);
+	TSEE_Object_SetPosition(tsee, obj, x, y);
 
 	if (TSEE_Attributes_Check(attributes, TSEE_ATTRIB_PLAYER)) {
 		TSEE_Attributes_Set(&attributes, TSEE_ATTRIB_PHYS);
@@ -84,7 +84,7 @@ TSEE_Object *TSEE_Object_Create(TSEE *tsee,
  * @param y New Y position
  * @return success status
  */
-bool TSEE_Object_SetPosition(TSEE_Object *obj, double x, double y) {
+bool TSEE_Object_SetPosition(TSEE *tsee, TSEE_Object *obj, double x, double y) {
 	if (!obj) {
 		TSEE_Error("Attempted to set position on NULL pointer.\n");
 		return false;
@@ -95,6 +95,9 @@ bool TSEE_Object_SetPosition(TSEE_Object *obj, double x, double y) {
 	}
 	obj->position.x = x;
 	obj->position.y = y;
+	obj->texture->rect.x = obj->position.x - tsee->world->scroll_x;
+	obj->texture->rect.y = obj->position.y * -1 +
+								  tsee->window->height - tsee->world->scroll_y;
 	return true;
 }
 
@@ -105,8 +108,8 @@ bool TSEE_Object_SetPosition(TSEE_Object *obj, double x, double y) {
  * @param vec Vector with the new position in
  * @return success status
  */
-bool TSEE_Object_SetPositionVec2(TSEE_Object *obj, TSEE_Vec2 vec) {
-	return TSEE_Object_SetPosition(obj, vec.x, vec.y);
+bool TSEE_Object_SetPositionVec2(TSEE *tsee, TSEE_Object *obj, TSEE_Vec2 vec) {
+	return TSEE_Object_SetPosition(tsee, obj, vec.x, vec.y);
 }
 
 /**
@@ -186,4 +189,14 @@ void TSEE_Object_Destroy(TSEE *tsee, TSEE_Object *object, bool destroyTexture) {
 		xfree(object->text.text);
 	}
 	xfree(object);
+}
+
+/**
+ * @brief Updates the texture position for an object.
+ * 
+ * @param obj the object to update the position of
+ */
+void TSEE_Object_UpdatePosition(TSEE *tsee, TSEE_Object *obj) {
+	obj->texture->rect.x = obj->position.x - tsee->world->scroll_x;
+	obj->texture->rect.y = -obj->position.y + tsee->window->height - tsee->world->scroll_y;
 }

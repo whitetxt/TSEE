@@ -78,7 +78,6 @@ TSEE_Object *TSEE_Text_Create(TSEE *tsee,
 	SDL_FreeSurface(surf);
 	textObj->attributes = TSEE_ATTRIB_TEXT | TSEE_ATTRIB_UI;
 	textObj->position = VEC_ZERO;
-	textObj->render_position = VEC_ZERO;
 	TSEE_Resource_Texture_Store(tsee, textObj->texture);
 	return textObj;
 }
