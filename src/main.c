@@ -49,10 +49,10 @@ int main(int argc, char *argv[]) {
 						 TSEE_Texture_Create(tsee, "assets/parallax1.png"), 6);
 	TSEE_Parallax_Create(tsee,
 						 TSEE_Texture_Create(tsee, "assets/parallax2.png"), 4);
-	//TSEE_Parallax_Create(tsee,
-	//					 TSEE_Texture_Create(tsee, "assets/parallax3.png"), 2);
-	//TSEE_Parallax_Create(tsee,
-	//					 TSEE_Texture_Create(tsee, "assets/parallax4.png"), 1);
+	TSEE_Parallax_Create(tsee,
+						 TSEE_Texture_Create(tsee, "assets/parallax3.png"), 2);
+	TSEE_Parallax_Create(tsee,
+						 TSEE_Texture_Create(tsee, "assets/parallax4.png"), 1);
 
 	printf("Breakpoint here\n");
 

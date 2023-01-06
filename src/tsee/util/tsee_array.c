@@ -57,7 +57,7 @@ bool TSEE_Array_Insert(TSEE_Array *arr, void *data, size_t index) {
 		TSEE_Error("Array or data is NULL\n");
 		return false;
 	}
-	if (index >= arr->size) {
+	if (index > arr->size) {
 		if (index != 0) {
 			TSEE_Warn("Attempted insert into array (size %zu) at index `%zu`\n",
 					  arr->size, index);

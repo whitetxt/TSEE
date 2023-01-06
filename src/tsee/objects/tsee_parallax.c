@@ -39,7 +39,8 @@ TSEE_Object *TSEE_Parallax_Create(TSEE *tsee,
 		printf("New parallax object found at distance %f, index %ld\nOur distance: %f\n", obj->parallax.distance, i, distanceFromCamera);
 
 		if (parallax->parallax.distance < obj->parallax.distance) {
-			latest_good_index = i;
+			latest_good_index = i + 1;
+		} else {
 			break;
 		}
 	}
