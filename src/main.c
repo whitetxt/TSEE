@@ -67,6 +67,7 @@ int main(int argc, char *argv[]) {
 
 	// After setup for the map, correct dt
 	tsee->current_time = SDL_GetPerformanceCounter();
+	tsee->world->max_scroll_x = 1000;
 
 	while (tsee->window->running) {
 		TSEE_Events_Handle(tsee);

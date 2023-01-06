@@ -26,8 +26,9 @@ void TSEE_Physics_PerformStep(TSEE *tsee) {
 	}
 	if (tsee->player->object) {
 		TSEE_World_ScrollToObject(tsee, tsee->player->object);
-		/*TSEE_Log("Scroll: %f, %f\n", tsee->world->scroll_x,
-				 tsee->world->scroll_y);*/
+		TSEE_Log("Scroll: %d, %d\n", tsee->world->scroll_x,
+				 tsee->world->scroll_y);
+		TSEE_Log("Max Scroll X: %d\n", tsee->world->max_scroll_x);
 	}
 	Uint64 end = SDL_GetPerformanceCounter();
 	tsee->debug->physics_time +=

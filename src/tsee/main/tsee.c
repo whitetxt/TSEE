@@ -41,6 +41,7 @@ TSEE *TSEE_Create(int width, int height) {
 		return NULL;
 	}
 	tsee->world->objects = TSEE_Array_Create();
+	tsee->world->parallax_objects = TSEE_Array_Create();
 	tsee->world->scroll_x = 0;
 	tsee->world->scroll_y = 0;
 	tsee->world->max_scroll_x = 0;
@@ -51,6 +52,7 @@ TSEE *TSEE_Create(int width, int height) {
 	if (!tsee->player) {
 		TSEE_Error("Failed to malloc for player.\n");
 		TSEE_Array_Destroy(tsee->world->objects);
+		TSEE_Array_Destroy(tsee->world->parallax_objects);
 		xfree(tsee->world);
 		xfree(tsee->window);
 		xfree(tsee);
@@ -78,6 +80,7 @@ TSEE *TSEE_Create(int width, int height) {
 		TSEE_Error("Failed to malloc for UI.\n");
 		xfree(tsee->player);
 		TSEE_Array_Destroy(tsee->world->objects);
+		TSEE_Array_Destroy(tsee->world->parallax_objects);
 		xfree(tsee->world);
 		xfree(tsee->window);
 		xfree(tsee);
@@ -91,6 +94,7 @@ TSEE *TSEE_Create(int width, int height) {
 		xfree(tsee->ui);
 		xfree(tsee->player);
 		TSEE_Array_Destroy(tsee->world->objects);
+		TSEE_Array_Destroy(tsee->world->parallax_objects);
 		xfree(tsee->world);
 		xfree(tsee->window);
 		xfree(tsee);
@@ -110,6 +114,7 @@ TSEE *TSEE_Create(int width, int height) {
 		xfree(tsee->ui);
 		xfree(tsee->player);
 		TSEE_Array_Destroy(tsee->world->objects);
+		TSEE_Array_Destroy(tsee->world->parallax_objects);
 		xfree(tsee->world);
 		xfree(tsee->window);
 		xfree(tsee);
@@ -277,42 +282,40 @@ bool TSEE_World_SetGravity(TSEE *tsee, TSEE_Vec2 gravity) {
  */
 void TSEE_World_ScrollToObject(TSEE *tsee, TSEE_Object *obj) {
 	SDL_Rect pos = TSEE_Object_GetRect(obj);
-	double width = tsee->window->width;
-	double height = tsee->window->height;
+	double win_width = tsee->window->width;
+	double win_height = tsee->window->height;
 
 	double mid_x = pos.x + pos.w / 2;
 	double mid_y = pos.y + pos.h / 2;
 
-	double half_width = width / 2;
-	double half_height = height / 2;
+	double half_win_width = win_width / 2;
+	double half_win_height = win_height / 2;
 
-	if (mid_x < half_width && tsee->world->scroll_x != 0) {
-		double diff = half_width - mid_x;
+	if (mid_x < half_win_width && tsee->world->scroll_x > 0) {
+		double diff = half_win_width - mid_x;
 		tsee->world->scroll_x -= diff;
-		obj->texture->rect.x = half_width - pos.w / 2;
-	} else if (mid_x > half_width &&
-			   tsee->world->scroll_x != tsee->world->max_scroll_x) {
-		double diff = mid_x - half_width;
+		obj->texture->rect.x = half_win_width - pos.w / 2;
+	} else if (mid_x > half_win_width &&
+			   tsee->world->scroll_x < tsee->world->max_scroll_x) {
+		double diff = mid_x - half_win_width;
 		tsee->world->scroll_x += diff;
-		obj->texture->rect.x = half_width - pos.w / 2;
+		obj->texture->rect.x = half_win_width - pos.w / 2;
 	}
 
-	if (mid_y > half_height * 0.75f) {
-		double diff = mid_y - half_height * 0.75f;
+	if (mid_y > half_win_height * 0.75f) {
+		double diff = mid_y - half_win_height * 0.75f;
 		tsee->world->scroll_y -= diff;
-		obj->texture->rect.y = half_height * 0.75f - pos.h / 2;
-	} else if (mid_y < half_height * 0.25f && tsee->world->scroll_y <= 0) {
-		double diff = half_height * 0.25f - mid_y;
+		obj->texture->rect.y = half_win_height * 0.75f - pos.h / 2;
+	} else if (mid_y < half_win_height * 0.25f && tsee->world->scroll_y < 0) {
+		double diff = half_win_height * 0.25f - mid_y;
 		tsee->world->scroll_y += diff;
-		obj->texture->rect.y = half_height * 0.25f - pos.h / 2;
+		obj->texture->rect.y = half_win_height * 0.25f - pos.h / 2;
 	}
 
-	if (tsee->world) {
-		if (tsee->world->scroll_x < 0) {
-			tsee->world->scroll_x = 0;
-		} else if (tsee->world->scroll_x > tsee->world->max_scroll_x) {
-			tsee->world->scroll_x = tsee->world->max_scroll_x;
-		}
+	if (tsee->world->scroll_x < 0) {
+		tsee->world->scroll_x = 0;
+	} else if (tsee->world->scroll_x > tsee->world->max_scroll_x) {
+		tsee->world->scroll_x = tsee->world->max_scroll_x;
 	}
 
 	if (tsee->world->scroll_y < 0) {
@@ -321,9 +324,9 @@ void TSEE_World_ScrollToObject(TSEE *tsee, TSEE_Object *obj) {
 
 	for (size_t i = 0; i < tsee->world->objects->size; i++) {
 		TSEE_Object *object = TSEE_Array_Get(tsee->world->objects, i);
-		if (TSEE_Object_CheckAttribute(object, TSEE_ATTRIB_UI) ||
+		/*if (TSEE_Object_CheckAttribute(object, TSEE_ATTRIB_UI) ||
 			TSEE_Object_CheckAttribute(object, TSEE_ATTRIB_PLAYER))
-			continue;
+			continue;*/
 		if (!TSEE_Object_CheckAttribute(object, TSEE_ATTRIB_PARALLAX)) {
 			object->texture->rect.x =
 				object->position.x - tsee->world->scroll_x;

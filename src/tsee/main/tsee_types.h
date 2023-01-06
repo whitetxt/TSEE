@@ -3,10 +3,11 @@
 // Struct to keep track of all the world's objects.
 typedef struct TSEE_World {
 	TSEE_Array *objects;
+	TSEE_Array *parallax_objects;
 	TSEE_Vec2 gravity;
-	double scroll_x;
-	double scroll_y;
-	double max_scroll_x;
+	int scroll_x;
+	int scroll_y;
+	int max_scroll_x;
 } TSEE_World;
 
 // TSEE's system of keeping track of what's initialized.
