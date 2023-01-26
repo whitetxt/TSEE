@@ -65,6 +65,7 @@ TSEE_Object *TSEE_Object_Create(TSEE *tsee,
 		obj->physics.inv_mass = 1;
 		obj->physics.velocity = (TSEE_Vec2){0, 0};
 		obj->physics.force = (TSEE_Vec2){0, 0};
+		obj->physics.restitution = 0.9;
 	}
 
 	obj->attributes = attributes;
