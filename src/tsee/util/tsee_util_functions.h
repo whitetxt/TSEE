@@ -36,4 +36,5 @@ double TSEE_Vec2_Dot(TSEE_Vec2 first, TSEE_Vec2 second);
 bool TSEE_Vec2_Subtract(TSEE_Vec2 *first, TSEE_Vec2 minus);
 TSEE_Vec2 TSEE_Vec2_RSubtract(TSEE_Vec2 first, TSEE_Vec2 minus);
 
-#define min(a, b) a < b ? a : b;
+#define min(a, b) ((a) < (b) ? a : b)
+#define max(a, b) ((a) > (b) ? a : b)

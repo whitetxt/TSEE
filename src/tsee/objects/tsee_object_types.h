@@ -14,8 +14,6 @@ typedef struct TSEE_Physics_Data {
 	double mass;
 	double inv_mass;
 	double restitution;
-	double staticFriction;
-	double dynamicFriction;
 } TSEE_Physics_Data;
 
 typedef struct TSEE_Parallax_Data {

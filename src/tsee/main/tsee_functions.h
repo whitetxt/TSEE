@@ -45,13 +45,13 @@
 
 #endif
 
-#define xfree(ptr) _xfree(ptr, __FILE__, __LINE__);
+#define xfree(ptr) _xfree(ptr, __FILE__, __LINE__)
 
-#define xmalloc(size) _xmalloc(size, __FILE__, __LINE__);
+#define xmalloc(size) _xmalloc(size, __FILE__, __LINE__)
 
-#define xrealloc(ptr, size) _xrealloc(ptr, size, __FILE__, __LINE__);
+#define xrealloc(ptr, size) _xrealloc(ptr, size, __FILE__, __LINE__)
 
-#define xmemmove(src, dst, size) _xmemmove(src, dst, size, __FILE__, __LINE__);
+#define xmemmove(src, dst, size) _xmemmove(src, dst, size, __FILE__, __LINE__)
 
 // Main Functions
 

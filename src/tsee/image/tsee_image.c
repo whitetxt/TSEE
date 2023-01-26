@@ -68,7 +68,7 @@ void TSEE_Texture_Destroy(TSEE_Texture *tex) {
 	if (!tex)
 		return;
 	if (tex->path) {
-		xfree(tex->path)
+		xfree(tex->path);
 	}
 	if (tex->texture) {
 		SDL_DestroyTexture(tex->texture);
