@@ -19,7 +19,7 @@ void TSEE_Physics_SetObjectMass(TSEE_Object *obj, double mass) {
 void TSEE_Physics_PerformStep(TSEE *tsee) {
 	Uint64 start = SDL_GetPerformanceCounter();
 	for (size_t i = 0; i < tsee->world->objects->size; i++) {
-		TSEE_Object *object = tsee->world->objects->data[i];
+		TSEE_Object *object = TSEE_Array_Get(tsee->world->objects, i);
 		if (TSEE_Object_CheckAttribute(object, TSEE_ATTRIB_PHYS)) {
 			TSEE_Physics_UpdateObject(tsee, object);
 			// Check collisions now that we have moved
