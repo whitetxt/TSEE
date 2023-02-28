@@ -43,12 +43,14 @@ bool TSEE_Toolbar_AddButton(TSEE *tsee, char *font, char *text) {
 	}
 	toolbarobj->text =
 		TSEE_Text_Create(tsee, font, text, (SDL_Color){255, 255, 255, 255});
+	toolbarobj->text->attributes &= TSEE_ATTRIB_UI;
 	if (!toolbarobj->text) {
 		TSEE_Error("Failed to create toolbar button texture\n");
 		TSEE_Array_Destroy(toolbarobj->buttons);
 		xfree(toolbarobj);
 		return false;
 	}
+	toolbarobj->expanded = false;
 	TSEE_Array_Append(tsee->ui->toolbar, toolbarobj);
 	int idx = tsee->ui->toolbar->size - 1;
 	int sizeBefore = 0;
@@ -114,6 +116,7 @@ bool TSEE_Toolbar_AddChild(TSEE *tsee,
 		(parent->buttons->size + 1) * 32 + child->text->texture->rect.h / 2,
 		child->text->texture->rect.w, child->text->texture->rect.h};
 	child->callback = cb;
+	child->text->attributes &= TSEE_ATTRIB_UI;
 	TSEE_Array_Append(parent->buttons, child);
 	return true;
 }
@@ -155,46 +158,44 @@ bool TSEE_UI_Click(TSEE *tsee, int x, int y) {
  * @return success status
  */
 bool TSEE_UI_Render(TSEE *tsee) {
-	if (tsee->ui->toolbar_enabled) {
-		if (tsee->ui->toolbar->size > 0) {
+	if (!tsee->ui->toolbar_enabled)
+		return true;
+	if (tsee->ui->toolbar->size <= 0)
+		return true;
+	SDL_SetRenderDrawColor(tsee->window->renderer, 255, 255, 255, 75);
+	SDL_RenderFillRect(tsee->window->renderer,
+					   &(SDL_Rect){0, 0, tsee->window->width, 32});
+	for (size_t i = 0; i < tsee->ui->toolbar->size; i++) {
+		TSEE_Toolbar_Object *toolbarobj = TSEE_Array_Get(tsee->ui->toolbar, i);
+		SDL_Rect fatRect = {
+			toolbarobj->text->texture->rect.x - 8, 0,
+			toolbarobj->text->texture->rect.w + 16,
+			32 + (toolbarobj->buttons->size * 32) * toolbarobj->expanded};
+		if (SDL_PointInRect(&tsee->window->mouse, &fatRect)) {
+			// If hovered over
+			toolbarobj->expanded = true;
 			SDL_SetRenderDrawColor(tsee->window->renderer, 255, 255, 255, 75);
-			SDL_RenderFillRect(tsee->window->renderer,
-							   &(SDL_Rect){0, 0, tsee->window->width, 32});
-		}
-		for (size_t i = 0; i < tsee->ui->toolbar->size; i++) {
-			TSEE_Toolbar_Object *toolbarobj =
-				TSEE_Array_Get(tsee->ui->toolbar, i);
-			SDL_Rect fatRect = {
-				toolbarobj->text->texture->rect.x - 8, 0,
-				toolbarobj->text->texture->rect.w + 16,
-				32 + (toolbarobj->buttons->size * 32) * toolbarobj->expanded};
-			if (SDL_PointInRect(&tsee->window->mouse, &fatRect)) {
-				// If hovered over
-				toolbarobj->expanded = true;
+			SDL_Rect fatCopy = (SDL_Rect){fatRect.x, 0, fatRect.w, 32};
+			SDL_RenderFillRect(tsee->window->renderer, &fatCopy);
+			for (size_t j = 0; j < toolbarobj->buttons->size; j++) {
+				fatCopy.y += 32;
+				TSEE_Toolbar_Child *child =
+					TSEE_Array_Get(toolbarobj->buttons, j);
 				SDL_SetRenderDrawColor(tsee->window->renderer, 255, 255, 255,
 									   75);
-				SDL_Rect fatCopy = (SDL_Rect){fatRect.x, 0, fatRect.w, 32};
 				SDL_RenderFillRect(tsee->window->renderer, &fatCopy);
-				for (size_t j = 0; j < toolbarobj->buttons->size; j++) {
-					fatCopy.y += 32;
-					TSEE_Toolbar_Child *child =
-						TSEE_Array_Get(toolbarobj->buttons, j);
+				if (SDL_PointInRect(&tsee->window->mouse, &fatCopy)) {
+					// If hovered over
 					SDL_SetRenderDrawColor(tsee->window->renderer, 255, 255,
-										   255, 75);
+										   255, 50);
 					SDL_RenderFillRect(tsee->window->renderer, &fatCopy);
-					if (SDL_PointInRect(&tsee->window->mouse, &fatCopy)) {
-						// If hovered over
-						SDL_SetRenderDrawColor(tsee->window->renderer, 255, 255,
-											   255, 50);
-						SDL_RenderFillRect(tsee->window->renderer, &fatCopy);
-					}
-					TSEE_Object_Render(tsee, child->text);
 				}
-			} else {
-				toolbarobj->expanded = false;
+				TSEE_Object_Render(tsee, child->text);
 			}
-			TSEE_Object_Render(tsee, toolbarobj->text);
+		} else {
+			toolbarobj->expanded = false;
 		}
+		TSEE_Object_Render(tsee, toolbarobj->text);
 	}
 	return true;
 }

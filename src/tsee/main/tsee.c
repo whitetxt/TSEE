@@ -24,7 +24,8 @@ TSEE *TSEE_Create(int width, int height) {
 		return NULL;
 	}
 	if (!SDL_SetHint(SDL_HINT_RENDER_BATCHING, "1")) {
-		TSEE_Warn("Render batching could not be enabled, performance may suffer.\n");
+		TSEE_Warn(
+			"Render batching could not be enabled, performance may suffer.\n");
 	}
 	tsee->window->width = width;
 	tsee->window->height = height;
@@ -123,6 +124,9 @@ TSEE *TSEE_Create(int width, int height) {
 	tsee->debug->event_time = 0;
 	tsee->debug->physics_time = 0;
 	tsee->debug->render_time = 0;
+	tsee->debug->render_times.object_time = 0;
+	tsee->debug->render_times.parallax_time = 0;
+	tsee->debug->render_times.ui_time = 0;
 	tsee->debug->frame_time = 0;
 	tsee->debug->framerate = 0;
 	tsee->debug->active = false;
@@ -198,7 +202,8 @@ bool TSEE_Close(TSEE *tsee) {
 	}
 	if (tsee->world->parallax_objects) {
 		for (size_t i = 0; i < tsee->world->parallax_objects->size; i++) {
-			TSEE_Object *para = TSEE_Array_Get(tsee->world->parallax_objects, i);
+			TSEE_Object *para =
+				TSEE_Array_Get(tsee->world->parallax_objects, i);
 			TSEE_Object_Destroy(tsee, para, false);
 		}
 		TSEE_Array_Destroy(tsee->world->parallax_objects);
@@ -265,7 +270,7 @@ bool TSEE_CalculateDT(TSEE *tsee) {
 	tsee->last_time = tsee->current_time;
 	tsee->current_time = SDL_GetPerformanceCounter();
 	tsee->dt = (double)((tsee->current_time - tsee->last_time) /
-					   (double)SDL_GetPerformanceFrequency());
+						(double)SDL_GetPerformanceFrequency());
 	return true;
 }
 

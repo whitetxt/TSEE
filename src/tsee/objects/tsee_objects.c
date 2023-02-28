@@ -59,7 +59,7 @@ TSEE_Object *TSEE_Object_Create(TSEE *tsee,
 		obj->physics.inv_mass = 0;
 		obj->physics.velocity = (TSEE_Vec2){0, 0};
 		obj->physics.force = (TSEE_Vec2){0, 0};
-		obj->physics.restitution = 0.75;
+		obj->physics.restitution = 0.25;
 	}
 
 	if (TSEE_Attributes_Check(attributes, TSEE_ATTRIB_PLAYER)) {
@@ -154,7 +154,30 @@ SDL_Rect TSEE_Object_GetRect(TSEE_Object *obj) {
  * @return true on success, false on fail
  */
 bool TSEE_Object_Render(TSEE *tsee, TSEE_Object *object) {
-	if (!TSEE_Object_CheckAttribute(object, TSEE_ATTRIB_PARALLAX)) {
+	if (TSEE_Object_CheckAttribute(object, TSEE_ATTRIB_PARALLAX)) {
+		if (!TSEE_Parallax_Render(tsee, object)) {
+			TSEE_Error("Failed to render parallax object (%s)\n",
+					   SDL_GetError());
+			return false;
+		}
+	} else if (TSEE_Object_CheckAttribute(object, TSEE_ATTRIB_UI)) {
+		Uint64 start = 0;
+		if (tsee->debug->active) {
+			start = SDL_GetPerformanceCounter();
+		}
+		int ret =
+			SDL_RenderCopy(tsee->window->renderer, object->texture->texture,
+						   NULL, &object->texture->rect);
+		if (ret != 0) {
+			TSEE_Error("Failed to render object (%s)\n", SDL_GetError());
+			return false;
+		}
+		if (tsee->debug->active) {
+			tsee->debug->render_times.ui_time +=
+				(SDL_GetPerformanceCounter() - start) * 1000 /
+				(double)SDL_GetPerformanceFrequency();
+		}
+	} else {
 		Uint64 start = 0;
 		if (tsee->debug->active) {
 			start = SDL_GetPerformanceCounter();
@@ -174,12 +197,6 @@ bool TSEE_Object_Render(TSEE *tsee, TSEE_Object *object) {
 			tsee->debug->render_times.object_time +=
 				(SDL_GetPerformanceCounter() - start) * 1000 /
 				(double)SDL_GetPerformanceFrequency();
-		}
-	} else {
-		if (!TSEE_Parallax_Render(tsee, object)) {
-			TSEE_Error("Failed to render parallax object (%s)\n",
-					   SDL_GetError());
-			return false;
 		}
 	}
 	return true;

@@ -109,8 +109,8 @@ bool TSEE_RenderAll(TSEE *tsee) {
 	Uint64 start = SDL_GetPerformanceCounter();
 	if (SDL_GetWindowFlags(tsee->window->window) & SDL_WINDOW_MINIMIZED) {
 		// Don't render if minimised.
-		// Limits max FPS to 30
-		SDL_Delay(33);
+		// Limits to ~15 FPS
+		SDL_Delay(67);
 		return true;
 	}
 	SDL_SetRenderDrawColor(tsee->window->renderer, 0, 0, 0, 255);
@@ -137,7 +137,7 @@ bool TSEE_RenderAll(TSEE *tsee) {
 	}
 
 	if (tsee->debug->active) {
-		char text[128];
+		char text[200];
 		SDL_Color colour = {255, 255, 255, SDL_ALPHA_OPAQUE};
 		int height_off = 0;
 		sprintf(text, "Event: %.3f ms", tsee->debug->event_time);
@@ -160,6 +160,7 @@ bool TSEE_RenderAll(TSEE *tsee) {
 			physicsText->texture->rect.x = 0;
 			physicsText->texture->rect.y = height_off;
 			height_off += physicsText->texture->rect.h;
+			height_off += 16;
 			SDL_RenderFillRect(tsee->window->renderer,
 							   &physicsText->texture->rect);
 			TSEE_Text_Render(tsee, physicsText);
@@ -177,31 +178,33 @@ bool TSEE_RenderAll(TSEE *tsee) {
 			TSEE_Text_Render(tsee, renderText);
 			TSEE_Text_Destroy(tsee, renderText, true);
 		}
-		sprintf(text, "Object Render: %.3f ms",
-				tsee->debug->render_times.object_time);
-		TSEE_Object *objRenderText =
+		sprintf(text, "Object / Parallax / UI");
+		TSEE_Object *renderBreakdownLabel =
 			TSEE_Text_Create(tsee, "_default", text, colour);
-		if (objRenderText) {
-			objRenderText->texture->rect.x = 0;
-			objRenderText->texture->rect.y = height_off;
-			height_off += objRenderText->texture->rect.h;
+		if (renderBreakdownLabel) {
+			renderBreakdownLabel->texture->rect.x = 0;
+			renderBreakdownLabel->texture->rect.y = height_off;
+			height_off += renderBreakdownLabel->texture->rect.h;
 			SDL_RenderFillRect(tsee->window->renderer,
-							   &objRenderText->texture->rect);
-			TSEE_Text_Render(tsee, objRenderText);
-			TSEE_Text_Destroy(tsee, objRenderText, true);
+							   &renderBreakdownLabel->texture->rect);
+			TSEE_Text_Render(tsee, renderBreakdownLabel);
+			TSEE_Text_Destroy(tsee, renderBreakdownLabel, true);
 		}
-		sprintf(text, "Parallax Render: %.3f ms",
-				tsee->debug->render_times.parallax_time);
-		TSEE_Object *parallaxTimeText =
+		sprintf(text, "%.3f / %.3f / %.3f",
+				tsee->debug->render_times.object_time,
+				tsee->debug->render_times.parallax_time,
+				tsee->debug->render_times.ui_time);
+		TSEE_Object *renderBreakdownText =
 			TSEE_Text_Create(tsee, "_default", text, colour);
-		if (parallaxTimeText) {
-			parallaxTimeText->texture->rect.x = 0;
-			parallaxTimeText->texture->rect.y = height_off;
-			height_off += parallaxTimeText->texture->rect.h;
+		if (renderBreakdownText) {
+			renderBreakdownText->texture->rect.x = 0;
+			renderBreakdownText->texture->rect.y = height_off;
+			height_off += renderBreakdownText->texture->rect.h;
+			height_off += 16;
 			SDL_RenderFillRect(tsee->window->renderer,
-							   &parallaxTimeText->texture->rect);
-			TSEE_Text_Render(tsee, parallaxTimeText);
-			TSEE_Text_Destroy(tsee, parallaxTimeText, true);
+							   &renderBreakdownText->texture->rect);
+			TSEE_Text_Render(tsee, renderBreakdownText);
+			TSEE_Text_Destroy(tsee, renderBreakdownText, true);
 		}
 		sprintf(text, "Frame: %.3f ms", tsee->debug->frame_time);
 		TSEE_Object *frameTimeText =
@@ -241,6 +244,7 @@ bool TSEE_RenderAll(TSEE *tsee) {
 	tsee->debug->physics_time = 0;
 	tsee->debug->render_times.object_time = 0;
 	tsee->debug->render_times.parallax_time = 0;
+	tsee->debug->render_times.ui_time = 0;
 	return true;
 }
 
@@ -254,6 +258,6 @@ bool TSEE_Rendering_IsReady(TSEE *tsee) {
 	double timeBetweenFrames = 1.0f / tsee->window->fps;
 	double dt =
 		(double)((SDL_GetPerformanceCounter() - tsee->window->last_render) /
-				(double)SDL_GetPerformanceFrequency());
+				 (double)SDL_GetPerformanceFrequency());
 	return dt - timeBetweenFrames > -0.1f;
 }

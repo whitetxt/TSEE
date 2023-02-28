@@ -23,6 +23,7 @@ typedef struct TSEE_Init {
 typedef struct TSEE_Debug_RenderTimes {
 	double object_time;
 	double parallax_time;
+	double ui_time;
 } TSEE_Debug_RenderTimes;
 
 typedef struct TSEE_Debug {

@@ -14,6 +14,13 @@ bool TSEE_Font_Load(TSEE *tsee, char *path, int size, char *name) {
 		TSEE_Error("Failed to malloc for font.\n");
 		return false;
 	}
+	TSEE_Font *stored_font = TSEE_Resource_Font_Get(tsee, name);
+	if (stored_font && stored_font->size == size) {
+		TSEE_Warn(
+			"Attempted to load font with duplicate name (%s) and size (%d).\n",
+			name, size);
+		return true;
+	}
 	font->font = TTF_OpenFont(path, size);
 	if (font->font == NULL) {
 		TSEE_Warn("Failed to load font `%s` (%s)\n", path, TTF_GetError());
