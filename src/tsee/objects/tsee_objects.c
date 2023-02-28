@@ -78,7 +78,8 @@ TSEE_Object *TSEE_Object_Create(TSEE *tsee,
 
 	obj->attributes = attributes;
 
-	// Only insert if not parallax, parallax objects will be moved around as needed by the Parallax_Create function.
+	// Only insert if not parallax, parallax objects will be moved around as
+	// needed by the Parallax_Create function.
 	if (!TSEE_Attributes_Check(attributes, TSEE_ATTRIB_PARALLAX))
 		TSEE_Array_Append(tsee->world->objects, obj);
 
@@ -105,8 +106,8 @@ bool TSEE_Object_SetPosition(TSEE *tsee, TSEE_Object *obj, double x, double y) {
 	obj->position.x = x;
 	obj->position.y = y;
 	obj->texture->rect.x = obj->position.x - tsee->world->scroll_x;
-	obj->texture->rect.y = obj->position.y * -1 +
-								  tsee->window->height - tsee->world->scroll_y;
+	obj->texture->rect.y =
+		obj->position.y * -1 + tsee->window->height - tsee->world->scroll_y;
 	return true;
 }
 
@@ -160,7 +161,8 @@ bool TSEE_Object_Render(TSEE *tsee, TSEE_Object *object) {
 		}
 		object->texture->rect.x = object->position.x - tsee->world->scroll_x;
 		// Transform the value into coords where bottom-left is the origin.
-		object->texture->rect.y = -object->position.y + tsee->window->height - tsee->world->scroll_y;
+		object->texture->rect.y =
+			-object->position.y + tsee->window->height - tsee->world->scroll_y;
 		int ret =
 			SDL_RenderCopy(tsee->window->renderer, object->texture->texture,
 						   NULL, &object->texture->rect);
@@ -202,10 +204,11 @@ void TSEE_Object_Destroy(TSEE *tsee, TSEE_Object *object, bool destroyTexture) {
 
 /**
  * @brief Updates the texture position for an object.
- * 
+ *
  * @param obj the object to update the position of
  */
 void TSEE_Object_UpdatePosition(TSEE *tsee, TSEE_Object *obj) {
 	obj->texture->rect.x = obj->position.x - tsee->world->scroll_x;
-	obj->texture->rect.y = -obj->position.y + tsee->window->height - tsee->world->scroll_y;
+	obj->texture->rect.y =
+		-obj->position.y + tsee->window->height - tsee->world->scroll_y;
 }
