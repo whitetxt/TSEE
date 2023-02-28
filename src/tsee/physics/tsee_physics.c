@@ -133,37 +133,36 @@ bool TSEE_Physics_GetAABBAABBManifold(TSEE_Manifold *m) {
 
 	if (TSEE_IsRectNull(TSEE_Object_GetCollisionRect(a, b))) return false;
 
-	TSEE_Vec2 n = TSEE_Vec2_RSubtract(b->position, a->position);
-	float a_extent = a->position.x + (a->texture->rect.w / 2);
-	float b_extent = b->position.x + (b->texture->rect.w / 2);
+	float amtRight = fabs(a->position.x + a->texture->rect.w -
+						b->position.x);
+	float amtLeft = fabs(b->position.x + b->texture->rect.w -
+						a->position.x);
+	float amtTop = fabs(b->position.y - a->position.y +
+						a->texture->rect.h);
+	float amtBottom = fabs(a->position.y + a->texture->rect.h -
+						b->position.y);
 
-	float x_overlap = a_extent + b_extent - fabs(n.x);
-
-	if (x_overlap > 0) {
-		a_extent = a->position.y + (a->texture->rect.h / 2);
-		b_extent = b->position.y + (b->texture->rect.h / 2);
-		float y_overlap = a_extent + b_extent - fabs(n.y);
-
-		if (y_overlap > 0) {
-			if (x_overlap < y_overlap) {
-				if (n.x < 0) {
-					m->normal = (TSEE_Vec2){-1, 0};
-				} else {
-					m->normal = (TSEE_Vec2){1, 0};
-				}
-				m->depth = x_overlap;
-			} else {
-				if (n.y < 0) {
-					m->normal = (TSEE_Vec2){0, -1};
-				} else {
-					m->normal = (TSEE_Vec2){0, 1};
-				}
-				m->depth = y_overlap;
-			}
-			return true;
+	float values[4] = {amtRight, amtLeft, amtTop, amtBottom};
+	float lowest = values[0];
+	// Get lowest value, side it collided on
+	for (int x = 1; x < 4; x++) {
+		if (values[x] < lowest) {
+			lowest = values[x];
 		}
 	}
-	return false;
+
+	if (lowest < 0) return false;
+	m->depth = lowest;
+	if (lowest == amtRight) {
+		m->normal = (TSEE_Vec2){1, 0};
+	} else if (lowest == amtLeft) {
+		m->normal = (TSEE_Vec2){-1, 0};
+	} else if (lowest == amtTop) {
+		m->normal = (TSEE_Vec2){0, -1};
+	} else if (lowest == amtBottom) {
+		m->normal = (TSEE_Vec2){0, 1};
+	}
+	return true;
 }
 
 /**
@@ -190,12 +189,12 @@ void TSEE_Physics_ResolveCollision(TSEE *tsee,
 		TSEE_Object_CheckAttribute(b, TSEE_ATTRIB_PHYS))) {
 		// NEW METHOD!!
 		TSEE_Vec2 normal = manifold->normal;
-		TSEE_Log("Normal Vector: %f, %f\n", normal.x, normal.y);
 		TSEE_Vec2 rv = TSEE_Vec2_RSubtract(b->physics.velocity, a->physics.velocity);
 		float velAlongNorm = TSEE_Vec2_Dot(rv, normal);
 		if (velAlongNorm > 0) return;
 		// e is resititution
-		float e = min(a->physics.restitution, b->physics.restitution);	
+		float e = min(a->physics.restitution, b->physics.restitution);
+		e = 1;
 		// j is the impulse scalar
 		float j = -(1 + e) * velAlongNorm;
 		j /= (a->physics.inv_mass + b->physics.inv_mass);

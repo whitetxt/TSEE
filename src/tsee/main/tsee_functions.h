@@ -28,6 +28,9 @@
 // Log something to the console, typically for debugging.
 #define TSEE_Log(message, ...)
 
+// Log a vector to console.
+#define TSEE_LogVec2(vector)
+
 // Inform the user of a warning, typically used for something important, but not
 // a full error.
 #define TSEE_Warn(message, ...)
