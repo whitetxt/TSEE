@@ -59,7 +59,7 @@ TSEE_Object *TSEE_Object_Create(TSEE *tsee,
 		obj->physics.inv_mass = 0;
 		obj->physics.velocity = (TSEE_Vec2){0, 0};
 		obj->physics.force = (TSEE_Vec2){0, 0};
-		obj->physics.restitution = 0.95;
+		obj->physics.restitution = 0.75;
 	}
 
 	if (TSEE_Attributes_Check(attributes, TSEE_ATTRIB_PLAYER)) {
@@ -73,7 +73,7 @@ TSEE_Object *TSEE_Object_Create(TSEE *tsee,
 		obj->physics.inv_mass = 1;
 		obj->physics.velocity = (TSEE_Vec2){0, 0};
 		obj->physics.force = (TSEE_Vec2){0, 0};
-		obj->physics.restitution = 0.9;
+		obj->physics.restitution = 0.8;
 	}
 
 	obj->attributes = attributes;
