@@ -58,3 +58,4 @@ git_resources/
 docs/
 .vscode/
 build/
+megalinter-reports/
