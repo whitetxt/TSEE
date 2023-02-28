@@ -19,6 +19,8 @@ char *TSEE_ReadFile_UntilNull(FILE *fp) {
 		buffer = newPtr;
 		buffer[len - 1] = c;
 	}
+	if (!buffer)
+		return buffer;
 	buffer[len] = '\0';
 	return buffer;
 }
@@ -32,6 +34,33 @@ char *TSEE_ReadFile_UntilNull(FILE *fp) {
 void TSEE_WriteFile_String(FILE *fp, char *string) {
 	TSEE_WriteFile(string, sizeof(*string) * strlen(string), 1, fp);
 	putc(0, fp);
+}
+
+/**
+ * @brief Writes a Vec2 to a file.
+ *
+ * @param fp File to write to
+ * @param vec2 Vec2 to write
+ */
+void TSEE_WriteFile_Vec2(FILE *fp, TSEE_Vec2 vec2) {
+	TSEE_WriteFile(&vec2.x, sizeof(vec2.x), 1, fp);
+	TSEE_WriteFile(&vec2.y, sizeof(vec2.x), 1, fp);
+}
+
+/**
+ * @brief Reads in a Vec2 from a file.
+ *
+ * @param fp File to read from
+ * @return TSEE_Vec2 or NULL
+ */
+TSEE_Vec2 *TSEE_ReadFile_Vec2(FILE *fp) {
+	TSEE_Vec2 *dst = malloc(sizeof(*dst));
+	if (!TSEE_ReadFile(&dst->x, sizeof(dst->x), 1, fp) ||
+		!TSEE_ReadFile(&dst->y, sizeof(dst->y), 1, fp)) {
+		TSEE_Error("Failed to read in Vec2.\n");
+		return NULL;
+	}
+	return dst;
 }
 
 /**
@@ -128,19 +157,13 @@ bool TSEE_Map_Load(TSEE *tsee, char *fn) {
 			 mapVersion, mapDescription);
 
 	// Read the gravity (for some reason its here in the header?)
-	double gravityX = 0;
-	if (TSEE_ReadFile(&gravityX, sizeof(gravityX), 1, fp) != 1) {
-		TSEE_Error("Failed to read gravity X.\n");
+	TSEE_Vec2 *gravity = TSEE_ReadFile_Vec2(fp);
+	if (!gravity) {
+		TSEE_Error("Failed to read gravity.\n");
 		fclose(fp);
 		return false;
 	}
-	double gravityY = 0;
-	if (TSEE_ReadFile(&gravityY, sizeof(gravityY), 1, fp) != 1) {
-		TSEE_Error("Failed to read gravity Y.\n");
-		fclose(fp);
-		return false;
-	}
-	TSEE_World_SetGravity(tsee, (TSEE_Vec2){gravityX, gravityY});
+	TSEE_World_SetGravity(tsee, *gravity);
 
 	// Read map's textures
 	size_t numTextures = 0;
@@ -184,12 +207,14 @@ bool TSEE_Map_Load(TSEE *tsee, char *fn) {
 		double y = 0;
 		TSEE_Object_Attributes attr;
 
-		if (TSEE_ReadFile(&x, sizeof(x), 1, fp) != 1 ||
+		TSEE_Vec2 *position = TSEE_ReadFile_Vec2(fp);
+
+		/*if (TSEE_ReadFile(&x, sizeof(x), 1, fp) != 1 ||
 			TSEE_ReadFile(&y, sizeof(y), 1, fp) != 1) {
 			TSEE_Error("Failed to read object position\n");
 			fclose(fp);
 			return false;
-		}
+		}*/
 
 		if (TSEE_ReadFile(&attr, sizeof(attr), 1, fp) != 1) {
 			TSEE_Error("Failed to read object attributes\n");
@@ -204,7 +229,7 @@ bool TSEE_Map_Load(TSEE *tsee, char *fn) {
 										  1000);
 		} else {
 			object = TSEE_Object_Create(tsee, TSEE_Texture_Create(tsee, path),
-										attr, x, y);
+										attr, position->x, position->y);
 		}
 
 		if (TSEE_Attributes_Check(attr, TSEE_ATTRIB_PHYS)) {
@@ -212,10 +237,12 @@ bool TSEE_Map_Load(TSEE *tsee, char *fn) {
 						  1, fp);
 			TSEE_ReadFile(&object->physics.restitution,
 						  sizeof(object->physics.restitution), 1, fp);
-		} else if (TSEE_Attributes_Check(attr, TSEE_ATTRIB_PARALLAX)) {
+		}
+		if (TSEE_Attributes_Check(attr, TSEE_ATTRIB_PARALLAX)) {
 			TSEE_ReadFile(&object->parallax.distance,
 						  sizeof(object->parallax.distance), 1, fp);
-		} else if (TSEE_Attributes_Check(attr, TSEE_ATTRIB_TEXT)) {
+		}
+		if (TSEE_Attributes_Check(attr, TSEE_ATTRIB_TEXT)) {
 			object->text.text = TSEE_ReadFile_UntilNull(fp);
 		}
 
@@ -267,6 +294,17 @@ bool TSEE_Map_Load(TSEE *tsee, char *fn) {
  * @return success status
  */
 bool TSEE_Map_Save(TSEE *tsee, char *fn) {
+	/*
+	FILE FORMAT:
+	mapName \0
+	mapAuthor \0
+	mapVersion \0
+	mapDescription \0
+	gravity (Vec2)
+	numTextures (Uint64)
+	textures (each ending in \0)
+
+	*/
 	FILE *fp = fopen(fn, "wb");
 	if (fp == NULL) {
 		TSEE_Error("Failed to open map file (%s)\n", fn);
@@ -282,15 +320,11 @@ bool TSEE_Map_Save(TSEE *tsee, char *fn) {
 	TSEE_WriteFile_String(fp, mapVersion);
 	TSEE_WriteFile_String(fp, mapDescription);
 	// Write the gravity
-	double gravityX = tsee->world->gravity.x;
-	TSEE_WriteFile(&gravityX, sizeof(gravityX), 1, fp);
-	double gravityY = tsee->world->gravity.y;
-	TSEE_WriteFile(&gravityY, sizeof(gravityY), 1, fp);
+	TSEE_WriteFile_Vec2(fp, tsee->world->gravity);
 	// Write the number of textures
-
 	// As not all textures are loaded from files, we must figure out how many
 	// unique ones there are.
-	size_t numTextures = 0;
+	Uint64 numTextures = 0;
 	char **texturesSeen = NULL;
 	for (size_t i = 0; i < tsee->resources->textures->size; i++) {
 		TSEE_Texture *texture = TSEE_Array_Get(tsee->resources->textures, i);
@@ -341,11 +375,14 @@ bool TSEE_Map_Save(TSEE *tsee, char *fn) {
 			}
 		}
 		if (!written) {
-			TSEE_Error("Couldn't write texture idx for texture!!\n");
+			TSEE_Error("Couldn't write texture idx for texture!\n");
 			return false;
 		}
+		TSEE_WriteFile_Vec2(fp, object->position);
+		/*
 		TSEE_WriteFile(&object->position.x, sizeof(object->position.x), 1, fp);
 		TSEE_WriteFile(&object->position.y, sizeof(object->position.y), 1, fp);
+		*/
 		TSEE_WriteFile(&object->attributes, sizeof(object->attributes), 1, fp);
 		// Write individual fields for each attribute
 		if (TSEE_Object_CheckAttribute(object, TSEE_ATTRIB_PHYS)) {
@@ -353,10 +390,12 @@ bool TSEE_Map_Save(TSEE *tsee, char *fn) {
 						   1, fp);
 			TSEE_WriteFile(&object->physics.restitution,
 						   sizeof(object->physics.restitution), 1, fp);
-		} else if (TSEE_Object_CheckAttribute(object, TSEE_ATTRIB_PARALLAX)) {
+		}
+		if (TSEE_Object_CheckAttribute(object, TSEE_ATTRIB_PARALLAX)) {
 			TSEE_WriteFile(&object->parallax.distance,
 						   sizeof(object->parallax.distance), 1, fp);
-		} else if (TSEE_Object_CheckAttribute(object, TSEE_ATTRIB_TEXT)) {
+		}
+		if (TSEE_Object_CheckAttribute(object, TSEE_ATTRIB_TEXT)) {
 			TSEE_WriteFile_String(fp, object->text.text);
 		}
 	}

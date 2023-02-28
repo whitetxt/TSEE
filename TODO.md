@@ -9,10 +9,11 @@
 - [x] Generate docs
 - [x] Finish work on the resource manager
 - [x] Add world scrolling
-- [ ] Fix slightly buggy collision
-- [ ] Figure out why memmove was segfaulting
+- [x] Fix slightly buggy collision
 
 ## v0.3b
 
-- [ ] Make physics work
+- [x] Make physics work
 - [ ] General Optimisations
+- [ ] Figure out why memmove was segfaulting
+- [ ] Fix loading files (invalid buf)
