@@ -54,6 +54,14 @@ TSEE_Object *TSEE_Object_Create(TSEE *tsee,
 	obj->texture = texture;
 	TSEE_Object_SetPosition(tsee, obj, x, y);
 
+	if (TSEE_Attributes_Check(attributes, TSEE_ATTRIB_STATIC)) {
+		obj->physics.mass = 0;
+		obj->physics.inv_mass = 0;
+		obj->physics.velocity = (TSEE_Vec2){0, 0};
+		obj->physics.force = (TSEE_Vec2){0, 0};
+		obj->physics.restitution = 0.95;
+	}
+
 	if (TSEE_Attributes_Check(attributes, TSEE_ATTRIB_PLAYER)) {
 		TSEE_Attributes_Set(&attributes, TSEE_ATTRIB_PHYS);
 		tsee->player->object = obj;

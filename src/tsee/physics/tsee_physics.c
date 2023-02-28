@@ -22,6 +22,16 @@ void TSEE_Physics_PerformStep(TSEE *tsee) {
 		TSEE_Object *object = tsee->world->objects->data[i];
 		if (TSEE_Object_CheckAttribute(object, TSEE_ATTRIB_PHYS)) {
 			TSEE_Physics_UpdateObject(tsee, object);
+			// Check collisions now that we have moved
+			for (size_t j = i + 1; j < tsee->world->objects->size; j++) {
+				TSEE_Object *other = tsee->world->objects->data[j];
+
+				TSEE_Manifold manifold = (TSEE_Manifold){object, other, {0, 0}, -1};
+				if (!TSEE_Physics_GetAABBAABBManifold(&manifold)) continue;
+
+				TSEE_Physics_ResolveCollision(tsee, &manifold);
+				TSEE_Physics_PositionalCorrection(&manifold);
+			}
 		}
 	}
 	if (tsee->player->object) {
@@ -74,9 +84,6 @@ void TSEE_Physics_UpdateObject(TSEE *tsee, TSEE_Object *obj) {
 	// "friction"
 	obj->physics.velocity.y *= 0.99;
 	obj->physics.velocity.x *= 0.975;
-
-	// Check collisions now that we have moved
-	TSEE_Physics_CheckAndResolveCollisions(tsee, obj);
 }
 
 /**
@@ -115,27 +122,6 @@ void TSEE_Physics_PositionalCorrection(TSEE_Manifold *manifold) {
 }
 
 /**
- * @brief Check for collisions with other objects and resolve any resulting
- * collisions
- *
- * @param obj Object to check collisions for
- */
-void TSEE_Physics_CheckAndResolveCollisions(TSEE *tsee, TSEE_Object *obj) {
-	if (TSEE_Object_CheckAttribute(obj, TSEE_ATTRIB_PARALLAX)) return;
-	for (size_t i = 0; i < tsee->world->objects->size; i++) {
-		TSEE_Object *other = tsee->world->objects->data[i];
-		if (other == obj) continue;
-
-		TSEE_Manifold manifold = (TSEE_Manifold){obj, other, {0, 0}, -1};
-		if (!TSEE_Physics_GetAABBAABBManifold(&manifold)) continue;
-		TSEE_Log("MANIFOLD GOT IT!\nNormal: %f, %f\nDepth: %f\n", manifold.normal.x, manifold.normal.y, manifold.depth);
-
-		TSEE_Physics_ResolveCollision(tsee, &manifold);
-		TSEE_Physics_PositionalCorrection(&manifold);
-	}
-}
-
-/**
  * @brief Generates a manifold for an AABB-AABB Collision.
  * 
  * @param m Manifold to generate, with the objects already pointed to.
@@ -147,35 +133,37 @@ bool TSEE_Physics_GetAABBAABBManifold(TSEE_Manifold *m) {
 
 	if (TSEE_IsRectNull(TSEE_Object_GetCollisionRect(a, b))) return false;
 
-	int amtRight = fabs(a->position.x + a->texture->rect.w -
-						b->position.x);
-	int amtLeft = fabs(b->position.x + b->texture->rect.w -
-						a->position.x);
-	int amtTop = fabs(b->position.y - a->position.y +
-						a->texture->rect.h);
-	int amtBottom = fabs(a->position.y + a->texture->rect.h -
-						b->position.y);
+	TSEE_Vec2 n = TSEE_Vec2_RSubtract(b->position, a->position);
+	float a_extent = a->position.x + (a->texture->rect.w / 2);
+	float b_extent = b->position.x + (b->texture->rect.w / 2);
 
-	int values[4] = {amtRight, amtLeft, amtTop, amtBottom};
-	int lowest = values[0];
-	// Get lowest value, side it collided on
-	for (int x = 1; x < 4; x++) {
-		if (values[x] < lowest) {
-			lowest = values[x];
+	float x_overlap = a_extent + b_extent - fabs(n.x);
+
+	if (x_overlap > 0) {
+		a_extent = a->position.y + (a->texture->rect.h / 2);
+		b_extent = b->position.y + (b->texture->rect.h / 2);
+		float y_overlap = a_extent + b_extent - fabs(n.y);
+
+		if (y_overlap > 0) {
+			if (x_overlap < y_overlap) {
+				if (n.x < 0) {
+					m->normal = (TSEE_Vec2){-1, 0};
+				} else {
+					m->normal = (TSEE_Vec2){1, 0};
+				}
+				m->depth = x_overlap;
+			} else {
+				if (n.y < 0) {
+					m->normal = (TSEE_Vec2){0, -1};
+				} else {
+					m->normal = (TSEE_Vec2){0, 1};
+				}
+				m->depth = y_overlap;
+			}
+			return true;
 		}
 	}
-	if (lowest < 0) return false;
-	m->depth = lowest;
-	if (lowest == amtRight) {
-		m->normal = (TSEE_Vec2){1, 0};
-	} else if (lowest == amtLeft) {
-		m->normal = (TSEE_Vec2){-1, 0};
-	} else if (lowest == amtTop) {
-		m->normal = (TSEE_Vec2){0, 1};
-	} else if (lowest == amtBottom) {
-		m->normal = (TSEE_Vec2){0, -1};
-	}
-	return true;
+	return false;
 }
 
 /**
@@ -198,29 +186,11 @@ void TSEE_Physics_ResolveCollision(TSEE *tsee,
 								   TSEE_Manifold *manifold) {
 	TSEE_Object *a = manifold->a;
 	TSEE_Object *b = manifold->b;
-	if (TSEE_Object_CheckAttribute(a, TSEE_ATTRIB_PHYS) &&
-		TSEE_Object_CheckAttribute(b, TSEE_ATTRIB_PHYS)) {
-		/*// Time to try again
-		TSEE_Vec2 overlap = {a->position.x - b->position.x, a->position.y - b->position.y};
-		double divisor = a->physics.mass + b->physics.mass;
-		double a_share = a->physics.mass / divisor;
-		double b_share = b->physics.mass / divisor;
-		if (overlap.x != 0) {
-			double x_momentum = a->physics.velocity.x * a->physics.mass + b->physics.velocity.x * b->physics.mass;
-			double a_momentum = x_momentum * a_share;
-			double b_momentum = x_momentum * b_share;
-			a->physics.velocity.x = a_momentum / a->physics.mass;
-			b->physics.velocity.x = b_momentum / b->physics.mass;
-			if (a->position.x > b->position.x) {
-				a->position.x = b->position.x + b->texture->rect.w;
-			} else {
-				b->position.x = a->position.x + a->texture->rect.w;
-			}
-		}
-		TSEE_Object_UpdatePosition(tsee, a);
-		TSEE_Object_UpdatePosition(tsee, b);*/
+	if (true || (TSEE_Object_CheckAttribute(a, TSEE_ATTRIB_PHYS) &&
+		TSEE_Object_CheckAttribute(b, TSEE_ATTRIB_PHYS))) {
 		// NEW METHOD!!
 		TSEE_Vec2 normal = manifold->normal;
+		TSEE_Log("Normal Vector: %f, %f\n", normal.x, normal.y);
 		TSEE_Vec2 rv = TSEE_Vec2_RSubtract(b->physics.velocity, a->physics.velocity);
 		float velAlongNorm = TSEE_Vec2_Dot(rv, normal);
 		if (velAlongNorm > 0) return;
@@ -232,8 +202,11 @@ void TSEE_Physics_ResolveCollision(TSEE *tsee,
 
 		// Apply impulse
 		TSEE_Vec2 impulse = TSEE_Vec2_RMultiply(normal, j);
-		TSEE_Vec2_Subtract(&a->physics.velocity, TSEE_Vec2_RMultiply(impulse, a->physics.inv_mass));
-		TSEE_Vec2_Add(&b->physics.velocity, TSEE_Vec2_RMultiply(impulse, b->physics.inv_mass));
+		float mass_sum = a->physics.mass + b->physics.mass;
+		float ratio = a->physics.mass / mass_sum;
+		TSEE_Vec2_Subtract(&a->physics.velocity, TSEE_Vec2_RMultiply(impulse, ratio));
+		ratio = b->physics.mass / mass_sum;
+		TSEE_Vec2_Add(&b->physics.velocity, TSEE_Vec2_RMultiply(impulse, ratio));
 		return;
 	}
 	int amtRight = fabs(a->position.x + a->texture->rect.w -

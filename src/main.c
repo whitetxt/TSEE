@@ -55,25 +55,19 @@ int main(int argc, char *argv[]) {
 						 TSEE_Texture_Create(tsee, "assets/parallax4.png"), 1);
 
 	TSEE_Object *obj = TSEE_Object_Create(tsee, TSEE_Texture_Create(tsee, "assets/test_image.png"), TSEE_ATTRIB_PHYS, 200, 500);
-	printf("new object location: %f, %f\n", obj->position.x, obj->position.y);
-	printf("new object render position: %d, %d\n", obj->texture->rect.x, obj->texture->rect.y);
-	printf("Breakpoint here\n");
 
 	for (int x = 0; x < tsee->window->width * 5; x += 64) {
 		TSEE_Object_Create(tsee,
 						   TSEE_Texture_Create(tsee, "assets/box.png"),
 						   TSEE_ATTRIB_STATIC, x, 64);
 	}
-	//TSEE_Object_Create(tsee, TSEE_Texture_Create(tsee, "assets/box.png"), TSEE_ATTRIB_PHYS, 20, 500);
-	//TSEE_Object_Create(tsee, TSEE_Texture_Create(tsee, "assets/box.png"), TSEE_ATTRIB_PHYS, 20, 600);
 
 	// After setup for the map, correct dt
-	tsee->current_time = SDL_GetPerformanceCounter();
 	tsee->world->max_scroll_x = tsee->window->width * 5;
 
 	while (tsee->window->running) {
-		TSEE_Events_Handle(tsee);
 		TSEE_CalculateDT(tsee);
+		TSEE_Events_Handle(tsee);
 		TSEE_Player_HandleInput(tsee);
 		TSEE_Physics_PerformStep(tsee);
 		TSEE_RenderAll(tsee);

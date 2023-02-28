@@ -24,7 +24,7 @@ bool TSEE_Rendering_Init(TSEE *tsee) {
 		"No window title set: Call TSEE_Window_SetTitle",
 		SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, tsee->window->width,
 		tsee->window->height, SDL_WINDOW_SHOWN);
-	if (tsee->window->window == NULL) {
+	if (!tsee->window->window) {
 		TSEE_Error("Window could not be created! SDL_Error: %s\n",
 				   SDL_GetError());
 		SDL_Quit();
@@ -37,7 +37,7 @@ bool TSEE_Rendering_Init(TSEE *tsee) {
 	tsee->window->renderer = SDL_CreateRenderer(
 		tsee->window->window, -1,
 		SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-	if (tsee->window->renderer == NULL) {
+	if (!tsee->window->renderer) {
 		TSEE_Error("Renderer could not be created! SDL_Error: %s\n",
 				   SDL_GetError());
 		SDL_DestroyWindow(tsee->window->window);
