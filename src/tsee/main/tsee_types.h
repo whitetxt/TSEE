@@ -18,6 +18,7 @@ typedef struct TSEE_Init {
 	bool input;
 	bool ui;
 	bool resources;
+	bool animation;
 } TSEE_Init;
 
 typedef struct TSEE_Debug_RenderTimes {
@@ -49,6 +50,7 @@ typedef struct TSEE {
 	TSEE_Init *init;
 	TSEE_UI *ui;
 	TSEE_Debug *debug;
+	TSEE_Animations *animations;
 	Uint64 last_time;
 	Uint64 current_time;
 	double dt;

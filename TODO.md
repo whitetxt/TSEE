@@ -17,3 +17,4 @@
 - [ ] General Optimisations
 - [ ] Figure out why memmove was segfaulting
 - [ ] Fix serialisation (loading/saving)
+- [ ] Setup Animations

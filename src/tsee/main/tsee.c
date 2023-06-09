@@ -151,7 +151,7 @@ bool TSEE_InitAll(TSEE *tsee) {
 	}
 	TSEE_Log("Initialized TSEE Rendering.\n");
 	if (!TSEE_Resource_Init(tsee)) {
-		TSEE_Critical("Failed to initialise the TSEE resource manager.\n");
+		TSEE_Critical("Failed to initialise the TSEE Resource Manager.\n");
 		TSEE_Close(tsee);
 		return false;
 	}
@@ -180,6 +180,11 @@ bool TSEE_InitAll(TSEE *tsee) {
 		return false;
 	}
 	TSEE_Log("Initialized TSEE UI.\n");
+	if (!TSEE_Animation_Init(tsee)) {
+		TSEE_Critical("Failed to initialize the TSEE Animation Module.\n");
+		TSEE_Close(tsee);
+		return false;
+	}
 	TSEE_Log("All TSEE modules initialized.\n");
 	return true;
 }
@@ -343,5 +348,19 @@ void TSEE_World_ScrollToObject(TSEE *tsee, TSEE_Object *obj) {
 		}
 		object->texture->rect.y = object->position.y * -1 +
 								  tsee->window->height - tsee->world->scroll_y;
+	}
+}
+
+/**
+ * @brief Runs the main game loop.
+ */
+void TSEE_MainLoop(TSEE *tsee) {
+	while (tsee->window->running) {
+		TSEE_CalculateDT(tsee);
+		TSEE_Events_Handle(tsee);
+		TSEE_Player_HandleInput(tsee);
+		TSEE_Physics_PerformStep(tsee);
+		TSEE_Animation_RunStep(tsee);
+		TSEE_RenderAll(tsee);
 	}
 }

@@ -203,8 +203,6 @@ bool TSEE_Map_Load(TSEE *tsee, char *fn) {
 		}
 		TSEE_Log("Read object %ld with texture %ld\n", i, texIdx);
 		char *path = texturePaths[texIdx];
-		double x = 0;
-		double y = 0;
 		TSEE_Object_Attributes attr;
 
 		TSEE_Vec2 *position = TSEE_ReadFile_Vec2(fp);

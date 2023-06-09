@@ -185,3 +185,15 @@ bool TSEE_Array_Destroy(TSEE_Array *arr) {
 	xfree(arr);
 	return true;
 }
+
+/**
+ * @brief Gets the length of an array
+ *
+ * @param arr Array to get length for
+ * @return The length of the array (int)
+ */
+int TSEE_Array_Length(TSEE_Array *arr) {
+	if (!arr)
+		return -1;
+	return arr->size;
+}
