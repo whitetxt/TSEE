@@ -1,5 +1,3 @@
-// !! TSEE TYPES !!
-
 // Struct to keep track of all the world's objects.
 typedef struct TSEE_World {
 	TSEE_Array *objects;

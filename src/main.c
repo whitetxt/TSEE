@@ -55,7 +55,7 @@ int main(int argc, char *argv[]) {
 	TSEE_Parallax_Create(tsee,
 						 TSEE_Texture_Create(tsee, "assets/parallax4.png"), 1);
 
-	TSEE_Object *obj = TSEE_Object_Create(
+	TSEE_Object_Create(
 		tsee, TSEE_Texture_Create(tsee, "assets/test_image.png"),
 		TSEE_ATTRIB_PHYS, 200, 500);
 
