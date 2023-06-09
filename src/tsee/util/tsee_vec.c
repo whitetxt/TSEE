@@ -33,7 +33,7 @@ TSEE_Vec2 TSEE_Vec2_RAdd(TSEE_Vec2 final, TSEE_Vec2 add) {
 
 /**
  * @brief Returns the length of the vector
- * 
+ *
  * @param vec Vector to get the length of.
  * @return length of the vector.
  */
@@ -43,7 +43,7 @@ double TSEE_Vec2_Len(TSEE_Vec2 vec) {
 
 /**
  * @brief Returns the length of the vector squared.
- * 
+ *
  * @param vec Vector to get the length of.
  * @return length of the vector squared.
  */
@@ -185,7 +185,7 @@ bool TSEE_Vec2_Subtract(TSEE_Vec2 *first, TSEE_Vec2 minus) {
 
 /**
  * @brief Subtract one vector from another, returning the resultant vector
- * 
+ *
  * @param first the first vector
  * @param minus the vector to subtract
  * @return TSEE_Vec2 the resultant vector

@@ -6,6 +6,7 @@ typedef enum TSEE_Object_Attributes {
 	TSEE_ATTRIB_UI = 8,
 	TSEE_ATTRIB_PLAYER = 16,
 	TSEE_ATTRIB_STATIC = 32,
+	TSEE_ATTRIB_ANIMATED = 64,
 } TSEE_Object_Attributes;
 
 typedef struct TSEE_Physics_Data {

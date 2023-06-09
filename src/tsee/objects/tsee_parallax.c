@@ -22,7 +22,7 @@ TSEE_Object *TSEE_Parallax_Create(TSEE *tsee,
 	if (!parallax) {
 		return NULL;
 	}
-	//TSEE_Array_Delete(tsee->world->objects, 0);
+	// TSEE_Array_Delete(tsee->world->objects, 0);
 
 	parallax->parallax.distance = distanceFromCamera;
 	parallax->texture->rect.y = tsee->window->height - texture->rect.h;
@@ -36,7 +36,7 @@ TSEE_Object *TSEE_Parallax_Create(TSEE *tsee,
 			continue;
 
 		num_parallax++;
-		
+
 		if (parallax->parallax.distance < obj->parallax.distance) {
 			latest_good_index = i + 1;
 		} else {
@@ -48,7 +48,8 @@ TSEE_Object *TSEE_Parallax_Create(TSEE *tsee,
 		latest_good_index = num_parallax;
 	}
 
-	TSEE_Array_Insert(tsee->world->parallax_objects, parallax, latest_good_index);
+	TSEE_Array_Insert(tsee->world->parallax_objects, parallax,
+					  latest_good_index);
 	return parallax;
 }
 

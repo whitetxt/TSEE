@@ -10,6 +10,7 @@ void *TSEE_Array_Get(TSEE_Array *arr, size_t index);
 int TSEE_Array_GetIndex(TSEE_Array *arr, void *data);
 bool TSEE_Array_Clear(TSEE_Array *arr);
 bool TSEE_Array_Destroy(TSEE_Array *arr);
+int TSEE_Array_Length(TSEE_Array *arr);
 
 // Safety
 

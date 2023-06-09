@@ -9,7 +9,8 @@
  */
 bool TSEE_Attributes_Check(TSEE_Object_Attributes attr,
 						   TSEE_Object_Attributes against) {
-	return attr & against;
+	if (against == TSEE_ATTRIB_NONE) return attr = against;
+	else return attr & against;
 }
 
 /**
@@ -20,5 +21,6 @@ bool TSEE_Attributes_Check(TSEE_Object_Attributes attr,
  */
 void TSEE_Attributes_Set(TSEE_Object_Attributes *attr,
 						 TSEE_Object_Attributes to_set) {
-	*attr |= to_set;
+	if (to_set == TSEE_ATTRIB_NONE) *attr = TSEE_ATTRIB_NONE;
+	else *attr |= to_set;
 }

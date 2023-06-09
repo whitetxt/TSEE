@@ -39,7 +39,8 @@ int main(int argc, char *argv[]) {
 
 	create_menu(tsee);
 
-	TSEE_Object_Create(tsee, TSEE_Texture_Create(tsee, "assets/test_image2.png"),
+	TSEE_Object_Create(tsee,
+					   TSEE_Texture_Create(tsee, "assets/test_image2.png"),
 					   TSEE_ATTRIB_PHYS | TSEE_ATTRIB_PLAYER, 300, 400);
 	TSEE_Player_SetJumpForce(tsee, 50);
 	TSEE_Player_SetSpeed(tsee, 750);
@@ -54,24 +55,19 @@ int main(int argc, char *argv[]) {
 	TSEE_Parallax_Create(tsee,
 						 TSEE_Texture_Create(tsee, "assets/parallax4.png"), 1);
 
-	TSEE_Object *obj = TSEE_Object_Create(tsee, TSEE_Texture_Create(tsee, "assets/test_image.png"), TSEE_ATTRIB_PHYS, 200, 500);
+	TSEE_Object *obj = TSEE_Object_Create(
+		tsee, TSEE_Texture_Create(tsee, "assets/test_image.png"),
+		TSEE_ATTRIB_PHYS, 200, 500);
 
 	for (int x = 0; x < tsee->window->width * 5; x += 64) {
-		TSEE_Object_Create(tsee,
-						   TSEE_Texture_Create(tsee, "assets/box.png"),
+		TSEE_Object_Create(tsee, TSEE_Texture_Create(tsee, "assets/box.png"),
 						   TSEE_ATTRIB_STATIC, x, 64);
 	}
 
 	// After setup for the map, correct dt
 	tsee->world->max_scroll_x = tsee->window->width * 5;
 
-	while (tsee->window->running) {
-		TSEE_CalculateDT(tsee);
-		TSEE_Events_Handle(tsee);
-		TSEE_Player_HandleInput(tsee);
-		TSEE_Physics_PerformStep(tsee);
-		TSEE_RenderAll(tsee);
-	}
+	TSEE_MainLoop(tsee);
 
 	TSEE_Log("Saving settings.\n");
 	if (!TSEE_Settings_Save(tsee)) {
