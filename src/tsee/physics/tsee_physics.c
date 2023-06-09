@@ -10,7 +10,11 @@ void TSEE_Physics_SetObjectMass(TSEE_Object *obj, double mass) {
 	if (!TSEE_Object_CheckAttribute(obj, TSEE_ATTRIB_PHYS))
 		return;	 // Ignore objects which are not physics objects.
 	obj->physics.mass = mass;
-	obj->physics.inv_mass = 1 / mass;
+	if (mass != 0) {
+		obj->physics.inv_mass = 1 / mass;
+	} else {
+		obj->physics.inv_mass = 0;
+	}
 }
 
 /**
@@ -31,7 +35,7 @@ void TSEE_Physics_PerformStep(TSEE *tsee) {
 				if (!TSEE_Physics_GetAABBAABBManifold(&manifold))
 					continue;
 
-				TSEE_Physics_ResolveCollision(tsee, &manifold);
+				TSEE_Physics_ResolveCollision(&manifold);
 				TSEE_Physics_PositionalCorrection(&manifold);
 			}
 		}
@@ -190,33 +194,30 @@ bool TSEE_Manifold_IsNone(TSEE_Manifold man) {
  * @param a First object
  * @param b Second object
  */
-void TSEE_Physics_ResolveCollision(TSEE *tsee, TSEE_Manifold *manifold) {
+void TSEE_Physics_ResolveCollision(TSEE_Manifold *manifold) {
 	TSEE_Object *a = manifold->a;
 	TSEE_Object *b = manifold->b;
-	if (true || (TSEE_Object_CheckAttribute(a, TSEE_ATTRIB_PHYS) &&
-				 TSEE_Object_CheckAttribute(b, TSEE_ATTRIB_PHYS))) {
-		// NEW METHOD!!
-		TSEE_Vec2 normal = manifold->normal;
-		TSEE_Vec2 rv =
-			TSEE_Vec2_RSubtract(b->physics.velocity, a->physics.velocity);
-		float velAlongNorm = TSEE_Vec2_Dot(rv, normal);
-		if (velAlongNorm > 0)
-			return;
-		// e is resititution
-		float e = min(a->physics.restitution, b->physics.restitution);
-		// j is the impulse scalar
-		float j = -(1 + e) * velAlongNorm;
-		j /= (a->physics.inv_mass + b->physics.inv_mass);
-
-		// Apply impulse
-		TSEE_Vec2 impulse = TSEE_Vec2_RMultiply(normal, j);
-		float mass_sum = a->physics.mass + b->physics.mass;
-		float ratio = a->physics.mass / mass_sum;
-		TSEE_Vec2_Subtract(&a->physics.velocity,
-						   TSEE_Vec2_RMultiply(impulse, ratio));
-		ratio = b->physics.mass / mass_sum;
-		TSEE_Vec2_Add(&b->physics.velocity,
-					  TSEE_Vec2_RMultiply(impulse, ratio));
+	// NEW METHOD!!
+	TSEE_Vec2 normal = manifold->normal;
+	TSEE_Vec2 rv =
+		TSEE_Vec2_RSubtract(b->physics.velocity, a->physics.velocity);
+	float velAlongNorm = TSEE_Vec2_Dot(rv, normal);
+	if (velAlongNorm > 0)
 		return;
-	}
+	// e is resititution
+	float e = min(a->physics.restitution, b->physics.restitution);
+	// j is the impulse scalar
+	float j = -(1 + e) * velAlongNorm;
+	j /= (a->physics.inv_mass + b->physics.inv_mass);
+
+	// Apply impulse
+	TSEE_Vec2 impulse = TSEE_Vec2_RMultiply(normal, j);
+	float mass_sum = a->physics.mass + b->physics.mass;
+	float ratio = a->physics.mass / mass_sum;
+	TSEE_Vec2_Subtract(&a->physics.velocity,
+						TSEE_Vec2_RMultiply(impulse, ratio));
+	ratio = b->physics.mass / mass_sum;
+	TSEE_Vec2_Add(&b->physics.velocity,
+					TSEE_Vec2_RMultiply(impulse, ratio));
+	return;
 }

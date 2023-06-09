@@ -33,7 +33,7 @@
 #include "resources/tsee_resources_functions.h"
 #include "image/tsee_image_functions.h"
 #include "objects/tsee_object_functions.h"
-#include "image/tsee_animation_types.h"
+#include "image/tsee_animation_functions.h"
 #include "UI/tsee_ui_functions.h"
 #include "maps/tsee_map_functions.h"
 #include "events/tsee_event_functions.h"

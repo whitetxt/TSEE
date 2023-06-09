@@ -9,7 +9,7 @@
  */
 bool TSEE_Attributes_Check(TSEE_Object_Attributes attr,
 						   TSEE_Object_Attributes against) {
-	if (against == TSEE_ATTRIB_NONE) return attr = against;
+	if (against == TSEE_ATTRIB_NONE) return attr == TSEE_ATTRIB_NONE;
 	else return attr & against;
 }
 
