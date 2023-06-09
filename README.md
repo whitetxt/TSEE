@@ -7,6 +7,7 @@ A pure C game engine designed to be intuitive and easy to use.
 - Simple to use wrapper for SDL2
 - Optimized texture loading (with caching support)
 - Intuitive UI system
+- Somewhat accurate physics engine
 - Simple yet informative logging capabilites
 - Optimised parallax backgrounds
 - Full resource management
@@ -34,7 +35,7 @@ All documentation is provided in the form of doxygen comments at the start of fu
 
 Functions are named in the form "TSEE*\<Scope>*\<Function>" (e.g TSEE_Object_Create or TSEE_Object_Destroy)
 
-The full documentation can be generated using the tsee.dxg config with doxygen.
+The full documentation can be generated using the tsee.dxg config with doxygen, or `make docs`.
 
 ## Building
 
