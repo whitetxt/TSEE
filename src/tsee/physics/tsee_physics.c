@@ -165,8 +165,14 @@ bool TSEE_Physics_GetAABBAABBManifold(TSEE_Manifold *m) {
 	} else if (lowest == amtLeft) {
 		m->normal = (TSEE_Vec2){-1, 0};
 	} else if (lowest == amtTop) {
+		if (TSEE_Object_CheckAttribute(a, TSEE_ATTRIB_PLAYER)) {
+			a->is_grounded = true;
+		}
 		m->normal = (TSEE_Vec2){0, -1};
 	} else if (lowest == amtBottom) {
+		if (TSEE_Object_CheckAttribute(b, TSEE_ATTRIB_PLAYER)) {
+			b->is_grounded = true;
+		}
 		m->normal = (TSEE_Vec2){0, 1};
 	}
 	return true;
