@@ -52,6 +52,7 @@ TSEE_Object *TSEE_Object_Create(TSEE *tsee,
 		return NULL;
 	}
 	obj->texture = texture;
+	obj->is_grounded = false;
 	TSEE_Object_SetPosition(tsee, obj, x, y);
 
 	if (TSEE_Attributes_Check(attributes, TSEE_ATTRIB_STATIC)) {

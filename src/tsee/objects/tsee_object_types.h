@@ -28,6 +28,7 @@ typedef struct TSEE_Text_Data {
 typedef struct TSEE_Object {
 	TSEE_Texture *texture;
 	TSEE_Vec2 position;
+	bool is_grounded;
 	TSEE_Object_Attributes attributes;
 	union {
 		TSEE_Physics_Data physics;
