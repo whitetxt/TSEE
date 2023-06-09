@@ -165,14 +165,10 @@ bool TSEE_Physics_GetAABBAABBManifold(TSEE_Manifold *m) {
 	} else if (lowest == amtLeft) {
 		m->normal = (TSEE_Vec2){-1, 0};
 	} else if (lowest == amtTop) {
-		if (TSEE_Object_CheckAttribute(a, TSEE_ATTRIB_PLAYER)) {
-			a->is_grounded = true;
-		}
+		a->is_grounded = true;
 		m->normal = (TSEE_Vec2){0, -1};
 	} else if (lowest == amtBottom) {
-		if (TSEE_Object_CheckAttribute(b, TSEE_ATTRIB_PLAYER)) {
-			b->is_grounded = true;
-		}
+		b->is_grounded = true;
 		m->normal = (TSEE_Vec2){0, 1};
 	}
 	return true;
@@ -208,7 +204,6 @@ void TSEE_Physics_ResolveCollision(TSEE *tsee, TSEE_Manifold *manifold) {
 			return;
 		// e is resititution
 		float e = min(a->physics.restitution, b->physics.restitution);
-		e = 1;
 		// j is the impulse scalar
 		float j = -(1 + e) * velAlongNorm;
 		j /= (a->physics.inv_mass + b->physics.inv_mass);
@@ -223,90 +218,5 @@ void TSEE_Physics_ResolveCollision(TSEE *tsee, TSEE_Manifold *manifold) {
 		TSEE_Vec2_Add(&b->physics.velocity,
 					  TSEE_Vec2_RMultiply(impulse, ratio));
 		return;
-	}
-	int amtRight = fabs(a->position.x + a->texture->rect.w - b->position.x);
-	int amtLeft = fabs(b->position.x + b->texture->rect.w - a->position.x);
-	int amtTop = fabs(b->position.y - a->position.y + a->texture->rect.h);
-	int amtBottom = fabs(a->position.y + a->texture->rect.h - b->position.y);
-
-	int values[4] = {amtRight, amtLeft, amtTop, amtBottom};
-	int lowest = values[0];
-	// Get lowest value, side it collided on
-	for (int x = 1; x < 4; x++) {
-		if (values[x] < lowest) {
-			lowest = values[x];
-		}
-	}
-
-	if (TSEE_Object_CheckAttribute(a, TSEE_ATTRIB_PHYS)) {
-		if (lowest == amtRight) {
-			if (amtTop <= tsee->player->step_size) {
-				TSEE_Object_SetPosition(tsee, a, a->position.x,
-										b->position.y + a->texture->rect.h);
-			} else {
-				TSEE_Object_SetPosition(
-					tsee, a, b->position.x - a->texture->rect.w, a->position.y);
-				a->physics.velocity.x = 0;
-			}
-		} else if (lowest == amtLeft) {
-			if (amtTop <= tsee->player->step_size) {
-				TSEE_Object_SetPosition(tsee, a, a->position.x,
-										b->position.y + a->texture->rect.h);
-			} else {
-				TSEE_Object_SetPosition(
-					tsee, a, b->position.x + b->texture->rect.w, a->position.y);
-				a->physics.velocity.x = 0;
-			}
-		} else if (lowest == amtTop) {
-			TSEE_Object_SetPosition(tsee, a, a->position.x,
-									b->position.y + a->texture->rect.h);
-			if (a == tsee->player->object) {
-				tsee->player->grounded = true;
-			}
-			if (a->physics.velocity.y < 0) {
-				a->physics.velocity.y = 0;
-			}
-		} else if (lowest == amtBottom) {
-			TSEE_Object_SetPosition(tsee, a, a->position.x,
-									b->position.y - b->texture->rect.h);
-			if (a->physics.velocity.y > 0) {
-				a->physics.velocity.y = 0;
-			}
-		}
-	} else {
-		if (lowest == amtRight) {
-			if (amtTop <= tsee->player->step_size) {
-				TSEE_Object_SetPosition(tsee, b, b->position.x,
-										a->position.y + b->texture->rect.h);
-			} else {
-				TSEE_Object_SetPosition(
-					tsee, b, a->position.x - b->texture->rect.w, b->position.y);
-				b->physics.velocity.x = 0;
-			}
-		} else if (lowest == amtLeft) {
-			if (amtTop <= tsee->player->step_size) {
-				TSEE_Object_SetPosition(tsee, b, b->position.x,
-										a->position.y + b->texture->rect.h);
-			} else {
-				TSEE_Object_SetPosition(
-					tsee, b, a->position.x + a->texture->rect.w, b->position.y);
-				b->physics.velocity.x = 0;
-			}
-		} else if (lowest == amtTop) {
-			TSEE_Object_SetPosition(tsee, b, b->position.x,
-									a->position.y + b->texture->rect.h);
-			if (b == tsee->player->object) {
-				tsee->player->grounded = true;
-			}
-			if (b->physics.velocity.y < 0) {
-				b->physics.velocity.y = 0;
-			}
-		} else if (lowest == amtBottom) {
-			TSEE_Object_SetPosition(tsee, b, b->position.x,
-									a->position.y - a->texture->rect.h);
-			if (b->physics.velocity.y > 0) {
-				b->physics.velocity.y = 0;
-			}
-		}
 	}
 }

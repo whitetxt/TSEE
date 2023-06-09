@@ -43,7 +43,7 @@ bool TSEE_Toolbar_AddButton(TSEE *tsee, char *font, char *text) {
 	}
 	toolbarobj->text =
 		TSEE_Text_Create(tsee, font, text, (SDL_Color){255, 255, 255, 255});
-	toolbarobj->text->attributes &= TSEE_ATTRIB_UI;
+	toolbarobj->text->attributes = TSEE_ATTRIB_TEXT | TSEE_ATTRIB_UI;
 	if (!toolbarobj->text) {
 		TSEE_Error("Failed to create toolbar button texture\n");
 		TSEE_Array_Destroy(toolbarobj->buttons);
@@ -116,7 +116,7 @@ bool TSEE_Toolbar_AddChild(TSEE *tsee,
 		(parent->buttons->size + 1) * 32 + child->text->texture->rect.h / 2,
 		child->text->texture->rect.w, child->text->texture->rect.h};
 	child->callback = cb;
-	child->text->attributes &= TSEE_ATTRIB_UI;
+	child->text->attributes = TSEE_ATTRIB_TEXT | TSEE_ATTRIB_UI;
 	TSEE_Array_Append(parent->buttons, child);
 	return true;
 }
