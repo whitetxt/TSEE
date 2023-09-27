@@ -10,6 +10,7 @@ TSEE::TSEE() {
 	this->last_time = microseconds.count();
 	this->current_time = microseconds.count();
 	this->dt = 0;
+	this->LoadSettings();
 	return;
 }
 

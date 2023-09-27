@@ -109,3 +109,37 @@ void Window::SetTitle(std::string title) {
 std::string Window::GetTitle() {
 	return this->title;
 }
+
+void Window::SettingsCallback(std::string line) {
+	if (line[0] == '#') {
+		log::debug("[Settings] Skipping commented line.");
+		return;
+	}
+	std::string sec = line.substr(0, line.find("="));
+	std::string val = line.substr(line.find("=") + 1);
+	log::debug(fmt::format("[Settings] Got line: {}={}", sec, val));
+	if (sec == "width") {
+		this->SetSize(std::stoi(val), this->height);
+	} else if (sec == "height") {
+		this->SetSize(this->width, std::stoi(val));
+	} else {
+		log::warn(fmt::format("Unknown section: {} with value {}", sec, val));
+	}
+}
+
+void Window::LoadSettings() {
+	std::ifstream file;
+	file.open("settings.ini");
+	std::string line;
+	std::string window_name;
+	while (file >> line) {
+		if (line[0] == '>') {
+			window_name = line.substr(1);
+			continue;
+		}
+		if (window_name != this->title) {
+			continue;
+		}
+		this->SettingsCallback(line);
+	}
+}

@@ -3,8 +3,6 @@
 namespace tsee::window {
 class Window {
    private:
-	int Construct(int width, int height, std::string title);
-
 	SDL_Window *window;
 	SDL_Renderer *renderer;
 
@@ -17,6 +15,9 @@ class Window {
 	SDL_Point mouse;
 	SDL_DisplayMode mode;
 	Uint64 last_render;
+
+	int Construct(int width, int height, std::string title);
+	void SettingsCallback(std::string line);
 
    public:
 	Window();
@@ -31,5 +32,6 @@ class Window {
 	SDL_Point GetSize();
 	void SetTitle(std::string title);
 	std::string GetTitle();
+	void LoadSettings();
 };
 }  // namespace tsee::window
