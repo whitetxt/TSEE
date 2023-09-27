@@ -13,6 +13,8 @@ class TSEE {
 	TSEE();
 	~TSEE();
 	window::Window CreateWindow(int width, int height, std::string title);
+	window::Window CreateWindow(int width, int height);
+	window::Window CreateWindow();
 	void RenderAll();
 
    private:

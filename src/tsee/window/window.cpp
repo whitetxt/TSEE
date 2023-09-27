@@ -8,15 +8,15 @@ int Window::Construct(int width, int height, std::string title) {
 		ret = -1;
 		goto end;
 	}
-	this->window = SDL_CreateWindow(title.length() > 0 ? title.c_str() : "TSEE", SDL_WINDOWPOS_CENTERED,
-									SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_SHOWN);
+	this->window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height,
+									SDL_WINDOW_SHOWN);
 	if (!this->window) {
 		ret = -2;
 		goto end;
 	}
 	this->width = width;
 	this->height = height;
-	this->title = title.length() > 0 ? title : "TSEE";
+	this->title = title;
 	this->renderer = SDL_CreateRenderer(this->window, -1, SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED);
 	if (!this->renderer) {
 		ret = -3;
@@ -58,11 +58,11 @@ end:
 }
 
 Window::Window() {
-	this->Construct(800, 640, nullptr);
+	this->Construct(800, 640, "TSEE");
 }
 
 Window::Window(int width, int height) {
-	this->Construct(width, height, nullptr);
+	this->Construct(width, height, "TSEE");
 }
 
 Window::Window(int width, int height, std::string title) {

@@ -25,6 +25,18 @@ window::Window TSEE::CreateWindow(int width, int height, std::string title) {
 	return win;
 }
 
+window::Window TSEE::CreateWindow(int width, int height) {
+	window::Window win(width, height);
+	this->windows.push_back(win);
+	return win;
+}
+
+window::Window TSEE::CreateWindow() {
+	window::Window win;
+	this->windows.push_back(win);
+	return win;
+}
+
 void TSEE::RenderAll() {
 	for (window::Window w : this->windows) {
 		w.Render();
