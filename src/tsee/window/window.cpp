@@ -2,20 +2,21 @@
 
 using namespace tsee::window;
 
-int Window::Construct() {
+int Window::Construct(int width, int height, std::string title) {
 	int ret = 0;
 	if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
 		ret = -1;
 		goto end;
 	}
-	this->window = SDL_CreateWindow("TSEE", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 640, SDL_WINDOW_SHOWN);
+	this->window = SDL_CreateWindow(title.length() > 0 ? title.c_str() : "TSEE", SDL_WINDOWPOS_CENTERED,
+									SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_SHOWN);
 	if (!this->window) {
 		ret = -2;
 		goto end;
 	}
-	this->width = 800;
-	this->height = 640;
-	this->title = "TSEE";
+	this->width = width;
+	this->height = height;
+	this->title = title.length() > 0 ? title : "TSEE";
 	this->renderer = SDL_CreateRenderer(this->window, -1, SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED);
 	if (!this->renderer) {
 		ret = -3;
@@ -57,23 +58,15 @@ end:
 }
 
 Window::Window() {
-	this->Construct();
+	this->Construct(800, 640, nullptr);
 }
 
 Window::Window(int width, int height) {
-	this->Construct();
-	SDL_SetWindowSize(this->window, width, height);
-	this->width = width;
-	this->height = height;
+	this->Construct(width, height, nullptr);
 }
 
 Window::Window(int width, int height, std::string title) {
-	this->Construct();
-	SDL_SetWindowSize(this->window, width, height);
-	this->width = width;
-	this->height = height;
-	SDL_SetWindowTitle(this->window, title.c_str());
-	this->title = title;
+	this->Construct(width, height, title);
 }
 
 void Window::Destroy() {

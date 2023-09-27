@@ -3,7 +3,7 @@
 namespace tsee::window {
 class Window {
    private:
-	int Construct();
+	int Construct(int width, int height, std::string title);
 
 	SDL_Window *window;
 	SDL_Renderer *renderer;
