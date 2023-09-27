@@ -10,8 +10,13 @@ class Window {
 
 	int width;
 	int height;
-
+	int fps;
+	bool vsync;
 	std::string title;
+
+	SDL_Point mouse;
+	SDL_DisplayMode mode;
+	Uint64 last_render;
 
    public:
 	Window();
@@ -20,5 +25,11 @@ class Window {
 
 	void Render();
 	void Destroy();
+	SDL_Window *GetSDLWindow();
+	SDL_Renderer *GetSDLRenderer();
+	void SetSize(int width, int height);
+	SDL_Point GetSize();
+	void SetTitle(std::string title);
+	std::string GetTitle();
 };
 }  // namespace tsee::window

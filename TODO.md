@@ -3,7 +3,7 @@
 ## v0.4b
 
 - [] C++ Conversion
-  - [] Convert Window
+  - [x] Convert Window
   - [] Convert Resource Manager
   - [] Convert Rendering Logic
   - [] Convert Maps

@@ -13,14 +13,28 @@ int Window::Construct() {
 		ret = -2;
 		goto end;
 	}
-	this->renderer = SDL_CreateRenderer(this->window, -1, 0);
+	this->width = 800;
+	this->height = 640;
+	this->title = "TSEE";
+	this->renderer = SDL_CreateRenderer(this->window, -1, SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED);
 	if (!this->renderer) {
 		ret = -3;
 		goto end;
 	}
-	this->width = 800;
-	this->height = 640;
-	this->title = "TSEE";
+	this->vsync = true;
+	SDL_SetRenderDrawColor(this->renderer, 0, 0, 127, SDL_ALPHA_OPAQUE);
+	this->last_render = SDL_GetPerformanceCounter();
+
+	if (SDL_GetCurrentDisplayMode(0, &this->mode) != 0) {
+		tsee::log::warn(fmt::format("Failed to get display mode ({})\n", SDL_GetError()));
+		this->fps = 60;
+	} else {
+		this->fps = this->mode.refresh_rate;
+		if (this->fps == 0) {
+			tsee::log::warn("Unspecified refresh rate.\n");
+			this->fps = 60;
+		}
+	}
 
 end:
 	switch (ret) {
@@ -63,11 +77,42 @@ Window::Window(int width, int height, std::string title) {
 }
 
 void Window::Destroy() {
-	tsee::log::log(fmt::format("Destroying window: {}", this->title));
+	tsee::log::debug(fmt::format("Destroying window: {}", this->title));
 	SDL_DestroyRenderer(this->renderer);
 	SDL_DestroyWindow(this->window);
 }
 
 void Window::Render() {
 	SDL_RenderPresent(this->renderer);
+	this->last_render = SDL_GetPerformanceCounter();
+}
+
+SDL_Window *Window::GetSDLWindow() {
+	return this->window;
+}
+
+SDL_Renderer *Window::GetSDLRenderer() {
+	return this->renderer;
+}
+
+void Window::SetSize(int width, int height) {
+	SDL_SetWindowSize(this->window, width, height);
+	this->width = width;
+	this->height = height;
+}
+
+SDL_Point Window::GetSize() {
+	SDL_Point point;
+	point.x = this->width;
+	point.y = this->height;
+	return point;
+}
+
+void Window::SetTitle(std::string title) {
+	SDL_SetWindowTitle(this->window, title.c_str());
+	this->title = title;
+}
+
+std::string Window::GetTitle() {
+	return this->title;
 }
