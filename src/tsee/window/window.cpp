@@ -76,6 +76,7 @@ void Window::Destroy() {
 }
 
 void Window::Render() {
+	SDL_RenderClear(this->renderer);
 	SDL_RenderPresent(this->renderer);
 	this->last_render = SDL_GetPerformanceCounter();
 }
