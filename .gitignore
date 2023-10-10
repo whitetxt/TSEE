@@ -55,7 +55,17 @@ build/TSEE
 git_resources/
 
 # Don't push docs lmao
-docs/
+doc/
 .vscode/
 build/
 megalinter-reports/
+
+# Ignore the build and lib dirs
+build
+lib/*
+
+# Ignore any executables
+bin/*
+
+# Ignore Mac specific files
+.DS_Store
