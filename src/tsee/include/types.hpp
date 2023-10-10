@@ -1,6 +1,7 @@
 namespace tsee {
 class TSEE {
    public:
+	int last_window_id;
 	std::vector<window::Window> windows;
 	// ResourceManager resources;
 	// World world;

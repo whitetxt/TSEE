@@ -2,7 +2,8 @@
 
 using namespace tsee::window;
 
-int Window::Construct(int width, int height, std::string title) {
+int Window::Construct(int id, int width, int height, std::string title) {
+	this->id = id;
 	int ret = 0;
 	if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
 		ret = -1;
@@ -57,16 +58,16 @@ end:
 	return ret;
 }
 
-Window::Window() {
-	this->Construct(800, 640, "TSEE");
+Window::Window(int id) {
+	this->Construct(id, 800, 640, "TSEE");
 }
 
-Window::Window(int width, int height) {
-	this->Construct(width, height, "TSEE");
+Window::Window(int id, int width, int height) {
+	this->Construct(id, width, height, "TSEE");
 }
 
-Window::Window(int width, int height, std::string title) {
-	this->Construct(width, height, title);
+Window::Window(int id, int width, int height, std::string title) {
+	this->Construct(id, width, height, title);
 }
 
 void Window::Destroy() {
@@ -76,7 +77,14 @@ void Window::Destroy() {
 }
 
 void Window::Render() {
+	if (SDL_GetWindowFlags(this->window) & SDL_WINDOW_MINIMIZED) {
+		// Don't render if minimised.
+		// Limits to ~15 FPS
+		SDL_Delay(67);
+	}
+	SDL_SetRenderDrawColor(this->renderer, 0, 0, 0, 255);
 	SDL_RenderClear(this->renderer);
+
 	SDL_RenderPresent(this->renderer);
 	this->last_render = SDL_GetPerformanceCounter();
 }
