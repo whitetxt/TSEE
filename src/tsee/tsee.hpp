@@ -2,7 +2,7 @@
 
 // Include required libs
 #include <SDL2/SDL.h>
-// #include <SDL2/SDL_image.h>
+#include <SDL2/SDL_image.h>
 // #include <SDL2/SDL_ttf.h>
 #include "ext/fmt/include/fmt/core.h"
 #include "ext/fmt/include/fmt/chrono.h"
@@ -10,6 +10,7 @@
 #include <fstream>
 #include <chrono>
 #include <vector>
+#include <unordered_map>
 
 // // Include TSEE types
 // #include "util/tsee_util_types.h"
@@ -26,7 +27,6 @@
 #include "include/log.hpp"
 #include "include/window.hpp"
 #include "include/image.hpp"
-#include "include/resource.hpp"
 #include "include/types.hpp"
 
 // // Include TSEE functions

@@ -3,9 +3,13 @@
 namespace tsee::window {
 class Window {
    private:
+	int id;
+
 	SDL_Window *window;
 	SDL_Renderer *renderer;
 
+	int x;
+	int y;
 	int width;
 	int height;
 	int fps;
@@ -16,13 +20,13 @@ class Window {
 	SDL_DisplayMode mode;
 	Uint64 last_render;
 
-	int Construct(int width, int height, std::string title);
+	int Construct(int id, int width, int height, std::string title);
 	void SettingsCallback(std::string line);
 
    public:
-	Window();
-	Window(int width, int height);
-	Window(int width, int height, std::string title);
+	Window(int id);
+	Window(int id, int width, int height);
+	Window(int id, int width, int height, std::string title);
 
 	void Render();
 	void Destroy();

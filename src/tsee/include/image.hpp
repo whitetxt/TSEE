@@ -1,18 +1,13 @@
-#include <SDL2/SDL.h>
-#include <string>
-
-namespace tsee::image {
-class Texture {
+namespace tsee::sprite {
+class Image {
    private:
-	void Construct();
-	SDL_Texture *texture;
+	SDL_Surface *surf;
 	SDL_Rect rect;
 	std::string path;
+	std::unordered_map<int, SDL_Texture> textures;
 
    public:
-	Texture();
-	Texture(std::string path);
-	~Texture();
-	void SetPath(std::string path);
+	Image(std::string path);
+	~Image();
 };
-}  // namespace tsee::image
+}  // namespace tsee::sprite

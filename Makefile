@@ -1,67 +1,27 @@
-CC = gcc
-CFLAGS = -Wall -Wextra -Wshadow -Wstrict-aliasing -Wstrict-overflow -pedantic -fstack-protector-all -fno-common -rdynamic ${shell pkg-config --cflags sdl2 SDL2_image SDL2_ttf}
+CC := g++ # This is the main compiler
+# CC := clang --analyze # and comment out the linker last line for sanity
+SRCDIR := src
+BUILDDIR := build
+TARGET := bin/runner
+ 
+SRCEXT := cpp
+SOURCES := $(shell find $(SRCDIR) -type f -name *.$(SRCEXT))
+OBJECTS := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.o))
+# CFLAGS := -O3 -Wall -Wextra -pedantic -fstack-protector-all -fno-common -rdynamic ${shell pkg-config --cflags sdl2 SDL2_image SDL2_ttf}
+CFLAGS := -g -Wall -Wextra -pedantic ${shell pkg-config --cflags sdl2 SDL2_image SDL2_ttf}
+LIB := ${shell pkg-config --libs sdl2 SDL2_image SDL2_ttf}
+INC := -I include
 
-LD = $(CC)
-LDFLAGS = ${shell pkg-config --libs sdl2 SDL2_image SDL2_ttf} -lm -lz
+$(TARGET): $(OBJECTS)
+	@echo " Linking..."
+	@echo " $(CC) $^ -o $(TARGET) $(LIB)"; $(CC) $^ -o $(TARGET) $(LIB)
 
-files = ${wildcard src/*.c src/tsee/*/*.c}
-obj = ${files:.c=.o}
+$(BUILDDIR)/%.o: $(SRCDIR)/%.$(SRCEXT)
+	@mkdir -p $(BUILDDIR)
+	@echo " $(CC) $(CFLAGS) $(INC) -c -o $@ $<"; $(CC) $(CFLAGS) $(INC) -c -o $@ $<
 
-ifeq ($(DEV),1)
-CFLAGS += -DTSEE_DEV -g
-OPT = 
-out = build/dev/TSEE
-else
-CFLAGS += -g
-OPT = -Ofast -flto
-out = build/release/TSEE
-endif
+clean:
+	@echo " Cleaning..."; 
+	@echo " $(RM) -r $(BUILDDIR) $(TARGET)"; $(RM) -r $(BUILDDIR) $(TARGET)
 
-all: check_folder $(out)
-
-$(out): $(obj)
-	$(LD) -o $@ $(obj) $(LDFLAGS)
-
-.c.o:
-	$(CC) $(OPT) -c -o $@ $< $(CFLAGS)
-
-clean: check_folder
-	-rm -rf ${out}
-	-rm -rf ${obj}
-	-rm -rf ${src:.c=.d}
-
-cleandev: out = build/dev/TSEE
-cleandev: check_folder
-	-rm -rf ${out}
-	-rm -rf ${obj}
-	-rm -rf ${src:.c=.d}
-
-fresh: clean all
-
-run: out = build/release/TSEE
-run:
-	chmod +x ${out}
-	cd build/release && ../../${out}
-
-rundev: out = build/dev/TSEE
-rundev:
-	chmod +x ${out}
-	cd build/dev && ../../${out}
-
-gdb: out = build/dev/TSEE
-gdb:
-	cd build/dev && gdb ../../${out}
-
-vg: out = build/dev/TSEE
-vg:
-	cd build/dev && valgrind --leak-check=full --show-possibly-lost=no --show-reachable=no --track-origins=yes -s ../../${out}
-
-check_folder:
-	mkdir -p build
-	mkdir -p build/dev
-	mkdir -p build/release
-
-docs:
-	doxygen src/tsee.dxg
-
--include $(files:.c=.d)
+.PHONY: clean

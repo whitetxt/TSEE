@@ -8,7 +8,9 @@ int main(int argc, char *argv[]) {
 	tsee::TSEE game;
 	for (size_t i = 0; i < 1; i++) {
 		tsee::log::log("Adding Window");
-		game.CreateWindow(rand() % 800, rand() % 640, "Main Window");
+		game.CreateWindow(rand() % 800, rand() % 640, "Test Window");
+		game.CreateWindow(rand() % 800, rand() % 640);
+		game.CreateWindow();
 	}
 
 	for (size_t i = 0; i < 25; i++) {

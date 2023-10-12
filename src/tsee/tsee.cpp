@@ -10,6 +10,8 @@ TSEE::TSEE() {
 	this->last_time = microseconds.count();
 	this->current_time = microseconds.count();
 	this->dt = 0;
+	this->last_window_id = 0;
+	// this->LoadSettings();
 	return;
 }
 
@@ -25,19 +27,19 @@ TSEE::~TSEE() {
 }
 
 window::Window TSEE::CreateWindow(int width, int height, std::string title) {
-	window::Window win(width, height, title);
+	window::Window win(++this->last_window_id, width, height, title);
 	this->windows.push_back(win);
 	return win;
 }
 
 window::Window TSEE::CreateWindow(int width, int height) {
-	window::Window win(width, height);
+	window::Window win(++this->last_window_id, width, height);
 	this->windows.push_back(win);
 	return win;
 }
 
 window::Window TSEE::CreateWindow() {
-	window::Window win;
+	window::Window win(++this->last_window_id);
 	this->windows.push_back(win);
 	return win;
 }
