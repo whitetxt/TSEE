@@ -164,3 +164,7 @@ void Window::SaveSettings() {
 	file << fmt::format("height={}\n", this->height);
 	file.close();
 }
+
+int Window::GetID() {
+	return this->id;
+}

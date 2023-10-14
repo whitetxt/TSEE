@@ -38,5 +38,6 @@ class Window {
 	std::string GetTitle();
 	void LoadSettings();
 	void SaveSettings();
+	int GetID();
 };
 }  // namespace tsee::window

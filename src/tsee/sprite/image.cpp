@@ -16,7 +16,7 @@ Image::Image(std::string path) {
 }
 
 Image::~Image() {
-	for (std::pair kv : this->textures) {
+	for (auto kv : this->textures) {
 		SDL_DestroyTexture(kv.second);
 	}
 	SDL_FreeSurface(this->surf);

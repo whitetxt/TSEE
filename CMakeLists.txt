@@ -1,6 +1,11 @@
 cmake_minimum_required(VERSION 3.14)
 project(tsee)
 
+set(CMAKE_CXX_STANDARD 20)
+
+include(FetchContent)
+Set(FETCHCONTENT_QUIET FALSE)
+
 ###############################################################################
 ## file globbing ##############################################################
 ###############################################################################
@@ -31,14 +36,40 @@ target_compile_options(tsee PUBLIC -std=c++17 -Wall -Wextra -pedantic)
 ###############################################################################
 
 # Fetch fmt lib from git
-# FetchContent_Declare(fmt
-#   GIT_REPOSITORY https://github.com/fmtlib/fmt.git
-#   GIT_TAG master
-# )
-# FetchContent_MakeAvailable(fmt)
-add_subdirectory(src/tsee/ext/fmt)
+FetchContent_Declare(fmt
+        GIT_REPOSITORY https://github.com/fmtlib/fmt.git
+        GIT_TAG master
+        GIT_SHALLOW TRUE
+        GIT_PROGRESS TRUE
+)
+FetchContent_MakeAvailable(fmt)
 target_link_libraries(tsee fmt::fmt)
 
-find_package(SDL2 REQUIRED)
-include_directories(tsee ${SDL2_INCLUDE_DIRS})
-target_link_libraries(tsee ${SDL2_LIBRARIES})
+FetchContent_Declare(
+        SDL2
+        GIT_REPOSITORY https://github.com/libsdl-org/SDL.git
+        GIT_TAG release-2.28.4
+        GIT_SHALLOW TRUE
+        GIT_PROGRESS TRUE
+)
+FetchContent_MakeAvailable(SDL2)
+target_link_libraries(tsee SDL2::SDL2main SDL2::SDL2-static)
+
+FetchContent_Declare(
+        SDL2_image
+        GIT_REPOSITORY https://github.com/libsdl-org/SDL_image.git
+        GIT_TAG release-2.6.3
+        GIT_SHALLOW TRUE
+        GIT_PROGRESS TRUE
+)
+
+# START ADDITION
+set(SDL2IMAGE_INSTALL OFF)
+set(BUILD_SHARED_LIBS FALSE)
+# END ADDITION
+
+FetchContent_MakeAvailable(SDL2_image)
+target_link_libraries(tsee SDL2_image::SDL2_image-static)
+
+include_directories(tsee ${SDL2_INCLUDE_DIRS} ${_sdl2image_incdir})
+target_link_libraries(tsee ${SDL2_LIBRARIES} ${_sdl2image_libdir})
