@@ -29,7 +29,7 @@ target_include_directories(tsee PRIVATE src/tsee/include src/tsee src)
 ###############################################################################
 
 # just for example add some compiler flags
-target_compile_options(tsee PUBLIC -Wall -Wextra -pedantic)
+target_compile_options(tsee PUBLIC -g -Wall -Wextra -pedantic)
 
 ###############################################################################
 ## dependencies ###############################################################

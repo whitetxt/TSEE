@@ -7,7 +7,9 @@ int main(int argc, char *argv[]) {
 	tsee::log::debug("Creating TSEE");
 	tsee::TSEE game;
 	tsee::log::debug("Adding Window");
-	game.CreateWindow();
+	auto win = game.CreateWindow();
+
+	auto spr = win.CreateSprite("funny.jpg");
 
 	for (size_t i = 0; i < 25; i++) {
 		tsee::log::debug("Rendering");

@@ -20,10 +20,14 @@ class Window {
 	SDL_DisplayMode mode;
 	Uint64 last_render;
 
+	std::vector<tsee::sprite::Sprite> sprites;
+	
+
 	int Construct(int id, int width, int height, std::string title);
 	void SettingsCallback(std::string line);
 
    public:
+    Window();
 	Window(int id);
 	Window(int id, int width, int height);
 	Window(int id, int width, int height, std::string title);
@@ -39,5 +43,6 @@ class Window {
 	void LoadSettings();
 	void SaveSettings();
 	int GetID();
+	tsee::sprite::Sprite CreateSprite(std::string path);
 };
 }  // namespace tsee::window

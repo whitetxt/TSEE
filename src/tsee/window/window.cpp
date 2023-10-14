@@ -59,6 +59,10 @@ end:
 	return ret;
 }
 
+Window::Window() {
+	this->Construct(-1, 800, 640, "TSEE");
+}
+
 Window::Window(int id) {
 	this->Construct(id, 800, 640, "TSEE");
 }
@@ -86,6 +90,10 @@ void Window::Render() {
 	}
 	SDL_SetRenderDrawColor(this->renderer, 0, 0, 0, 255);
 	SDL_RenderClear(this->renderer);
+
+	for (tsee::sprite::Sprite sprite : this->sprites) {
+		sprite.Render();
+	}
 
 	SDL_RenderPresent(this->renderer);
 	this->last_render = SDL_GetPerformanceCounter();
@@ -167,4 +175,10 @@ void Window::SaveSettings() {
 
 int Window::GetID() {
 	return this->id;
+}
+
+tsee::sprite::Sprite Window::CreateSprite(std::string path) {
+	tsee::sprite::Sprite sprite = tsee::sprite::Sprite(this->renderer, path);
+	this->sprites.push_back(sprite);
+	return sprite;
 }

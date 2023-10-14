@@ -25,8 +25,8 @@
 // #include "physics/tsee_physics_types.h"
 
 #include "include/log.hpp"
-#include "include/window.hpp"
 #include "include/image.hpp"
+#include "include/window.hpp"
 #include "include/types.hpp"
 
 // // Include TSEE functions
