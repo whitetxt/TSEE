@@ -29,7 +29,7 @@ target_include_directories(tsee PRIVATE src/tsee/include src/tsee src)
 ###############################################################################
 
 # just for example add some compiler flags
-target_compile_options(tsee PUBLIC -std=c++17 -Wall -Wextra -pedantic)
+target_compile_options(tsee PUBLIC -Wall -Wextra -pedantic)
 
 ###############################################################################
 ## dependencies ###############################################################
@@ -70,6 +70,3 @@ set(BUILD_SHARED_LIBS FALSE)
 
 FetchContent_MakeAvailable(SDL2_image)
 target_link_libraries(tsee SDL2_image::SDL2_image-static)
-
-include_directories(tsee ${SDL2_INCLUDE_DIRS} ${_sdl2image_incdir})
-target_link_libraries(tsee ${SDL2_LIBRARIES} ${_sdl2image_libdir})

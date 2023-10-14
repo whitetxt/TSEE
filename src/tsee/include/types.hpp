@@ -13,15 +13,19 @@ class TSEE {
 	// Animations animations;
 	TSEE();
 	~TSEE();
+	void LoadSettings();
+	void SaveSettings();
 	window::Window CreateWindow(int width, int height, std::string title);
 	window::Window CreateWindow(int width, int height);
 	window::Window CreateWindow();
-	void LoadSettings();
+	void SetDebug(bool debug);
 	void RenderAll();
 
    private:
 	int last_time;
 	int current_time;
+	bool isDebug;
 	double dt;
+	void SettingsCallback(std::string line);
 };
 }  // namespace tsee

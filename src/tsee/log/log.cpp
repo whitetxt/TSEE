@@ -1,10 +1,10 @@
 #include "../tsee.hpp"
 
-using namespace tsee::log;
+namespace tsee::log {
 
 std::string path = "main.log";
+bool isDebug = false;
 
-namespace tsee::log {
 void generic_log(std::string type, std::string msg) {
 	std::chrono::time_point<std::chrono::system_clock> t = std::chrono::system_clock::now();
 	std::string out = fmt::format("{:%d-%m-%Y %T} - [{}] {}\n", t, type, msg);
@@ -16,7 +16,9 @@ void generic_log(std::string type, std::string msg) {
 }
 
 void debug(std::string msg) {
-	generic_log("DEBUG", msg);
+	if (isDebug) {
+		generic_log("DEBUG", msg);
+	}
 }
 
 void log(std::string msg) {
@@ -30,4 +32,5 @@ void warn(std::string msg) {
 void error(std::string msg) {
 	generic_log("ERROR", msg);
 }
-}  // namespace tsee::log
+
+}
