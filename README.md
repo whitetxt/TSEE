@@ -1,26 +1,3 @@
 # TSEE
 
-A basic C++ game engine designed to be simple to use.
-
-## Features
-
-- Simple to use wrapper for SDL2
-- Optimized texture loading (with caching support)
-- Intuitive UI system
-- Somewhat accurate physics engine
-- Simple yet informative logging capabilites
-- Optimised parallax backgrounds
-- Full resource management
-- And its open-source!
-
-## Example Project
-
-Since TSEE is currently undergoing a rewrite, there is no example project.
-
-## Uses
-
-TSEE is highly versatile, so it can be used for practically anything 2D!
-
-## Documentation
-
-The rewrite has also messed up the docs :/
+jokes on you actually im going back to C and im doing a full redesign and rewrite of the entire engine so youll have to wait 5 billion years for this to be finished :3
